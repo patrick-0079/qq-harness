@@ -1,0 +1,20 @@
+.snowluma-page {
+  display: grid;
+  gap: 20px;
+}
+.snowluma-page > .panel:not(.form-stack) {
+  padding: 24px;
+}
+.snowluma-page .section-heading {
+  padding: 0 0 16px;
+  margin-bottom: 16px;
+}
+.snowluma-page .panel p {
+  margin: 12px 0;
+}
+.snowluma-page pre {
+  max-height: 360px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

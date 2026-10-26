@@ -1,0 +1,8 @@
+node_modules
+dist
+var
+package-lock.json
+test-results
+playwright-report
+packages/extension-compat/vendor
+packages/extension-compat/generated

@@ -1,0 +1,65 @@
+{
+  "id": "ext-skill",
+  "name": "技能管理器",
+  "version": "1.0.0",
+  "apiVersion": 2,
+  "type": "plugin",
+  "category": "utility",
+  "description": "扫描 skills/<id>/skill.json（type=skill），登记技能并把声明过的脚本注册进执行器；模型通过 skill_script_run 调用。无容器后端时降级为 worker+vm 沙箱（仅 js）。",
+  "author": "QQ Agent 内置",
+  "enabledByDefault": true,
+  "builtin": true,
+  "capabilities": [],
+  "requires": [],
+  "permissions": [],
+  "settings": {
+    "enabled": true,
+    "docsDir": "skills",
+    "maxPackages": 50,
+    "timeoutMs": 5000,
+    "memoryMb": 64,
+    "allowNonJs": false
+  },
+  "configSchema": {
+    "enabled": {
+      "type": "boolean",
+      "label": "启用技能管理器",
+      "description": "关闭后不再加载 skills/ 下的技能包，skill_script_run 会拒绝调用。",
+      "group": "总开关"
+    },
+    "timeoutMs": {
+      "type": "number",
+      "label": "单次执行超时（毫秒）",
+      "description": "超过该时长直接终止脚本（默认 5000）。",
+      "group": "限制"
+    },
+    "memoryMb": {
+      "type": "number",
+      "label": "内存上限（MB）",
+      "description": "worker 堆上限（默认 64，最大 256）。",
+      "group": "限制"
+    },
+    "maxPackages": {
+      "type": "number",
+      "label": "最多加载几个技能包",
+      "description": "默认 50。",
+      "group": "限制"
+    },
+    "allowNonJs": {
+      "type": "boolean",
+      "label": "允许非 js 脚本",
+      "description": "降级沙箱只支持 js；开启后仅当接入容器后端时才生效（当前会明确报错）。",
+      "group": "高级"
+    },
+    "docsDir": {
+      "type": "internal",
+      "label": "技能目录",
+      "description": "相对应用根目录（默认 skills）；测试可传绝对路径。",
+      "group": "高级"
+    }
+  },
+  "scope": "global",
+  "optionalDependsOn": [
+    "container"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "ext-promptinject",
+  "name": "提示词注入管理器",
+  "version": "1.0.0",
+  "apiVersion": 2,
+  "type": "plugin",
+  "category": "model",
+  "description": "扫描 promptinjects/ 目录，校验并登记每个 promptinject 包（inject.js 导出 meta + append + rewrite）。注入项按锚点追加或按 target 改写系统提示，支持一包多项、同 target 冲突按优先级裁决。",
+  "author": "QQ Agent 内置",
+  "enabledByDefault": true,
+  "builtin": true,
+  "capabilities": [],
+  "requires": [],
+  "permissions": [],
+  "settings": {
+    "enabled": true,
+    "docsDir": "promptinjects",
+    "maxPackages": 20
+  },
+  "configSchema": {
+    "enabled": {
+      "type": "boolean",
+      "label": "启用提示词注入管理器",
+      "description": "关闭后不再应用任何注入，系统提示回到核心默认内容。",
+      "group": "总开关"
+    },
+    "maxPackages": {
+      "type": "number",
+      "label": "最多加载几个包",
+      "description": "防止一次装入过多注入导致系统提示膨胀（默认 20）。",
+      "group": "限制"
+    },
+    "docsDir": {
+      "type": "internal",
+      "label": "注入包目录",
+      "description": "相对应用根目录（默认 promptinjects）；测试可传绝对路径。",
+      "group": "高级"
+    }
+  },
+  "scope": "global"
+}

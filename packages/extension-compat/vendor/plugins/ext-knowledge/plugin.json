@@ -1,0 +1,95 @@
+{
+  "id": "ext-knowledge",
+  "name": "知识库管理器",
+  "version": "1.1.0",
+  "apiVersion": 2,
+  "type": "plugin",
+  "category": "knowledge",
+  "description": "扫描 knowledge/ 目录，把每个 knowledge.json 包登记为 knowledge 类型子扩展；建立 L0 库摘要 / L1 模块简介 / L2 文档简介 / L3 原文索引。清单里的摘要会先做格式校验：合法直接使用，缺失或非法则自动生成（LLM + 抽取式兜底），结果缓存在 data/knowledge-summaries/，不改写用户清单。",
+  "author": "QQ Agent 内置",
+  "enabledByDefault": true,
+  "builtin": true,
+  "capabilities": [],
+  "requires": [],
+  "permissions": [],
+  "settings": {
+    "enabled": true,
+    "maxKbs": 6,
+    "maxModulesPerKb": 12,
+    "maxInjectChars": 3000,
+    "docsDir": "knowledge",
+    "summaryMode": "auto",
+    "summaryUseLlm": false,
+    "summaryModel": "",
+    "summaryBudgetTokens": 20000,
+    "summaryWriteBack": false
+  },
+  "configSchema": {
+    "enabled": {
+      "type": "boolean",
+      "label": "启用知识库管理器",
+      "description": "关闭后不再扫描与注入知识库，但已登记的文档仍可被 load_doc 读取（直到卸载）。",
+      "group": "总开关"
+    },
+    "summaryMode": {
+      "type": "enum",
+      "values": [
+        "auto",
+        "strict",
+        "off"
+      ],
+      "label": "摘要处理模式",
+      "description": "auto = 缺失自动生成、非法重生成；strict = 缺失或非法都拒绝加载并说明原因；off = 不校验也不生成（保持旧行为）。",
+      "group": "摘要"
+    },
+    "summaryUseLlm": {
+      "type": "boolean",
+      "label": "用模型生成摘要",
+      "description": "关闭后只用抽取式（取正文首段），不产生任何模型费用。",
+      "group": "摘要"
+    },
+    "summaryModel": {
+      "type": "string",
+      "label": "摘要模型（可选）",
+      "description": "留空 = 使用默认模型。建议填一个便宜的小模型。",
+      "group": "摘要"
+    },
+    "summaryBudgetTokens": {
+      "type": "number",
+      "label": "摘要预算（估算 token）",
+      "description": "单次扫描最多消耗的估算 token；超出后剩余条目保持“缺失”，不报错。默认 20000。",
+      "group": "摘要"
+    },
+    "summaryWriteBack": {
+      "type": "boolean",
+      "label": "把生成结果写回清单",
+      "description": "默认关闭：生成结果只写入 data/knowledge-summaries/。开启后会改写 knowledge.json（有备份），一般不建议。",
+      "group": "摘要"
+    },
+    "maxKbs": {
+      "type": "number",
+      "label": "最多注入几本知识库",
+      "description": "L0/L1 注入的库数量上限（默认 6）。",
+      "group": "注入预算"
+    },
+    "maxModulesPerKb": {
+      "type": "number",
+      "label": "每库最多注入几个模块",
+      "description": "L1 简介的模块数量上限（默认 12）。",
+      "group": "注入预算"
+    },
+    "maxInjectChars": {
+      "type": "number",
+      "label": "注入字符上限",
+      "description": "L0+L1 注入的总字符预算（默认 3000），超出按顺序截断。",
+      "group": "注入预算"
+    },
+    "docsDir": {
+      "type": "internal",
+      "label": "知识库目录",
+      "description": "相对应用根目录（默认 knowledge）；测试可传绝对路径。",
+      "group": "高级"
+    }
+  },
+  "scope": "global"
+}

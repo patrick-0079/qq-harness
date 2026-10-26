@@ -1,0 +1,62 @@
+{
+  "id": "ext-mcp",
+  "name": "MCP 管理器",
+  "version": "1.0.0",
+  "apiVersion": 2,
+  "type": "plugin",
+  "category": "utility",
+  "description": "扫描 mcp/*/mcp.json，连接 MCP 服务并把每个工具注册为原生 function（mcp__<server>__<tool>）。支持 stdio 与 streamable HTTP；工具名自动清洗与截断；默认拦截 shell 类工具名。",
+  "author": "QQ Agent 内置",
+  "enabledByDefault": true,
+  "builtin": true,
+  "capabilities": [],
+  "requires": [],
+  "permissions": [],
+  "settings": {
+    "enabled": true,
+    "docsDir": "mcp",
+    "autoStart": true,
+    "callTimeoutMs": 30000,
+    "maxToolsPerServer": 60,
+    "blockShellTools": true
+  },
+  "configSchema": {
+    "enabled": {
+      "type": "boolean",
+      "label": "启用 MCP 管理器",
+      "description": "关闭后不再连接任何 MCP 服务，已注册的工具会被注销。",
+      "group": "总开关"
+    },
+    "autoStart": {
+      "type": "boolean",
+      "label": "启动时自动连接",
+      "description": "关闭后只在第一次需要时连接（延迟到首次工具调用）。",
+      "group": "连接"
+    },
+    "callTimeoutMs": {
+      "type": "number",
+      "label": "单次调用超时（毫秒）",
+      "description": "单个 MCP 工具调用超过该时长即失败（默认 30000）。",
+      "group": "连接"
+    },
+    "maxToolsPerServer": {
+      "type": "number",
+      "label": "每服务最多注册工具数",
+      "description": "防止某个服务暴露几百个工具把工具列表撑爆（默认 60）。",
+      "group": "安全"
+    },
+    "blockShellTools": {
+      "type": "boolean",
+      "label": "拦截 shell 类工具名",
+      "description": "默认开启：名称含 shell/bash/pwsh/exec/spawn/cmd 的工具不予注册，防止模型间接执行命令。",
+      "group": "安全"
+    },
+    "docsDir": {
+      "type": "internal",
+      "label": "MCP 配置目录",
+      "description": "相对应用根目录（默认 mcp）；测试可传绝对路径。",
+      "group": "高级"
+    }
+  },
+  "scope": "global"
+}

@@ -1,0 +1,41 @@
+{
+  "id": "ext-tool",
+  "name": "工具管理器",
+  "version": "1.0.0",
+  "apiVersion": 2,
+  "type": "plugin",
+  "category": "utility",
+  "description": "扫描 tools/<id>/tool.json，在主进程加载工具包并注册工具（只允许 setup/available，不允许 hooks/providers/activate）。工具文档进文档仓库，模型可用 load_doc 查看。",
+  "author": "QQ Agent 内置",
+  "enabledByDefault": true,
+  "builtin": true,
+  "capabilities": [],
+  "requires": [],
+  "permissions": [],
+  "settings": {
+    "enabled": true,
+    "docsDir": "tools",
+    "maxPackages": 50
+  },
+  "configSchema": {
+    "enabled": {
+      "type": "boolean",
+      "label": "启用工具管理器",
+      "description": "关闭后不再加载 tools/ 下的工具包，已注册的工具会被注销。",
+      "group": "总开关"
+    },
+    "maxPackages": {
+      "type": "number",
+      "label": "最多加载几个工具包",
+      "description": "默认 50，防止一次装入过多工具撑爆工具列表。",
+      "group": "限制"
+    },
+    "docsDir": {
+      "type": "internal",
+      "label": "工具包目录",
+      "description": "相对应用根目录（默认 tools）；测试可传绝对路径。",
+      "group": "高级"
+    }
+  },
+  "scope": "global"
+}

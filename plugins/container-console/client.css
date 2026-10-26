@@ -1,0 +1,46 @@
+.container-console {
+  display: grid;
+  gap: 16px;
+}
+.container-console .container-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.container-console label {
+  display: grid;
+  gap: 6px;
+}
+.container-console label:has(input[type='checkbox']) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.container-console .container-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.container-console .container-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.container-console small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.container-console textarea {
+  min-height: 100px;
+}
+.container-console .container-output {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 420px;
+  overflow: auto;
+}

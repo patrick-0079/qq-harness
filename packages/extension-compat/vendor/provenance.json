@@ -1,0 +1,190 @@
+{
+  "importedAt": "2026-10-26T05:59:10.578Z",
+  "origin": "QQ-agent extension-system-v2",
+  "files": [
+    {
+      "file": "src/plugin-loader.js",
+      "sha256": "2755a3bd03a1ccd386b8c0901f3a118a2b3098db8e2e310840a9ad36c8957559"
+    },
+    {
+      "file": "src/tool-registry.js",
+      "sha256": "753cc042cb9edc5ac78e2c0c4d66c367388c8ecdea4d06d4ee95b7a2b8a043d5"
+    },
+    {
+      "file": "src/safe-fetch.js",
+      "sha256": "eacb650299416c9dcd6894b6447404236f76ab50a87075c8ed94b19275cce61b"
+    },
+    {
+      "file": "src/zip-install.js",
+      "sha256": "e7b62c64933f4074a99ec5cf4ed3a777508e64691c874d52b634bde01b797455"
+    },
+    {
+      "file": "src/extensions/api.js",
+      "sha256": "56cae5e9f858f8c011ea84354679c2844e5e5b0a7716eb344ec70c70fdd5898e"
+    },
+    {
+      "file": "src/extensions/doc-registry.js",
+      "sha256": "f1a338dcf2f3d504a35903d52ccb3b160b130d85e778c909a8f0dec3000b44f5"
+    },
+    {
+      "file": "src/extensions/hook-bus.js",
+      "sha256": "61f0bb9eb04f5e9a61f60811681c595cdbd6f50203d00f7c5425582e52bfbd00"
+    },
+    {
+      "file": "src/extensions/importer.js",
+      "sha256": "f88df1a6d1d89b08372bb0c6c3700d4c478eaee6cbe037291566847c97664cd8"
+    },
+    {
+      "file": "src/extensions/index.js",
+      "sha256": "6c5b82430f7bf6146630eac017c755d8d6be88190e7b87f4aaa4aead8fd4af9f"
+    },
+    {
+      "file": "src/extensions/prompt-inject.js",
+      "sha256": "db912373015b8e939a4c902430e08a5592151c5d8b50acbb471171f37170e460"
+    },
+    {
+      "file": "src/extensions/prompt-pipeline.js",
+      "sha256": "6e3c9bcc92d6e8fc6b1f27a5f87102535fa0be040444915b8af3e11a8be4d585"
+    },
+    {
+      "file": "src/extensions/registry.js",
+      "sha256": "8585e71fa3db987a4151285befacac004f5cbec3b1368b409e1a7fb8c92c29bb"
+    },
+    {
+      "file": "src/extensions/tab-registry.js",
+      "sha256": "7955db95df41b82ecebfe597610837e9eb7b9f66c0f59eeb8f34ce3468dc3a5b"
+    },
+    {
+      "file": "src/extensions/template-vars.js",
+      "sha256": "9943477dce9a285cb670aa55715304c9dcb9caa0fddedfb1b11c47120a97cbd2"
+    },
+    {
+      "file": "src/extensions/tool-bridge.js",
+      "sha256": "4cc406c00199eaaa561ad07341c591b0a2b0ab6d1db9c5c1839f28b0f080109b"
+    },
+    {
+      "file": "src/extensions/type-catalog.js",
+      "sha256": "62ff172130e626254fd6bfbd04a8ce8e587011f6361fd4a292efba35442ad2f5"
+    },
+    {
+      "file": "src/extensions/types.js",
+      "sha256": "a6aef2ce306874df275f34ae8fb84c559e06026b4c277d6e4782a797141cc491"
+    },
+    {
+      "file": "src/extensions/ui-registry.js",
+      "sha256": "ac6058b2e5f387676a1e311ad5e06c6f99bb8c8f997b195f3c1a9cdfe6e4e6b2"
+    },
+    {
+      "file": "src/skills/capabilities.js",
+      "sha256": "0012d526920b80ff13e64da478d77eb19704619212971bbaeeb855a22ebc3824"
+    },
+    {
+      "file": "src/skills/config.js",
+      "sha256": "f9912b47c7ed0d648a6d612c1cdd6ecbd09616b361a40d853b9955158d374e18"
+    },
+    {
+      "file": "src/skills/dependencies.js",
+      "sha256": "b06985a50ddd94fd79b5409133d835d0aad4e398460f3ca48962537b2ec65edc"
+    },
+    {
+      "file": "src/skills/errors.js",
+      "sha256": "e1c8ecb5b0bd542f691dccd7bbc430e7dc109e44e5e7bba19242d110e6cd2fa5"
+    },
+    {
+      "file": "src/skills/manager.js",
+      "sha256": "fa4af92b8dd501d60500f218ecc8b3c4fb9a457d48cad8052f44201380defc11"
+    },
+    {
+      "file": "src/skills/manifest.js",
+      "sha256": "9867469521bcbc236091b408e20e142b3fee5d3604299ddf8f86181340d7b575"
+    },
+    {
+      "file": "src/skills/registry.js",
+      "sha256": "7f7f5e59738ca51bcf952e4c99e45ac8f89ebf3e40abdce80cbdbb75e9d4886d"
+    },
+    {
+      "file": "src/mcp/client.js",
+      "sha256": "d5dd403b58ff034de94b805f3b5847c0857b09442d6bd5e961305279a04dbdc3"
+    },
+    {
+      "file": "src/knowledge/ensure.js",
+      "sha256": "2e29f20dd48003b6b825f7a881d3bcb715265f4409d60cb660634383d1be47d1"
+    },
+    {
+      "file": "src/knowledge/stale.js",
+      "sha256": "0a091604bb1ac9e90cd8a480e17c9580353427c1c409e4466ef43245f975de00"
+    },
+    {
+      "file": "src/knowledge/summarize.js",
+      "sha256": "4b0ec54cb72bdf220cbe48e31c9901abcb4f59099f6507e5f9cabab8f52ba509"
+    },
+    {
+      "file": "src/knowledge/tree.js",
+      "sha256": "8b1a378ce3193d517ca575a2df938ed8b2e2a8c8f440482c339dc867f52b9358"
+    },
+    {
+      "file": "src/knowledge/validate.js",
+      "sha256": "3f593b77016b6c264270014c2edd620170fe0cb531e7f1cf97a5997a37b2c649"
+    },
+    {
+      "file": "src/sandbox/index.js",
+      "sha256": "aacffe2fd89c117eda6c9a1653b616031d6dfd024f4056e961a8b90a9cf5be19"
+    },
+    {
+      "file": "plugins/ext-tool/index.js",
+      "sha256": "fed0efe5ea3d2dc6fb20d1f17fa879901f93996af297d64aec3978c5a97d368d"
+    },
+    {
+      "file": "plugins/ext-tool/plugin.json",
+      "sha256": "9d0fbdd60fc1698929c683aa107939f2925e2e05a43fba0318a43541f6e1b246"
+    },
+    {
+      "file": "plugins/ext-mcp/index.js",
+      "sha256": "6ce1ed0144ffb8232e7a42338dd8511e116d798a7f91cd6115245207a5d5ff2e"
+    },
+    {
+      "file": "plugins/ext-mcp/plugin.json",
+      "sha256": "fa4dd5a37cb5920faa64cbd82c506c9833c88c58dcd34e5ae24211ca0f9b508d"
+    },
+    {
+      "file": "plugins/ext-knowledge/index.js",
+      "sha256": "1aac80cc739677da9af7684b3c0fb003a3b2ac3ead2aa63cf2edee68dc601511"
+    },
+    {
+      "file": "plugins/ext-knowledge/plugin.json",
+      "sha256": "b33b21f0065176e819fc10796b32869dbbb181f7be472b809e85ebe599bc202e"
+    },
+    {
+      "file": "plugins/ext-skill/index.js",
+      "sha256": "88d77055920124294600ac6cb5d2b6266917a698192d1a014e0e079e0f29292b"
+    },
+    {
+      "file": "plugins/ext-skill/plugin.json",
+      "sha256": "3513251d06ad8ec61282105bdbedbc3b857ee3e9817444538f5e7110626c89bb"
+    },
+    {
+      "file": "plugins/ext-promptinject/index.js",
+      "sha256": "0acbd5f5be55d7cad02ccfbf19e68226d9706f7444e697800211b90b9b689595"
+    },
+    {
+      "file": "plugins/ext-promptinject/plugin.json",
+      "sha256": "b403a429c65178499725ab1de46d92980dc7ec31e434da2c9570376421c43325"
+    },
+    {
+      "file": "reference/extension-system-test.mjs",
+      "sha256": "5d3b0844fb5f5ae1dd9aa0e4d51ae3beb727d91b4ea87c4d1ab4591dbe3a8b7e"
+    },
+    {
+      "file": "reference/ui-extension-points-test.mjs",
+      "sha256": "44bf2e4677c324e1cc0265e082bd5eb17ee764bb19b3eadee71d6f6bf7545e70"
+    },
+    {
+      "file": "reference/knowledge-tree-test.mjs",
+      "sha256": "f0aefa472098f864206285d498396f9384791e57c55e4aacc313a713edc0d1c5"
+    },
+    {
+      "file": "reference/skill-degraded-test.mjs",
+      "sha256": "f2eb2e68a120680c50d001a9cdf6c94e5fd011c55be2d403ebaf054bb5be62e1"
+    }
+  ]
+}

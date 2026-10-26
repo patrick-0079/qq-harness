@@ -1,0 +1,1741 @@
+{
+  "generatedAt": "2026-10-26T08:13:24.379Z",
+  "scope": "Static declarations only; matching names do not establish parameter or behavior equivalence. Package IDs use directory names; no private config/data is read.",
+  "sourceFiles": [
+    {
+      "file": "src/routes.js",
+      "sha256": "d38ac819d72b52c443720e91ca23c8666d0af581d823c5af36743c31fbbbcbd8"
+    },
+    {
+      "file": "src/tools.js",
+      "sha256": "57173da6e671ed75d35a2e8a90e608f51740b1743ef5a806a3357fa477213d4e"
+    }
+  ],
+  "counts": {
+    "oldCoreTools": 31,
+    "nativeNamedTools": 10,
+    "oldCoreToolsWithoutNativeName": 22,
+    "oldRouteDeclarations": 123,
+    "nativeRouteDeclarations": 55,
+    "legacyPackageDirectories": 66,
+    "legacyPackagesImportingOldInternals": 29
+  },
+  "oldTools": [
+    {
+      "id": "send_message",
+      "file": "src/tools.js",
+      "line": 337,
+      "native": {
+        "id": "send_message",
+        "file": "plugins/basic-tools/src/index.ts",
+        "line": 20
+      }
+    },
+    {
+      "id": "send_to",
+      "file": "src/tools.js",
+      "line": 372,
+      "native": null
+    },
+    {
+      "id": "send_sticker",
+      "file": "src/tools.js",
+      "line": 431,
+      "native": null
+    },
+    {
+      "id": "list_stickers",
+      "file": "src/tools.js",
+      "line": 488,
+      "native": null
+    },
+    {
+      "id": "get_sticker_image",
+      "file": "src/tools.js",
+      "line": 511,
+      "native": null
+    },
+    {
+      "id": "sticker_note",
+      "file": "src/tools.js",
+      "line": 540,
+      "native": null
+    },
+    {
+      "id": "collect_sticker",
+      "file": "src/tools.js",
+      "line": 567,
+      "native": null
+    },
+    {
+      "id": "send_poke",
+      "file": "src/tools.js",
+      "line": 611,
+      "native": null
+    },
+    {
+      "id": "get_recent_messages",
+      "file": "src/tools.js",
+      "line": 652,
+      "native": {
+        "id": "get_recent_messages",
+        "file": "plugins/basic-tools/src/index.ts",
+        "line": 32
+      }
+    },
+    {
+      "id": "read_forward",
+      "file": "src/tools.js",
+      "line": 684,
+      "native": {
+        "id": "read_forward",
+        "file": "plugins/basic-tools/src/index.ts",
+        "line": 53
+      }
+    },
+    {
+      "id": "get_active_members",
+      "file": "src/tools.js",
+      "line": 799,
+      "native": null
+    },
+    {
+      "id": "get_chats",
+      "file": "src/tools.js",
+      "line": 822,
+      "native": null
+    },
+    {
+      "id": "get_message_detail",
+      "file": "src/tools.js",
+      "line": 849,
+      "native": {
+        "id": "get_message_detail",
+        "file": "plugins/basic-tools/src/index.ts",
+        "line": 40
+      }
+    },
+    {
+      "id": "get_message_images",
+      "file": "src/tools.js",
+      "line": 875,
+      "native": null
+    },
+    {
+      "id": "fetch_avatar",
+      "file": "src/tools.js",
+      "line": 943,
+      "native": null
+    },
+    {
+      "id": "memory_append",
+      "file": "src/tools.js",
+      "line": 985,
+      "native": {
+        "id": "memory_append",
+        "file": "plugins/memory/src/index.ts",
+        "line": 27
+      }
+    },
+    {
+      "id": "memory_query",
+      "file": "src/tools.js",
+      "line": 1014,
+      "native": {
+        "id": "memory_query",
+        "file": "plugins/memory/src/index.ts",
+        "line": 20
+      }
+    },
+    {
+      "id": "memory_remove",
+      "file": "src/tools.js",
+      "line": 1036,
+      "native": null
+    },
+    {
+      "id": "report_feedback",
+      "file": "src/tools.js",
+      "line": 1062,
+      "native": null
+    },
+    {
+      "id": "web_search",
+      "file": "src/tools.js",
+      "line": 1084,
+      "native": null
+    },
+    {
+      "id": "web_fetch",
+      "file": "src/tools.js",
+      "line": 1109,
+      "native": null
+    },
+    {
+      "id": "finish",
+      "file": "src/tools.js",
+      "line": 1145,
+      "native": {
+        "id": "finish",
+        "file": "plugins/basic-tools/src/index.ts",
+        "line": 69
+      }
+    },
+    {
+      "id": "set_reminder",
+      "file": "src/tools.js",
+      "line": 1209,
+      "native": null
+    },
+    {
+      "id": "list_reminders",
+      "file": "src/tools.js",
+      "line": 1245,
+      "native": null
+    },
+    {
+      "id": "cancel_reminder",
+      "file": "src/tools.js",
+      "line": 1265,
+      "native": null
+    },
+    {
+      "id": "check_holiday",
+      "file": "src/tools.js",
+      "line": 1286,
+      "native": null
+    },
+    {
+      "id": "load_doc",
+      "file": "src/tools.js",
+      "line": 1324,
+      "native": {
+        "id": "load_doc",
+        "file": "plugins/extension-system/src/index.ts",
+        "line": 168
+      }
+    },
+    {
+      "id": "skill_script_run",
+      "file": "src/tools.js",
+      "line": 1365,
+      "native": {
+        "id": "skill_script_run",
+        "file": "plugins/extension-system/src/index.ts",
+        "line": 188
+      }
+    },
+    {
+      "id": "send_image",
+      "file": "src/tools.js",
+      "line": 1445,
+      "native": null
+    },
+    {
+      "id": "search_images",
+      "file": "src/tools.js",
+      "line": 1568,
+      "native": null
+    },
+    {
+      "id": "read_video",
+      "file": "src/tools.js",
+      "line": 1617,
+      "native": null
+    }
+  ],
+  "nativeTools": [
+    {
+      "id": "send_message",
+      "file": "plugins/basic-tools/src/index.ts",
+      "line": 20
+    },
+    {
+      "id": "get_recent_messages",
+      "file": "plugins/basic-tools/src/index.ts",
+      "line": 32
+    },
+    {
+      "id": "get_message_detail",
+      "file": "plugins/basic-tools/src/index.ts",
+      "line": 40
+    },
+    {
+      "id": "read_forward",
+      "file": "plugins/basic-tools/src/index.ts",
+      "line": 53
+    },
+    {
+      "id": "finish",
+      "file": "plugins/basic-tools/src/index.ts",
+      "line": 69
+    },
+    {
+      "id": "load_doc",
+      "file": "plugins/extension-system/src/index.ts",
+      "line": 168
+    },
+    {
+      "id": "skill_script_run",
+      "file": "plugins/extension-system/src/index.ts",
+      "line": 188
+    },
+    {
+      "id": "memory_query",
+      "file": "plugins/memory/src/index.ts",
+      "line": 20
+    },
+    {
+      "id": "memory_append",
+      "file": "plugins/memory/src/index.ts",
+      "line": 27
+    },
+    {
+      "id": "reminder_add",
+      "file": "plugins/reminders/src/index.ts",
+      "line": 72
+    }
+  ],
+  "oldRoutes": [
+    {
+      "method": "GET",
+      "pattern": "'/api/status'",
+      "file": "src/routes.js",
+      "line": 229
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/open-data-dir'",
+      "file": "src/routes.js",
+      "line": 279
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/reset-data'",
+      "file": "src/routes.js",
+      "line": 290
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/usage/stats'",
+      "file": "src/routes.js",
+      "line": 332
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/usage/breakdown'",
+      "file": "src/routes.js",
+      "line": 345
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/chat-stats'",
+      "file": "src/routes.js",
+      "line": 365
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/model-prices'",
+      "file": "src/routes.js",
+      "line": 400
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/model-prices/refresh'",
+      "file": "src/routes.js",
+      "line": 408
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/snowluma/launch'",
+      "file": "src/routes.js",
+      "line": 421
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/snowluma/logs'",
+      "file": "src/routes.js",
+      "line": 432
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/snowluma/stop'",
+      "file": "src/routes.js",
+      "line": 436
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/snowluma/open-folder'",
+      "file": "src/routes.js",
+      "line": 447
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/snowluma/open-webui'",
+      "file": "src/routes.js",
+      "line": 456
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/qq-portable/launch'",
+      "file": "src/routes.js",
+      "line": 467
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/qq-portable/stop'",
+      "file": "src/routes.js",
+      "line": 478
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/qq-portable/logs'",
+      "file": "src/routes.js",
+      "line": 489
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/qq-portable/status'",
+      "file": "src/routes.js",
+      "line": 493
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/onebot/groups'",
+      "file": "src/routes.js",
+      "line": 499
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/onebot/friends'",
+      "file": "src/routes.js",
+      "line": 512
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/persona-templates'",
+      "file": "src/routes.js",
+      "line": 532
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/persona-templates'",
+      "file": "src/routes.js",
+      "line": 536
+    },
+    {
+      "method": "PATCH",
+      "pattern": "/^\\/api\\/persona-templates\\/([^/]+)$/",
+      "file": "src/routes.js",
+      "line": 548
+    },
+    {
+      "method": "DELETE",
+      "pattern": "/^\\/api\\/persona-templates\\/([^/]+)$/",
+      "file": "src/routes.js",
+      "line": 561
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/providers'",
+      "file": "src/routes.js",
+      "line": 587
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/providers/key'",
+      "file": "src/routes.js",
+      "line": 599
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/api-key'",
+      "file": "src/routes.js",
+      "line": 608
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/search-key'",
+      "file": "src/routes.js",
+      "line": 615
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/onebot-token'",
+      "file": "src/routes.js",
+      "line": 648
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/providers/fetch-models'",
+      "file": "src/routes.js",
+      "line": 659
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/providers/test-one'",
+      "file": "src/routes.js",
+      "line": 687
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/providers/test-chat'",
+      "file": "src/routes.js",
+      "line": 703
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/providers'",
+      "file": "src/routes.js",
+      "line": 726
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/providers/models'",
+      "file": "src/routes.js",
+      "line": 740
+    },
+    {
+      "method": "DELETE",
+      "pattern": "'/api/providers/models'",
+      "file": "src/routes.js",
+      "line": 753
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/providers/set-key'",
+      "file": "src/routes.js",
+      "line": 786
+    },
+    {
+      "method": "DELETE",
+      "pattern": "'/api/providers'",
+      "file": "src/routes.js",
+      "line": 796
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/providers/test-all'",
+      "file": "src/routes.js",
+      "line": 825
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/vision/results'",
+      "file": "src/routes.js",
+      "line": 835
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/vision/scan'",
+      "file": "src/routes.js",
+      "line": 842
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/search-providers'",
+      "file": "src/routes.js",
+      "line": 859
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/search-providers'",
+      "file": "src/routes.js",
+      "line": 869
+    },
+    {
+      "method": "DELETE",
+      "pattern": "'/api/search-providers'",
+      "file": "src/routes.js",
+      "line": 918
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/search-providers/test'",
+      "file": "src/routes.js",
+      "line": 935
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/test/api'",
+      "file": "src/routes.js",
+      "line": 951
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/config'",
+      "file": "src/routes.js",
+      "line": 968
+    },
+    {
+      "method": "*",
+      "pattern": "'/api/prompt-preview'",
+      "file": "src/routes.js",
+      "line": 990
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/community/blocklist'",
+      "file": "src/routes.js",
+      "line": 1032
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/community/blocklist'",
+      "file": "src/routes.js",
+      "line": 1036
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/market/accounts'",
+      "file": "src/routes.js",
+      "line": 1054
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/market/login'",
+      "file": "src/routes.js",
+      "line": 1063
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/market/logout'",
+      "file": "src/routes.js",
+      "line": 1081
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/market/publish'",
+      "file": "src/routes.js",
+      "line": 1093
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/market/verify'",
+      "file": "src/routes.js",
+      "line": 1124
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/market/install'",
+      "file": "src/routes.js",
+      "line": 1143
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/skills'",
+      "file": "src/routes.js",
+      "line": 1171
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/skills/reload'",
+      "file": "src/routes.js",
+      "line": 1209
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/skills/cleanup'",
+      "file": "src/routes.js",
+      "line": 1235
+    },
+    {
+      "method": "DELETE",
+      "pattern": "/^\\/api\\/skills\\/([^/]+)$/",
+      "file": "src/routes.js",
+      "line": 1270
+    },
+    {
+      "method": "POST",
+      "pattern": "/^\\/api\\/skills\\/([^/]+)$/",
+      "file": "src/routes.js",
+      "line": 1320
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/skills/capabilities'",
+      "file": "src/routes.js",
+      "line": 1413
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/tools/availability'",
+      "file": "src/routes.js",
+      "line": 1428
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/config'",
+      "file": "src/routes.js",
+      "line": 1456
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/prompt-builtin'",
+      "file": "src/routes.js",
+      "line": 1494
+    },
+    {
+      "method": "PUT",
+      "pattern": "'/api/prompts'",
+      "file": "src/routes.js",
+      "line": 1521
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/chat-profiles'",
+      "file": "src/routes.js",
+      "line": 1589
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/chat-profiles'",
+      "file": "src/routes.js",
+      "line": 1609
+    },
+    {
+      "method": "GET",
+      "pattern": "/^\\/api\\/chat-profiles\\/(group|private):([A-Za-z0-9_-]+)$/",
+      "file": "src/routes.js",
+      "line": 1620
+    },
+    {
+      "method": "PATCH",
+      "pattern": "/^\\/api\\/chat-profiles\\/(group|private):([A-Za-z0-9_-]+)$/",
+      "file": "src/routes.js",
+      "line": 1637
+    },
+    {
+      "method": "DELETE",
+      "pattern": "/^\\/api\\/chat-profiles\\/(group|private):([A-Za-z0-9_-]+)$/",
+      "file": "src/routes.js",
+      "line": 1651
+    },
+    {
+      "method": "PUT",
+      "pattern": "/^\\/api\\/chat-profiles\\/(group|private):([A-Za-z0-9_-]+)\\/overrides$/",
+      "file": "src/routes.js",
+      "line": 1660
+    },
+    {
+      "method": "DELETE",
+      "pattern": "/^\\/api\\/chat-profiles\\/(group|private):([A-Za-z0-9_-]+)\\/overrides$/",
+      "file": "src/routes.js",
+      "line": 1699
+    },
+    {
+      "method": "DELETE",
+      "pattern": "/^\\/api\\/chat-profiles\\/(group|private):([A-Za-z0-9_-]+)\\/overrides\\/([A-Za-z0-9_-]+)$/",
+      "file": "src/routes.js",
+      "line": 1715
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/tools'",
+      "file": "src/routes.js",
+      "line": 1733
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/version'",
+      "file": "src/routes.js",
+      "line": 1788
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/update-check'",
+      "file": "src/routes.js",
+      "line": 1792
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/models'",
+      "file": "src/routes.js",
+      "line": 1815
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/sessions'",
+      "file": "src/routes.js",
+      "line": 1826
+    },
+    {
+      "method": "GET",
+      "pattern": "/^\\/api\\/sessions\\/([\\w-]+)$/",
+      "file": "src/routes.js",
+      "line": 1845
+    },
+    {
+      "method": "GET",
+      "pattern": "/^\\/api\\/sessions\\/([\\w-]+)\\/export$/",
+      "file": "src/routes.js",
+      "line": 1858
+    },
+    {
+      "method": "GET",
+      "pattern": "/^\\/api\\/sessions\\/([\\w-]+)\\/analysis$/",
+      "file": "src/routes.js",
+      "line": 1876
+    },
+    {
+      "method": "DELETE",
+      "pattern": "/^\\/api\\/sessions\\/([\\w-]+)$/",
+      "file": "src/routes.js",
+      "line": 1885
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/sessions/clear-finished'",
+      "file": "src/routes.js",
+      "line": 1895
+    },
+    {
+      "method": "POST",
+      "pattern": "/^\\/api\\/sessions\\/([\\w-]+)\\/retry$/",
+      "file": "src/routes.js",
+      "line": 1905
+    },
+    {
+      "method": "POST",
+      "pattern": "/^\\/api\\/sessions\\/([\\w-]+)\\/abort$/",
+      "file": "src/routes.js",
+      "line": 1916
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/chats'",
+      "file": "src/routes.js",
+      "line": 1924
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/memory-files'",
+      "file": "src/routes.js",
+      "line": 1946
+    },
+    {
+      "method": "GET",
+      "pattern": "/^\\/api\\/memory-files\\/(group|private)_(\\d+)$/",
+      "file": "src/routes.js",
+      "line": 1972
+    },
+    {
+      "method": "PUT",
+      "pattern": "/^\\/api\\/memory-files\\/(group|private)_(\\d+)\\/members\\/(\\d+)$/",
+      "file": "src/routes.js",
+      "line": 1979
+    },
+    {
+      "method": "DELETE",
+      "pattern": "/^\\/api\\/memory-files\\/(group|private)_(\\d+)\\/members\\/(\\d+)$/",
+      "file": "src/routes.js",
+      "line": 1998
+    },
+    {
+      "method": "DELETE",
+      "pattern": "/^\\/api\\/memory-files\\/(group|private)_(\\d+)$/",
+      "file": "src/routes.js",
+      "line": 2008
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/memory-files/consolidate'",
+      "file": "src/routes.js",
+      "line": 2017
+    },
+    {
+      "method": "GET",
+      "pattern": "/^\\/api\\/chats\\/(group|private)_(\\d+)\\/messages$/",
+      "file": "src/routes.js",
+      "line": 2046
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/media-data'",
+      "file": "src/routes.js",
+      "line": 2058
+    },
+    {
+      "method": "GET",
+      "pattern": "/^\\/api\\/groups\\/(\\d+)\\/members$/",
+      "file": "src/routes.js",
+      "line": 2100
+    },
+    {
+      "method": "POST",
+      "pattern": "/^\\/api\\/chats\\/(group|private)_(\\d+)\\/wake$/",
+      "file": "src/routes.js",
+      "line": 2114
+    },
+    {
+      "method": "POST",
+      "pattern": "/^\\/api\\/chats\\/(group|private)_(\\d+)\\/test-send$/",
+      "file": "src/routes.js",
+      "line": 2118
+    },
+    {
+      "method": "POST",
+      "pattern": "/^\\/api\\/chats\\/(group|private)_(\\d+)\\/mark-read$/",
+      "file": "src/routes.js",
+      "line": 2145
+    },
+    {
+      "method": "POST",
+      "pattern": "/^\\/api\\/chats\\/(group|private)_(\\d+)\\/clear$/",
+      "file": "src/routes.js",
+      "line": 2150
+    },
+    {
+      "method": "POST",
+      "pattern": "/^\\/api\\/chats\\/(group|private)_(\\d+)\\/mute$/",
+      "file": "src/routes.js",
+      "line": 2160
+    },
+    {
+      "method": "POST",
+      "pattern": "/^\\/api\\/chats\\/(group|private)_(\\d+)\\/delete-messages$/",
+      "file": "src/routes.js",
+      "line": 2170
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/pause'",
+      "file": "src/routes.js",
+      "line": 2182
+    },
+    {
+      "method": "DELETE",
+      "pattern": "'/api/pause'",
+      "file": "src/routes.js",
+      "line": 2192
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/logs'",
+      "file": "src/routes.js",
+      "line": 2208
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/logs/level'",
+      "file": "src/routes.js",
+      "line": 2216
+    },
+    {
+      "method": "*",
+      "pattern": "/^\\/api\\/captcha-forward\\/?$/",
+      "file": "src/routes.js",
+      "line": 2232
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/extensions'",
+      "file": "src/routes.js",
+      "line": 2299
+    },
+    {
+      "method": "DELETE",
+      "pattern": "/^\\/api\\/extensions\\/([a-z][a-z0-9-]*)\\/([A-Za-z0-9._-]+)$/",
+      "file": "src/routes.js",
+      "line": 2328
+    },
+    {
+      "method": "PATCH",
+      "pattern": "/^\\/api\\/extensions\\/([A-Za-z0-9._-]+)\\/settings$/",
+      "file": "src/routes.js",
+      "line": 2361
+    },
+    {
+      "method": "DELETE",
+      "pattern": "/^\\/api\\/extensions\\/([A-Za-z0-9._-]+)\\/settings$/",
+      "file": "src/routes.js",
+      "line": 2407
+    },
+    {
+      "method": "POST",
+      "pattern": "'/api/extensions/import'",
+      "file": "src/routes.js",
+      "line": 2434
+    },
+    {
+      "method": "PATCH",
+      "pattern": "/^\\/api\\/extensions\\/([A-Za-z0-9._-]+)\\/meta$/",
+      "file": "src/routes.js",
+      "line": 2480
+    },
+    {
+      "method": "GET",
+      "pattern": "/^\\/api\\/extensions\\/([A-Za-z0-9._-]+)\\/detail$/",
+      "file": "src/routes.js",
+      "line": 2503
+    },
+    {
+      "method": "GET",
+      "pattern": "/^\\/api\\/extensions\\/([A-Za-z0-9._-]+)\\/page$/",
+      "file": "src/routes.js",
+      "line": 2599
+    },
+    {
+      "method": "POST",
+      "pattern": "/^\\/api\\/extensions\\/knowledge\\/([A-Za-z0-9._-]+)\\/summarize$/",
+      "file": "src/routes.js",
+      "line": 2623
+    },
+    {
+      "method": "GET",
+      "pattern": "/^\\/api\\/extensions\\/knowledge\\/([A-Za-z0-9._-]+)\\/file$/",
+      "file": "src/routes.js",
+      "line": 2663
+    },
+    {
+      "method": "PUT",
+      "pattern": "/^\\/api\\/extensions\\/knowledge\\/([A-Za-z0-9._-]+)\\/file$/",
+      "file": "src/routes.js",
+      "line": 2678
+    },
+    {
+      "method": "GET",
+      "pattern": "/^\\/api\\/extensions\\/knowledge\\/([A-Za-z0-9._-]+)\\/changes$/",
+      "file": "src/routes.js",
+      "line": 2698
+    },
+    {
+      "method": "GET",
+      "pattern": "/^\\/api\\/extensions\\/([A-Za-z0-9._-]+)\\/vars$/",
+      "file": "src/routes.js",
+      "line": 2711
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/container/info'",
+      "file": "src/routes.js",
+      "line": 2725
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/extension-types'",
+      "file": "src/routes.js",
+      "line": 2760
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/ui/extension-points'",
+      "file": "src/routes.js",
+      "line": 2788
+    },
+    {
+      "method": "GET",
+      "pattern": "'/api/ui/contributions'",
+      "file": "src/routes.js",
+      "line": 2805
+    },
+    {
+      "method": "POST",
+      "pattern": "/^\\/api\\/extensions\\/([^/]+)\\/ui-actions\\/([^/]+)$/",
+      "file": "src/routes.js",
+      "line": 2830
+    }
+  ],
+  "nativeRoutes": [
+    {
+      "method": "GET",
+      "path": "/api/status",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 36
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugins",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 52
+    },
+    {
+      "method": "POST",
+      "path": "/api/plugins/:id/enabled",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 55
+    },
+    {
+      "method": "GET",
+      "path": "/api/config",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 74
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/config",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 75
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/profiles/:chatKey",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 85
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/profiles/:chatKey",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 90
+    },
+    {
+      "method": "GET",
+      "path": "/api/chats",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 94
+    },
+    {
+      "method": "GET",
+      "path": "/api/chats/:chatKey/messages",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 95
+    },
+    {
+      "method": "GET",
+      "path": "/api/chats/:chatKey/settings",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 98
+    },
+    {
+      "method": "GET",
+      "path": "/api/archives",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 101
+    },
+    {
+      "method": "GET",
+      "path": "/api/runs",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 102
+    },
+    {
+      "method": "POST",
+      "path": "/api/runs",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 103
+    },
+    {
+      "method": "POST",
+      "path": "/api/runs/:id/cancel",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 115
+    },
+    {
+      "method": "POST",
+      "path": "/api/chats/:chatKey/retry",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 116
+    },
+    {
+      "method": "GET",
+      "path": "/api/chats/:chatKey/memory",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 119
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/chats/:chatKey/memory",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 122
+    },
+    {
+      "method": "POST",
+      "path": "/api/demo/messages",
+      "file": "plugins/console-api/src/index.ts",
+      "line": 128
+    },
+    {
+      "method": "GET",
+      "path": "/api/extensions",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 63
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/extensions/:id/settings",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 74
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/extensions/:id/settings",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 91
+    },
+    {
+      "method": "GET",
+      "path": "/api/extension-types",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 95
+    },
+    {
+      "method": "GET",
+      "path": "/api/skills",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 100
+    },
+    {
+      "method": "POST",
+      "path": "/api/skills/reload",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 103
+    },
+    {
+      "method": "GET",
+      "path": "/api/skills/capabilities",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 107
+    },
+    {
+      "method": "GET",
+      "path": "/api/ui/extension-points",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 110
+    },
+    {
+      "method": "GET",
+      "path": "/api/ui/contributions",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 121
+    },
+    {
+      "method": "POST",
+      "path": "/api/extensions/:owner/ui-actions/:action",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 138
+    },
+    {
+      "method": "POST",
+      "path": "/api/extensions/import",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 149
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/extensions/:type/:id",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 192
+    },
+    {
+      "method": "GET",
+      "path": "/api/extensions/docs",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 203
+    },
+    {
+      "method": "GET",
+      "path": "/api/extensions/:id/vars",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 210
+    },
+    {
+      "method": "GET",
+      "path": "/api/extensions/:id/detail",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 222
+    },
+    {
+      "method": "GET",
+      "path": "/api/extensions/:id/page",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 236
+    },
+    {
+      "method": "GET",
+      "path": "/api/extensions/doc",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 252
+    },
+    {
+      "method": "GET",
+      "path": "/api/extensions/knowledge/:id/tree",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 255
+    },
+    {
+      "method": "GET",
+      "path": "/api/extensions/knowledge/:id/changes",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 258
+    },
+    {
+      "method": "GET",
+      "path": "/api/extensions/knowledge/:id/file",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 261
+    },
+    {
+      "method": "PUT",
+      "path": "/api/extensions/knowledge/:id/file",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 267
+    },
+    {
+      "method": "POST",
+      "path": "/api/extensions/knowledge/:id/summaries",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 277
+    },
+    {
+      "method": "POST",
+      "path": "/api/extensions/knowledge/:id/summarize",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 284
+    },
+    {
+      "method": "GET",
+      "path": "/api/extensions/summary-status",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 305
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2-assets/:owner/*",
+      "file": "plugins/extension-system/src/routes.ts",
+      "line": 308
+    },
+    {
+      "method": "GET",
+      "path": "/api/plugin-assets/:id/:hash/*",
+      "file": "plugins/external-plugins/src/index.ts",
+      "line": 38
+    },
+    {
+      "method": "GET",
+      "path": "/api/snowluma/status",
+      "file": "plugins/snowluma-runtime/src/index.ts",
+      "line": 32
+    },
+    {
+      "method": "GET",
+      "path": "/api/snowluma/settings",
+      "file": "plugins/snowluma-runtime/src/index.ts",
+      "line": 33
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/snowluma/settings",
+      "file": "plugins/snowluma-runtime/src/index.ts",
+      "line": 34
+    },
+    {
+      "method": "GET",
+      "path": "/api/snowluma/logs",
+      "file": "plugins/snowluma-runtime/src/index.ts",
+      "line": 35
+    },
+    {
+      "method": "POST",
+      "path": "/api/snowluma/launch",
+      "file": "plugins/snowluma-runtime/src/index.ts",
+      "line": 36
+    },
+    {
+      "method": "POST",
+      "path": "/api/snowluma/stop",
+      "file": "plugins/snowluma-runtime/src/index.ts",
+      "line": 37
+    },
+    {
+      "method": "POST",
+      "path": "/api/session",
+      "file": "plugins/transport-http/src/index.ts",
+      "line": 50
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "file": "plugins/transport-http/src/index.ts",
+      "line": 59
+    },
+    {
+      "method": "GET",
+      "path": "/api/events",
+      "file": "plugins/transport-http/src/index.ts",
+      "line": 60
+    },
+    {
+      "method": "ALL",
+      "path": "/api/*",
+      "file": "plugins/transport-http/src/index.ts",
+      "line": 88
+    },
+    {
+      "method": "GET",
+      "path": "*",
+      "file": "apps/server/src/main.ts",
+      "line": 48
+    }
+  ],
+  "legacyPackages": [
+    {
+      "directory": "plugins",
+      "id": "chat-record-view",
+      "coupledImports": []
+    },
+    {
+      "directory": "plugins",
+      "id": "container",
+      "coupledImports": [
+        "../../src/container-binding.js",
+        "../../src/container-jobs.js",
+        "../../src/container-runtime.js",
+        "../../src/container-skill-backend.js",
+        "../../src/container-terminals.js",
+        "../../src/sandbox/index.js"
+      ]
+    },
+    {
+      "directory": "plugins",
+      "id": "continuous-life",
+      "coupledImports": []
+    },
+    {
+      "directory": "plugins",
+      "id": "demo-iframe-tab",
+      "coupledImports": []
+    },
+    {
+      "directory": "plugins",
+      "id": "demo-plugin",
+      "coupledImports": []
+    },
+    {
+      "directory": "plugins",
+      "id": "ext-knowledge",
+      "coupledImports": [
+        "../../src/config.js",
+        "../../src/knowledge/ensure.js",
+        "../../src/knowledge/summarize.js",
+        "../../src/knowledge/tree.js",
+        "../../src/llm.js"
+      ]
+    },
+    {
+      "directory": "plugins",
+      "id": "ext-mcp",
+      "coupledImports": ["../../src/mcp/client.js"]
+    },
+    {
+      "directory": "plugins",
+      "id": "ext-promptinject",
+      "coupledImports": ["../../src/extensions/prompt-inject.js", "../../src/extensions/prompt-pipeline.js"]
+    },
+    {
+      "directory": "plugins",
+      "id": "ext-skill",
+      "coupledImports": [
+        "../../src/extensions/template-vars.js",
+        "../../src/extensions/types.js",
+        "../../src/sandbox/index.js"
+      ]
+    },
+    {
+      "directory": "plugins",
+      "id": "ext-tool",
+      "coupledImports": [
+        "../../src/extensions/template-vars.js",
+        "../../src/extensions/types.js",
+        "../../src/safe-fetch.js"
+      ]
+    },
+    {
+      "directory": "plugins",
+      "id": "image-compat",
+      "coupledImports": ["../src/gif-to-video.js"]
+    },
+    {
+      "directory": "plugins",
+      "id": "ops-ctrl",
+      "coupledImports": [
+        "../../src/config.js",
+        "../../src/logger.js",
+        "../../src/onebot.js",
+        "../../src/orchestrator.js",
+        "../../src/prompt.js"
+      ]
+    },
+    {
+      "directory": "plugins",
+      "id": "owner-identity",
+      "coupledImports": []
+    },
+    {
+      "directory": "plugins",
+      "id": "quota-guard",
+      "coupledImports": ["../../src/config.js", "../../src/skills/config.js", "../../src/skills/manager.js"]
+    },
+    {
+      "directory": "plugins",
+      "id": "search-guard",
+      "coupledImports": []
+    },
+    {
+      "directory": "plugins",
+      "id": "video-frames",
+      "coupledImports": []
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "anti-recon",
+      "coupledImports": []
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "at-mention",
+      "coupledImports": []
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "auto-finish",
+      "coupledImports": []
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "ccb-command",
+      "coupledImports": ["../../src/logger.js", "../../src/orchestrator.js"]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "command-digest",
+      "coupledImports": []
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "container-session",
+      "coupledImports": ["../../src/container-binding.js"]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "context-chime",
+      "coupledImports": ["../../src/config.js", "../../src/llm.js"]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "demo-chat-plugin",
+      "coupledImports": []
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "detailed-thinking",
+      "coupledImports": []
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "face-decode",
+      "coupledImports": []
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "group-manner",
+      "coupledImports": ["../../src/config.js", "../../src/logger.js"]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "persona-picker",
+      "coupledImports": []
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "punch-card",
+      "coupledImports": [
+        "../../src/chat-profiles.js",
+        "../../src/config.js",
+        "../../src/logger.js",
+        "../../src/onebot.js",
+        "../../src/orchestrator.js"
+      ]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "quote-target",
+      "coupledImports": ["../../src/config.js"]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "repeat-echo",
+      "coupledImports": ["../../src/config.js", "../../src/logger.js", "../../src/orchestrator.js"]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "reply-meme",
+      "coupledImports": []
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "reply-pacing",
+      "coupledImports": ["../../src/config.js", "../../src/logger.js"]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "reply-safety",
+      "coupledImports": []
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "revenge-ledger",
+      "coupledImports": ["../../src/config.js"]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "rollpig",
+      "coupledImports": ["../../src/logger.js", "../../src/orchestrator.js"]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "sleep-schedule",
+      "coupledImports": ["../../src/config.js"]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "stamina",
+      "coupledImports": ["../../src/config.js", "../../src/onebot.js", "../../src/sender.js"]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "steam-query",
+      "coupledImports": ["../../src/config.js"]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "sticker-cap",
+      "coupledImports": [
+        "../../src/config.js",
+        "../../src/logger.js",
+        "../../src/sticker-manager.js",
+        "../../src/stickers.js"
+      ]
+    },
+    {
+      "directory": "chat-plugins",
+      "id": "sticker-memory",
+      "coupledImports": ["../../src/config.js", "../../src/safe-fetch.js"]
+    },
+    {
+      "directory": "tools",
+      "id": "222",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "ark-db",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "bili-card",
+      "coupledImports": ["../../src/onebot.js", "../../src/orchestrator.js"]
+    },
+    {
+      "directory": "tools",
+      "id": "bilibili-peek",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "context-chime",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "daily-fortune",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "demo-tool",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "image-studio",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "my-weather",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "pig-hub",
+      "coupledImports": ["../../src/config.js", "../../src/skills/config.js"]
+    },
+    {
+      "directory": "tools",
+      "id": "recall",
+      "coupledImports": ["../../src/config.js", "../../src/skills/manager.js"]
+    },
+    {
+      "directory": "tools",
+      "id": "reply-meme",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "revenge-ledger",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "self-avatar",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "skill-summary",
+      "coupledImports": ["../../src/config.js", "../../src/plugin-loader.js", "../../src/skills/manager.js"]
+    },
+    {
+      "directory": "tools",
+      "id": "smart-image",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "stamina",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "steam-deals",
+      "coupledImports": ["../../src/config.js", "../../src/skills/config.js"]
+    },
+    {
+      "directory": "tools",
+      "id": "steam-query",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "sticker-memory",
+      "coupledImports": []
+    },
+    {
+      "directory": "tools",
+      "id": "trendy-memes",
+      "coupledImports": []
+    },
+    {
+      "directory": "mcp",
+      "id": "demo-mcp",
+      "coupledImports": []
+    },
+    {
+      "directory": "skills",
+      "id": "demo-skill",
+      "coupledImports": []
+    },
+    {
+      "directory": "knowledge",
+      "id": "demo-kb",
+      "coupledImports": []
+    },
+    {
+      "directory": "promptinjects",
+      "id": "demo-inject",
+      "coupledImports": []
+    }
+  ]
+}
