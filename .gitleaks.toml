@@ -1,0 +1,22 @@
+title = "QQ Harness publication checks"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "provider-credential-literal"
+description = "Provider credentials must come from local configuration"
+regex = '''(?i)(?:opencodeGoKey|deepseekKey|glmKey|mimoCookie|bochaKey|metasoKey)["']?\s*[:=]\s*["']([a-z0-9_.~+/=-]{16,})["']'''
+secretGroup = 1
+entropy = 3.0
+
+[[rules.allowlists]]
+condition = "AND"
+paths = ['''^tests/operations-commands\.test\.ts$''']
+regexTarget = "secret"
+regexes = ['''^fixture-(?:go|deepseek)$''']
+
+[[rules]]
+id = "deployment-chat-identity"
+description = "Use small synthetic chat IDs in public source and evidence"
+regex = '''\b(?:private|group):[1-9][0-9]{6,11}\b'''

@@ -44,6 +44,16 @@ export const containerSession = definePlugin({
     };
     ctx.provide(containerSessionService, {
       available,
+      command: (chatKey, argv, signal, stdin, containerId) => {
+        assert(chatKey);
+        return runtime.command(
+          chatKey,
+          argv,
+          AbortSignal.any([ctx.signal, signal ?? ctx.signal]),
+          stdin,
+          containerId,
+        );
+      },
       execute: (chatKey, input, signal, onOutput) => {
         assert(chatKey);
         return runtime.execute(
@@ -72,34 +82,72 @@ export const containerSession = definePlugin({
           return execute(tool, args as T);
         },
       });
-    const target = (value: string) => path.posix.resolve(CONTAINER_WORKSPACE, filePath.parse(value));
-    const command = (tool: ToolContext, argv: string[], stdin?: string) =>
-      runtime.command(tool.chatKey, argv, AbortSignal.any([ctx.signal, tool.run.signal]), stdin);
-    register('container_status', '查看当前会话绑定容器的状态。', properties({}), z.object({}), (tool) =>
-      runtime.inspect(tool.chatKey, tool.run.signal),
+    const selector = {
+      containerId: { type: 'string', description: '可选，当前会话已绑定的容器ID；省略使用默认容器' },
+    };
+    const selection = {
+      containerId: z
+        .string()
+        .regex(/^[a-zA-Z0-9_.-]{1,160}$/)
+        .optional(),
+    };
+    const target = (tool: ToolContext, value: string, id?: string) => {
+      const parsed = filePath.parse(value);
+      const relative =
+        parsed === CONTAINER_WORKSPACE
+          ? '.'
+          : parsed.startsWith(CONTAINER_WORKSPACE + '/')
+            ? parsed.slice(CONTAINER_WORKSPACE.length + 1)
+            : parsed;
+      return path.posix.resolve(runtime.workspace(tool.chatKey, id), relative);
+    };
+    const command = (tool: ToolContext, argv: string[], stdin?: string, id?: string) =>
+      runtime.command(tool.chatKey, argv, AbortSignal.any([ctx.signal, tool.run.signal]), stdin, id);
+    register(
+      'container_list',
+      '列出当前会话已绑定的容器及默认项，不包含其他会话的绑定。',
+      properties({}),
+      z.object({}),
+      async (tool) =>
+        runtime
+          .bindings()
+          .filter((row) => row.chatKey === tool.chatKey)
+          .map(({ cleanupPending: _internal, ...row }) => row),
     );
-    register('container_start', '启动当前会话已经绑定的容器。', properties({}), z.object({}), (tool) =>
-      runtime.start(tool.chatKey, tool.run.signal),
+    register(
+      'container_status',
+      '查看当前会话绑定容器的状态。',
+      properties(selector),
+      z.object(selection),
+      (tool, args) => runtime.inspect(tool.chatKey, tool.run.signal, args.containerId),
+    );
+    register(
+      'container_start',
+      '启动当前会话已经绑定且管理员允许启用的容器。',
+      properties(selector),
+      z.object(selection),
+      (tool, args) => runtime.start(tool.chatKey, tool.run.signal, args.containerId),
     );
     register(
       'container_stop',
-      '停止当前会话容器及其中的任务，保留容器文件。',
-      properties({}),
-      z.object({}),
-      async (tool) => {
-        await runtime.stop(tool.chatKey);
-        return { stopped: true };
+      '取消当前会话在所选容器中的任务，省略ID取消本会话全部容器任务；保留共享容器和文件。',
+      properties(selector),
+      z.object(selection),
+      async (tool, args) => {
+        await runtime.stop(tool.chatKey, tool.run.signal, args.containerId);
+        return { tasksCancelled: true };
       },
     );
     register(
       'container_bash',
-      '在当前会话容器内执行 shell 命令。超时或取消会停止该容器。可选择后台运行并用任务工具查询。',
+      '以本会话独立用户在所选容器执行命令。超时或取消仅清理本任务进程树。可后台运行并用任务工具查询。',
       properties(
         {
           command: { type: 'string' },
           workdir: { type: 'string' },
           timeoutMs: { type: 'integer' },
           run_in_background: { type: 'boolean' },
+          ...selector,
         },
         ['command'],
       ),
@@ -111,44 +159,82 @@ export const containerSession = definePlugin({
     );
     register(
       'container_read',
-      '读取容器内 UTF-8 文本文件；相对路径以 /tmp/qq-harness-workspace 为起点，输出有上限。',
-      properties({ path: { type: 'string' } }, ['path']),
-      z.object({ path: filePath }),
-      async (tool, args) => output(await command(tool, ['cat', '--', target(args.path)])),
-    );
-    register(
-      'container_write',
-      '将 UTF-8 文本写入容器文件，可创建父目录。仅操作当前会话容器。',
-      properties({ path: { type: 'string' }, content: { type: 'string' } }, ['path', 'content']),
-      z.object({ path: filePath, content: z.string().max(100000) }),
+      '以当前会话用户读取 UTF-8 文件；相对路径以该用户的私有 workspace 为起点，输出有上限。',
+      properties({ path: { type: 'string' }, ...selector }, ['path']),
+      z.object({ path: filePath, ...selection }),
       async (tool, args) =>
         output(
           await command(
             tool,
-            ['sh', '-c', 'mkdir -p -- "$(dirname -- "$1")" && cat > "$1"', 'sh', target(args.path)],
+            ['cat', '--', target(tool, args.path, args.containerId)],
+            undefined,
+            args.containerId,
+          ),
+        ),
+    );
+    register(
+      'container_write',
+      '将 UTF-8 文本写入容器文件，可创建父目录。仅操作当前会话容器。',
+      properties({ path: { type: 'string' }, content: { type: 'string' }, ...selector }, ['path', 'content']),
+      z.object({ path: filePath, content: z.string().max(100000), ...selection }),
+      async (tool, args) =>
+        output(
+          await command(
+            tool,
+            [
+              'sh',
+              '-c',
+              'mkdir -p -- "$(dirname -- "$1")" && cat > "$1"',
+              'sh',
+              target(tool, args.path, args.containerId),
+            ],
             args.content,
+            args.containerId,
           ),
         ),
     );
     register(
       'container_glob',
       '查找容器目录下匹配文件名模式的文件，pattern 是 find -name 模式。',
-      properties({ path: { type: 'string' }, pattern: { type: 'string' } }),
+      properties({ path: { type: 'string' }, pattern: { type: 'string' }, ...selector }),
       z.object({
-        path: filePath.default('/tmp/qq-harness-workspace'),
+        path: filePath.default('.'),
         pattern: z.string().min(1).max(500).default('*'),
+        ...selection,
       }),
       async (tool, args) =>
-        output(await command(tool, ['find', target(args.path), '-type', 'f', '-name', args.pattern])),
+        output(
+          await command(
+            tool,
+            ['find', target(tool, args.path, args.containerId), '-type', 'f', '-name', args.pattern],
+            undefined,
+            args.containerId,
+          ),
+        ),
     );
     register(
       'container_grep',
       '在容器目录内搜索文本，返回文件与行号；输出有上限。',
-      properties({ path: { type: 'string' }, pattern: { type: 'string' } }, ['pattern']),
-      z.object({ path: filePath.default('/tmp/qq-harness-workspace'), pattern: z.string().min(1).max(1000) }),
+      properties({ path: { type: 'string' }, pattern: { type: 'string' }, ...selector }, ['pattern']),
+      z.object({ path: filePath.default('.'), pattern: z.string().min(1).max(1000), ...selection }),
       async (tool, args) =>
         output(
-          await command(tool, ['grep', '-R', '-n', '-m', '100', '-e', args.pattern, '--', target(args.path)]),
+          await command(
+            tool,
+            [
+              'grep',
+              '-R',
+              '-n',
+              '-m',
+              '100',
+              '-e',
+              args.pattern,
+              '--',
+              target(tool, args.path, args.containerId),
+            ],
+            undefined,
+            args.containerId,
+          ),
         ),
     );
   },

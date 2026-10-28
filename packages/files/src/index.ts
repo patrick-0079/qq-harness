@@ -1,4 +1,6 @@
 import fs from 'node:fs';
+export { lockDirectory, processOwnsLock } from './process-lock.js';
+export { publicFetch, publicAddress, privateAddress, configuredFetch, type PublicFetchOptions } from './network.js';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 
@@ -54,3 +56,6 @@ export function deepMerge(base: unknown, patch: unknown): unknown {
   }
   return output;
 }
+export * from './secrets.js';
+export * from './browse-lock.js';
+export { modelImage, firstGifFrame } from './images.js';

@@ -1,0 +1,95 @@
+{
+  "at": "2026-10-27T17:35:56.768Z",
+  "scope": [
+    "private:10002",
+    "group:10001"
+  ],
+  "productionChanged": false,
+  "checks": [
+    {
+      "name": "shared-budget-and-hard-stop",
+      "passed": true,
+      "chatKey": "private:10002",
+      "used": 5,
+      "blocked": true,
+      "poke": true
+    },
+    {
+      "name": "plain-second-message",
+      "passed": true,
+      "chatKey": "private:10002",
+      "segmentTypes": [
+        "text"
+      ],
+      "markerHidden": true
+    },
+    {
+      "name": "quote-third-message",
+      "passed": true,
+      "chatKey": "private:10002",
+      "segmentTypes": [
+        "reply",
+        "text"
+      ],
+      "markerHidden": true,
+      "protocolNote": "协议在私聊引用段返回原消息的 message_seq，已通过只读 get_msg 与原消息交叉核验"
+    },
+    {
+      "name": "plain-fourth-message",
+      "passed": true,
+      "chatKey": "private:10002",
+      "segmentTypes": [
+        "text"
+      ],
+      "markerHidden": true
+    },
+    {
+      "name": "only-five-outbound-effects",
+      "passed": true,
+      "chatKey": "private:10002"
+    },
+    {
+      "name": "shared-budget-and-hard-stop",
+      "passed": true,
+      "chatKey": "group:10001",
+      "used": 5,
+      "blocked": true,
+      "poke": true
+    },
+    {
+      "name": "plain-second-message",
+      "passed": true,
+      "chatKey": "group:10001",
+      "segmentTypes": [
+        "text"
+      ],
+      "markerHidden": true
+    },
+    {
+      "name": "quote-third-message",
+      "passed": true,
+      "chatKey": "group:10001",
+      "segmentTypes": [
+        "reply",
+        "text"
+      ],
+      "markerHidden": true
+    },
+    {
+      "name": "combined-quote-and-at",
+      "passed": true,
+      "chatKey": "group:10001",
+      "segmentTypes": [
+        "reply",
+        "at",
+        "text"
+      ],
+      "markerHidden": true
+    },
+    {
+      "name": "only-five-outbound-effects",
+      "passed": true,
+      "chatKey": "group:10001"
+    }
+  ]
+}

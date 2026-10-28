@@ -15,6 +15,8 @@ export interface SlotProps {
   context: Record<string, unknown>;
 }
 export interface PageContribution {
+  hidden?: boolean;
+  parentId?: string;
   id: string;
   path: string;
   title: string;
@@ -46,6 +48,61 @@ export interface ClientPlugin {
   setup(context: ClientContext): void | Promise<void>;
 }
 export const defineClientPlugin = (value: ClientPlugin) => value;
+export { DialogHost, Drawer, dialogs } from './dialogs.js';
+export { Icon } from './icon.js';
+export { DesignProvider, Action, Toggle, Selection, Markdown } from './ui.js';
+import { dialogs } from './dialogs.js';
+let dirtyForms = 0;
+let replayingNavigation = false;
+let checkingNavigation = false;
+export const confirmDiscardChanges = async () =>
+  dirtyForms === 0 ||
+  dialogs.confirm({
+    title: '离开前放弃修改？',
+    description: '当前表单有尚未保存的内容。离开后，这些修改将丢失。',
+    confirmLabel: '放弃修改并离开',
+    cancelLabel: '继续编辑',
+    danger: true,
+  });
+export function useUnsavedChanges(dirty: boolean) {
+  React.useEffect(() => {
+    if (!dirty) return;
+    dirtyForms++;
+    return () => {
+      dirtyForms--;
+    };
+  }, [dirty]);
+}
+// Capture once, then replay the original navigation only after the React confirmation.
+if (typeof document !== 'undefined')
+  document.addEventListener(
+    'click',
+    (event) => {
+      if (!dirtyForms || replayingNavigation || event.defaultPrevented) return;
+      const anchor = (event.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
+      if (!anchor || anchor.download || anchor.target === '_blank' || anchor.href === window.location.href)
+        return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (checkingNavigation) return;
+      checkingNavigation = true;
+      void confirmDiscardChanges()
+        .then((discard) => {
+          if (discard && anchor.isConnected) {
+            replayingNavigation = true;
+            try {
+              anchor.click();
+            } finally {
+              replayingNavigation = false;
+            }
+          }
+        })
+        .finally(() => {
+          checkingNavigation = false;
+        });
+    },
+    true,
+  );
 export class ApiClient {
   private sessionToken = '';
   private sessionAt = 0;
@@ -71,8 +128,14 @@ export class ApiClient {
     const response = await fetch(path, {
       ...options,
       signal: this.signal
-        ? AbortSignal.any([this.signal, ...(options.signal ? [options.signal] : [])])
-        : options.signal,
+        ? AbortSignal.any([
+            this.signal,
+            ...(options.signal ? [options.signal] : []),
+            AbortSignal.timeout(15000),
+          ])
+        : options.signal
+          ? AbortSignal.any([options.signal, AbortSignal.timeout(15000)])
+          : AbortSignal.timeout(15000),
       headers: {
         'Content-Type': 'application/json',
         ...(this.token() ? { Authorization: `Bearer ${this.token()}` } : {}),
@@ -83,6 +146,31 @@ export class ApiClient {
     if (!response.ok)
       throw new Error((data as { error?: { message?: string } }).error?.message ?? `HTTP ${response.status}`);
     return data as T;
+  }
+  async blob(path: string, options: RequestInit = {}): Promise<Blob> {
+    const response = await fetch(path, {
+      ...options,
+      signal: this.signal
+        ? AbortSignal.any([
+            this.signal,
+            ...(options.signal ? [options.signal] : []),
+            AbortSignal.timeout(15000),
+          ])
+        : options.signal
+          ? AbortSignal.any([options.signal, AbortSignal.timeout(15000)])
+          : AbortSignal.timeout(15000),
+      headers: {
+        ...(this.token() ? { Authorization: `Bearer ${this.token()}` } : {}),
+        ...options.headers,
+      },
+    });
+    if (!response.ok) {
+      const value = (await response.json().catch(() => null)) as {
+        error?: { message?: string };
+      } | null;
+      throw new Error(value?.error?.message ?? `HTTP ${response.status}`);
+    }
+    return response.blob();
   }
   async events(onEvent: (type: string) => void, signal: AbortSignal): Promise<void> {
     while (!signal.aborted) {
@@ -152,7 +240,11 @@ export class ClientHost {
   constructor(
     private load: (plugin: PluginDto) => Promise<ClientPlugin>,
     api = new ApiClient(),
-    queries = new QueryClient({ defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } } }),
+    queries = new QueryClient({
+      defaultOptions: {
+        queries: { retry: 1, refetchOnWindowFocus: false },
+      },
+    }),
   ) {
     this.api = api;
     this.queries = queries;
@@ -186,15 +278,30 @@ export class ClientHost {
           .filter((plugin) => plugin.enabled && plugin.status === 'active' && plugin.client)
           .map((plugin) => [plugin.id, plugin]),
       );
-      for (const [id, entry] of [...this.active].reverse()) {
+      const signature = (descriptor: PluginDto) =>
+        JSON.stringify([descriptor.version, descriptor.generation, descriptor.client]);
+      const invalid = new Set<string>();
+      for (const [id, entry] of this.active) {
         const descriptor = desired.get(id);
         if (
           !descriptor ||
-          entry.signature !== `${descriptor.version}/${descriptor.generation}/${descriptor.client?.entry}` ||
+          entry.signature !== signature(descriptor) ||
           entry.plugin.requires?.some((requirement) => !desired.has(requirement))
         )
-          await this.unload(id);
+          invalid.add(id);
       }
+      // 依赖仍在 desired 中也可能换代或加载失败，先递归撤销消费者再重建。
+      // 只检查直接依赖是否被删除会留下引用旧插槽/旧服务的客户端贡献。
+      for (let changed = true; changed;) {
+        changed = false;
+        for (const [id, entry] of this.active) {
+          if (!invalid.has(id) && entry.plugin.requires?.some((requirement) => invalid.has(requirement))) {
+            invalid.add(id);
+            changed = true;
+          }
+        }
+      }
+      for (const id of [...this.active.keys()].reverse()) if (invalid.has(id)) await this.unload(id);
       const pending = [...desired.values()].filter((plugin) => !this.active.has(plugin.id));
       for (let pass = 0; pending.length && pass <= desired.size; pass++) {
         for (let index = pending.length - 1; index >= 0; index--) {
@@ -204,11 +311,7 @@ export class ClientHost {
             if (plugin.id !== descriptor.id) throw new Error('客户端插件 ID 与清单不一致');
             if (plugin.requires?.some((requirement) => !this.active.has(requirement))) continue;
             pending.splice(index, 1);
-            await this.activate(
-              plugin,
-              `${descriptor.version}/${descriptor.generation}/${descriptor.client?.entry}`,
-              descriptor.client?.css,
-            );
+            await this.activate(plugin, signature(descriptor), descriptor.client?.css);
             this.errors.delete(plugin.id);
           } catch (error) {
             this.errors.set(descriptor.id, error instanceof Error ? error.message : String(error));
@@ -229,7 +332,12 @@ export class ClientHost {
     return complete;
   }
   private async activate(plugin: ClientPlugin, signature: string, css: string[] = []) {
-    const entry: ActiveClient = { plugin, abort: new AbortController(), cleanup: [], signature };
+    const entry: ActiveClient = {
+      plugin,
+      abort: new AbortController(),
+      cleanup: [],
+      signature,
+    };
     this.active.set(plugin.id, entry);
     const assert = () => {
       entry.abort.signal.throwIfAborted();
@@ -312,8 +420,12 @@ export class ClientHost {
         this.errors.set(id, `清理失败：${String(error)}`);
       }
     }
-    await this.queries.cancelQueries({ predicate: (query) => query.queryKey.includes(id) });
-    this.queries.removeQueries({ predicate: (query) => query.queryKey.includes(id) });
+    await this.queries.cancelQueries({
+      predicate: (query) => query.queryKey.includes(id),
+    });
+    this.queries.removeQueries({
+      predicate: (query) => query.queryKey.includes(id),
+    });
     this.changed();
   }
   async stop() {

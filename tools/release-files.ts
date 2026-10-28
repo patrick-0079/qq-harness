@@ -1,0 +1,9 @@
+import fs from 'node:fs';import path from 'node:path';import {createHash} from 'node:crypto';
+export const sha=(bytes:Buffer|string)=>createHash('sha256').update(bytes).digest('hex');
+export function ownedChild(root:string,folder:string){const base=path.resolve(root),target=path.resolve(folder),relative=path.relative(base,target);if(!relative||relative.startsWith('..')||path.isAbsolute(relative))throw new Error('目录必须属于指定的工程目录');let current=base;for(const name of ['',...relative.split(path.sep)]){if(name)current=path.join(current,name);if(fs.existsSync(current)&&fs.lstatSync(current).isSymbolicLink())throw new Error('不允许符号链接');}return target;}
+export function hashes(root:string,exclude:string[]=[]):{file:string;sha256:string;bytes:number}[]{
+ const out:{file:string;sha256:string;bytes:number}[]=[];
+ const walk=(folder:string)=>{for(const name of fs.readdirSync(folder).sort()){const file=path.join(folder,name),relative=path.relative(root,file).replaceAll('\\','/');if(exclude.includes(relative))continue;const stat=fs.lstatSync(file);if(stat.isSymbolicLink())throw new Error('文件树不能包含符号链接');if(stat.isDirectory())walk(file);else if(stat.isFile()){const bytes=fs.readFileSync(file);out.push({file:relative,sha256:sha(bytes),bytes:bytes.length});}}};walk(root);return out;
+}
+export function sourceFingerprint(root:string){const entries=['apps','plugins','packages','scripts','tools','tests'].flatMap(folder=>fs.existsSync(path.join(root,folder))?hashes(path.join(root,folder)).map(row=>({...row,file:folder+'/'+row.file})):[]);for(const name of ['package.json','package-lock.json','tsconfig.json','vitest.config.ts','playwright.config.ts'])if(fs.existsSync(path.join(root,name))){const bytes=fs.readFileSync(path.join(root,name));entries.push({file:name,sha256:sha(bytes),bytes:bytes.length});}return sha(JSON.stringify(entries));}
+export const requiredChecks=['typecheck','unit','reference','architecture','dependencies','build','browser'] as const;

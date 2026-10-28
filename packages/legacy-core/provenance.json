@@ -1,0 +1,77 @@
+[
+  {
+    "source": "backup/source/src/web-search.js",
+    "file": "vendor/web-search.js",
+    "sha256": "f74914357db096e62fcbf73f68d3783cc81706b25c4a18d15955d19262d8d1a5"
+  },
+  {
+    "source": "backup/source/src/holidays.js",
+    "file": "vendor/holidays.js",
+    "sha256": "a88f8319a911ed903a0f9f871580511dada9542115c2472fbd5dd8abe0706202"
+  },
+  {
+    "source": "backup/source/src/sticker-manager.js",
+    "file": "vendor/sticker-manager.js",
+    "sha256": "b0b9646fb3a0c789c826945b96d05f17f23d601ff73833f81ce9a367fcf4e873"
+  },
+  {
+    "source": "backup/source/src/stickers.js",
+    "file": "vendor/stickers.js",
+    "sha256": "b7fb975ed808c17a57ad08b668527df619e501cfd5c8196eae63115651cbe11b"
+  },
+  {
+    "source": "backup/source/src/image-type.js",
+    "file": "vendor/image-type.js",
+    "sha256": "45ce272d916be970946c1222015e7e98a9c4fd12e5b0d11cfcb234543e2feccf"
+  },
+  {
+    "file": "vendor/trigger.js",
+    "source": "backup/source/src/trigger.js",
+    "sha256": "c0ac35c3f823ad93d6c3b05ffe69d66e4208620456a295e53b643c2c1ae4772e"
+  },
+  {
+    "file": "vendor/tier-slider.js",
+    "source": "backup/source/src/tier-slider.js",
+    "sha256": "44e0f0d1f397a22b6e4e8f63b2322c7be0dd2fdb7922f957d86a870f35fe47b1"
+  },
+  {
+    "file": "vendor/session-config.js",
+    "source": "backup/source/src/session-config.js",
+    "sha256": "8ecccbe65c5269dd32c74dd1b90fc91b3697f62e454ba35846d16ee3309e0c45"
+  },
+  {
+    "file": "vendor/silence-policy.js",
+    "source": "backup/source/src/silence-policy.js",
+    "sha256": "e10c2d2c41d3926bfb281e39e70d1e64fb0f281ba3fc0bb06520bafc421288ff"
+  },
+  {
+    "file": "vendor/image-search.js",
+    "source": "backup/source/skills/image-studio/lib/search.js",
+    "sha256": "06a165c3ffea941d93c13a7fc2fb26a285d40d56ebfcff36a1444e74a4e80ca7"
+  },
+  {
+    "file": "vendor/image-history.js",
+    "source": "backup/source/skills/image-studio/lib/history.js",
+    "sha256": "0b06154199e9cd3309f8b18065727aa77726f1b3ad2af7bdc756af53c4be7f56"
+  },
+  {
+    "file": "vendor/image-pixels.js",
+    "source": "backup/source/skills/image-studio/lib/imaging.js",
+    "sha256": "6732f0267854ef4845ef0ce61c4748eebf36bbc26f6d467f11837d08e5bd011a"
+  },
+  {
+    "file": "vendor/image-tags.json",
+    "source": "backup/source/skills/image-studio/lib/tag-dict.json",
+    "sha256": "d5aff059cf54f3b6a21cd690d1041300f2a715220f0becd624bace728e68638a"
+  },
+  {
+    "source": "backup/source/src/model-prices.js",
+    "file": "vendor/model-prices.js",
+    "sha256": "f605221cca8b9da95cefbcd4299f3c36da6da8a40f1de5c497f32720e396badd"
+  },
+  {
+    "source": "backup/source/src/util.js",
+    "file": "vendor/util.js",
+    "sha256": "53b7e7f3517ec1ab51ef75ad154bbffe295ffa6def4525a136b8400235468dac"
+  }
+]

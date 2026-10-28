@@ -6,12 +6,12 @@ export function legacyModelMiddleware(host: ExtensionHost): ModelMiddleware {
   const manager = host.raw().skillManager;
   const providers = (name: string) => manager.getCapabilityProviders(name, {});
   const warn = (id: string, error: unknown) => manager.recordError(id, error);
-  return {
+  const middleware:ModelMiddleware={
     async request(input) {
       let api = { ...input.api };
       let accountId = '';
       try {
-        const picked = providers('llm.endpoint-pick')[0]?.fn({ model: api.model });
+        const picked = input.context?.endpointOverride?undefined:providers('llm.endpoint-pick')[0]?.fn({ model: api.model });
         if (picked?.baseUrl) {
           api = {
             ...api,
@@ -33,7 +33,7 @@ export function legacyModelMiddleware(host: ExtensionHost): ModelMiddleware {
             model: api.model,
             messages: body.messages,
             tools: body.tools,
-            context: {},
+            context: {...input.context,api,model:api.model,messages:body.messages},
           });
           if (next && typeof next === 'object') {
             body = next.body ?? next;
@@ -43,7 +43,7 @@ export function legacyModelMiddleware(host: ExtensionHost): ModelMiddleware {
           warn(provider.skillId, error);
         }
       }
-      return { api, body, accountId };
+      return { ...input,api, body, accountId };
     },
     async response(result, rawUsage, input) {
       const legacy = {
@@ -73,12 +73,13 @@ export function legacyModelMiddleware(host: ExtensionHost): ModelMiddleware {
         }
       }
       return {
+        ...result,
         message: legacy.message,
         usage: {
           input: Number(legacy.usage.prompt_tokens) || 0,
           output: Number(legacy.usage.completion_tokens) || 0,
         },
-        ...(Object.keys(extra).length ? { extraUsage: extra } : {}),
+        ...(Object.keys(extra).length ? { extraUsage: {...result.extraUsage,...extra} } : {}),
       };
     },
     async retry(input, status, errorText) {
@@ -104,5 +105,12 @@ export function legacyModelMiddleware(host: ExtensionHost): ModelMiddleware {
         warn('llm.endpoint-feedback', error);
       }
     },
+  };
+  const scope=(input:import('@qq-harness/domain').ModelRequest)=>input.context?.chatKey??'';
+  return {
+    request:input=>host.scoped(scope(input),()=>middleware.request(input)),
+    response:(result,usage,input)=>host.scoped(scope(input),()=>middleware.response(result,usage,input)),
+    retry:(input,status,error)=>host.scoped(scope(input),()=>middleware.retry(input,status,error)),
+    feedback:(input,result)=>host.scoped(scope(input),()=>middleware.feedback(input,result)),
   };
 }

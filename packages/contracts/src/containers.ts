@@ -18,23 +18,54 @@ export const containerSettingsSchema = z.object({
 });
 export type ContainerSettings = z.infer<typeof containerSettingsSchema>;
 export interface ContainerEngineStatus {
+  imageAvailable?: boolean;
+  image?: string;
   available: boolean;
   engine?: 'docker' | 'podman';
   binary?: string;
   message: string;
   allowOperations: boolean;
 }
-export interface ContainerBinding {
-  chatKey: string;
+export interface ContainerResource {
+  ownerChatKey?: string;
   name: string;
   id: string;
   engine: 'docker' | 'podman';
   binary: string;
   image: string;
+  managed: boolean;
+  enabled?: boolean;
+  cleanupPending?: { id: string; username: string }[];
 }
-export interface ContainerInfo extends ContainerBinding {
+export interface ContainerBinding extends ContainerResource {
+  chatKey: string;
+  username: string;
+  uid?: number;
+  gid?: number;
+  home: string;
+  workspace: string;
+  primary: boolean;
+  legacyWorkspace?: boolean;
+}
+export interface ContainerInfo extends ContainerResource {
+  bound?: boolean;
+  chatKey?: string;
+  chatKeys: string[];
+  bindings: ContainerBinding[];
   running: boolean;
   status: string;
+}
+export interface ContainerPoolState {
+  version: 2;
+  resources: ContainerResource[];
+  bindings: ContainerBinding[];
+}
+export interface DiscoveredContainer {
+  id: string;
+  name: string;
+  image: string;
+  running: boolean;
+  registered: boolean;
 }
 export const containerExecSchema = z.object({
   command: z
@@ -44,6 +75,10 @@ export const containerExecSchema = z.object({
     .refine((v) => !v.includes('\0')),
   workdir: z.string().max(1000).default(CONTAINER_WORKSPACE),
   timeoutMs: z.number().int().min(1000).max(600000).optional(),
+  containerId: z
+    .string()
+    .regex(/^[a-zA-Z0-9_.-]{1,160}$/)
+    .optional(),
 });
 export type ContainerExecInput = z.infer<typeof containerExecSchema>;
 export interface ContainerExecResult {
@@ -53,6 +88,7 @@ export interface ContainerExecResult {
   truncated: boolean;
 }
 export interface ContainerJob {
+  containerId?: string;
   id: string;
   chatKey: string;
   command: string;

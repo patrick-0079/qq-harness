@@ -13,14 +13,14 @@ export function containerRuntime(options: ContainerOptions = {}) {
     requires: [storageService.id, accessService.id],
     setup(ctx) {
       const schema = z.object({
-        chatKey: chatKeySchema,
+        chatKey: chatKeySchema.optional(),
         operation: z.string(),
         exitCode: z.number().optional(),
       });
       ctx.definePoint({ id: 'container.before', kind: 'guard', schema, requiredGuard: true });
       ctx.definePoint({ id: 'container.after', kind: 'observe', schema });
-      ctx.on<{ chatKey: string }>('container.before', ({ chatKey }) => {
-        ctx.use(accessService).assert(chatKey);
+      ctx.on<{ chatKey?: string }>('container.before', ({ chatKey }) => {
+        if (chatKey) ctx.use(accessService).assert(chatKey);
         return true;
       });
       const runtime = new ContainerRuntime(ctx, ctx.use(storageService), ctx.use(accessService), options);

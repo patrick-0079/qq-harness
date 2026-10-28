@@ -72,4 +72,6 @@ export interface ExtensionHostOptions {
   initialConfig?: LegacyObject;
   hotReload?: boolean;
   managers?: string[];
+  /** Dependency injection for offline package verification; never read from UI config. */
+  fetch?: (url: string, options?: RequestInit) => Promise<Response>;
 }

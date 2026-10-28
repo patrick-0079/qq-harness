@@ -1,0 +1,51 @@
+.provided-tools-table {
+  width: 100%;
+  min-width: 960px;
+  table-layout: fixed;
+}
+.provided-tools-table .provided-tool-name {
+  width: 172px;
+}
+.provided-tools-table .provided-tool-owner {
+  width: 140px;
+}
+.provided-tools-table .provided-tool-state {
+  width: 160px;
+}
+.provided-tools-table .provided-tool-action {
+  width: 104px;
+}
+.provided-tools-table td {
+  padding: 12px;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+.provided-tools-table td small {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+}
+.provided-tools-table button {
+  white-space: nowrap;
+  min-width: 80px;
+}
+.provided-tools-table .provided-tool-summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  margin: 0;
+  line-height: 1.6;
+}
+.extension-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.extension-navigation > .tabs {
+  min-width: 0;
+  margin: 0;
+  flex-wrap: wrap;
+}

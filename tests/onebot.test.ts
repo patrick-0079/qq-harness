@@ -39,7 +39,7 @@ test('真实 OneBot 适配器与 OpenAI 协议连接本地 mock，完成端到�
                     type: 'function',
                     function: {
                       name: 'send_message',
-                      arguments: JSON.stringify({ text: '来自协议 mock 的回复' }),
+                      arguments: JSON.stringify({ messages: ['来自协议 mock 的回复'] }),
                     },
                   },
                   {
@@ -47,7 +47,7 @@ test('真实 OneBot 适配器与 OpenAI 协议连接本地 mock，完成端到�
                     type: 'function',
                     function: {
                       name: 'finish',
-                      arguments: JSON.stringify({ mode: 'spoken', reason: '已回复' }),
+                      arguments: JSON.stringify({ mode: 'spoken' }),
                     },
                   },
                 ],
@@ -109,7 +109,11 @@ test('真实 OneBot 适配器与 OpenAI 协议连接本地 mock，完成端到�
     expect(modelRequests[0]?.messages).toHaveLength(2);
     expect(authorizations.length).toBeGreaterThan(0);
     expect(authorizations.every((token) => token === 'Bearer mock-http-token')).toBe(true);
-    expect(app.runtime.use(storageService).archives()[0]?.usage).toEqual({ input: 10, output: 5 });
+    expect(app.runtime.use(storageService).archives()[0]?.usage).toEqual({
+      input: 10,
+      output: 5,
+      models: [{ input: 10, output: 5, providerId: '', model: 'mock', cost: null, currency: 'USD' }],
+    });
   } finally {
     await app.stop();
     wss.close();

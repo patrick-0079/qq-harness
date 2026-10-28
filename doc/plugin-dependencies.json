@@ -1,0 +1,875 @@
+[
+  {
+    "id": "access-policy",
+    "directory": "access-policy",
+    "source": "plugins/access-policy/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.config"
+    ],
+    "provides": [
+      "harness.access"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "adapter-mock",
+    "directory": "adapter-mock",
+    "source": "plugins/adapter-mock/src/index.ts",
+    "mode": "演示",
+    "requires": [],
+    "provides": [
+      "harness.adapter"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "adapter-onebot",
+    "directory": "adapter-onebot",
+    "source": "plugins/adapter-onebot/src/index.ts",
+    "mode": "live",
+    "requires": [
+      "harness.access",
+      "harness.config",
+      "harness.system-control"
+    ],
+    "provides": [
+      "harness.adapter"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "agent-basic",
+    "directory": "agent-basic",
+    "source": "plugins/agent-basic/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.basic-tools",
+      "harness.config",
+      "harness.model",
+      "harness.outbound",
+      "harness.storage",
+      "harness.tools"
+    ],
+    "provides": [
+      "harness.agent"
+    ],
+    "optional": [
+      "harness.system-control",
+      "harness.tool-scope",
+      "harness.traces"
+    ],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "agent-memory",
+    "directory": "agent-memory",
+    "source": "plugins/agent-memory/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.agent",
+      "harness.config",
+      "harness.conversation",
+      "harness.http",
+      "harness.memory.index",
+      "harness.memory.repository",
+      "harness.model",
+      "harness.storage",
+      "harness.tools"
+    ],
+    "provides": [
+      "@qq-harness/contracts",
+      "harness.memory",
+      "harness.memory.members"
+    ],
+    "optional": [
+      "harness.traces"
+    ],
+    "clientRequires": [
+      "console-chats"
+    ],
+    "client": true
+  },
+  {
+    "id": "basic-tools",
+    "directory": "basic-tools",
+    "source": "plugins/basic-tools/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.adapter",
+      "harness.config",
+      "harness.outbound",
+      "harness.storage",
+      "harness.tools"
+    ],
+    "provides": [
+      "harness.basic-tools"
+    ],
+    "optional": [
+      "harness.media",
+      "harness.traces"
+    ],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "command-direct",
+    "directory": "command-direct",
+    "source": "plugins/command-direct/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.config",
+      "harness.tools"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "config-file",
+    "directory": "config-file",
+    "source": "plugins/config-file/src/index.ts",
+    "mode": "默认装配",
+    "requires": [],
+    "provides": [
+      "harness.config"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "console-api",
+    "directory": "console-api",
+    "source": "plugins/console-api/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.config",
+      "harness.http",
+      "harness.storage",
+      "harness.system-control"
+    ],
+    "provides": [],
+    "optional": [
+      "@qq-harness/contracts",
+      "harness.access",
+      "harness.adapter",
+      "harness.conversation",
+      "harness.memory",
+      "harness.outbound",
+      "harness.tools"
+    ],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "console-chats",
+    "directory": "console-chats",
+    "source": "plugins/console-chats/client.tsx",
+    "mode": "客户端页面",
+    "requires": [],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [],
+    "client": true
+  },
+  {
+    "id": "console-overview",
+    "directory": "console-overview",
+    "source": "plugins/console-overview/client.tsx",
+    "mode": "客户端页面",
+    "requires": [],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [],
+    "client": true
+  },
+  {
+    "id": "console-plugins",
+    "directory": "console-plugins",
+    "source": "plugins/console-plugins/client.tsx",
+    "mode": "客户端页面",
+    "requires": [],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [],
+    "client": true
+  },
+  {
+    "id": "console-settings",
+    "directory": "console-settings",
+    "source": "plugins/console-settings/client.tsx",
+    "mode": "客户端页面",
+    "requires": [],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [],
+    "client": true
+  },
+  {
+    "id": "container-console",
+    "directory": "container-console",
+    "source": "plugins/container-console/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.container.jobs",
+      "harness.container.runtime",
+      "harness.container.session",
+      "harness.http"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [
+      "console-chats"
+    ],
+    "client": true
+  },
+  {
+    "id": "container-jobs",
+    "directory": "container-jobs",
+    "source": "plugins/container-jobs/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.config",
+      "harness.container.runtime",
+      "harness.container.session",
+      "harness.storage",
+      "harness.tools"
+    ],
+    "provides": [
+      "harness.container.jobs"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "container-runtime",
+    "directory": "container-runtime",
+    "source": "plugins/container-runtime/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.storage"
+    ],
+    "provides": [
+      "harness.container.runtime"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "container-session",
+    "directory": "container-session",
+    "source": "plugins/container-session/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.config",
+      "harness.container.runtime",
+      "harness.tools"
+    ],
+    "provides": [
+      "harness.container.session"
+    ],
+    "optional": [
+      "harness.container.jobs"
+    ],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "conversation",
+    "directory": "conversation",
+    "source": "plugins/conversation/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.adapter",
+      "harness.agent",
+      "harness.config",
+      "harness.storage",
+      "harness.system-control"
+    ],
+    "provides": [
+      "harness.conversation"
+    ],
+    "optional": [
+      "harness.operations.ingress"
+    ],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "conversation-manual",
+    "directory": "conversation-manual",
+    "source": "plugins/conversation-manual/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.config",
+      "harness.conversation",
+      "harness.http"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [
+      "console-chats"
+    ],
+    "client": true
+  },
+  {
+    "id": "conversation-proactive",
+    "directory": "conversation-proactive",
+    "source": "plugins/conversation-proactive/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.config",
+      "harness.conversation",
+      "harness.storage"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [
+      "console-chats"
+    ],
+    "client": true
+  },
+  {
+    "id": "example-notes",
+    "directory": "example-notes",
+    "source": "extensions/example-notes/plugin.json",
+    "mode": "后装示例，默认关闭",
+    "requires": [
+      "harness.external-loader",
+      "harness.http"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [
+      "console-chats"
+    ],
+    "client": true
+  },
+  {
+    "id": "ext-knowledge",
+    "directory": "v2-knowledge",
+    "source": "plugins/v2-knowledge/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.extensions"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [
+      "extension-system"
+    ],
+    "client": true
+  },
+  {
+    "id": "ext-mcp",
+    "directory": "v2-mcp",
+    "source": "plugins/v2-mcp/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.extensions"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [
+      "extension-system"
+    ],
+    "client": true
+  },
+  {
+    "id": "ext-promptinject",
+    "directory": "v2-promptinject",
+    "source": "plugins/v2-promptinject/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.extensions"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [
+      "extension-system"
+    ],
+    "client": true
+  },
+  {
+    "id": "ext-skill",
+    "directory": "v2-skills",
+    "source": "plugins/v2-skills/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.extensions"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [
+      "extension-system"
+    ],
+    "client": true
+  },
+  {
+    "id": "ext-tool",
+    "directory": "v2-tools",
+    "source": "plugins/v2-tools/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.extensions"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [
+      "extension-system"
+    ],
+    "client": true
+  },
+  {
+    "id": "extension-system",
+    "directory": "extension-system",
+    "source": "plugins/extension-system/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.adapter",
+      "harness.agent",
+      "harness.config",
+      "harness.conversation",
+      "harness.http",
+      "harness.model",
+      "harness.outbound",
+      "harness.storage",
+      "harness.tools"
+    ],
+    "provides": [
+      "harness.extensions",
+      "harness.model.middleware",
+      "harness.network.proxy",
+      "harness.tool-scope",
+      "harness.tools.policy",
+      "harness.video-frames"
+    ],
+    "optional": [
+      "harness.container.session"
+    ],
+    "clientRequires": [
+      "console-chats",
+      "console-settings",
+      "console-overview"
+    ],
+    "client": true
+  },
+  {
+    "id": "external-plugins",
+    "directory": "external-plugins",
+    "source": "plugins/external-plugins/src/index.ts",
+    "mode": "配置 extensionDir 时",
+    "requires": [
+      "harness.config",
+      "harness.http"
+    ],
+    "provides": [
+      "harness.external-loader"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "html-renderer",
+    "directory": "html-renderer",
+    "source": "plugins/html-renderer/src/index.ts",
+    "mode": "默认装配",
+    "requires": [],
+    "provides": [
+      "harness.html-renderer"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "image-studio",
+    "directory": "image-studio",
+    "source": "plugins/image-studio/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.agent",
+      "harness.config",
+      "harness.media",
+      "harness.outbound",
+      "harness.storage",
+      "harness.tools"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "media-runtime",
+    "directory": "media-runtime",
+    "source": "plugins/media-runtime/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.adapter",
+      "harness.config",
+      "harness.http",
+      "harness.storage"
+    ],
+    "provides": [
+      "harness.media"
+    ],
+    "optional": [
+      "harness.network.proxy",
+      "harness.video-frames"
+    ],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "media-tools",
+    "directory": "media-tools",
+    "source": "plugins/media-tools/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.adapter",
+      "harness.config",
+      "harness.media",
+      "harness.outbound",
+      "harness.storage",
+      "harness.tools"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "memory",
+    "directory": "memory",
+    "source": "plugins/memory/src/index.ts",
+    "mode": "旧简版，默认未装配",
+    "requires": [
+      "harness.agent",
+      "harness.config",
+      "harness.storage",
+      "harness.tools"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "memory-index-lexical",
+    "directory": "memory-index-lexical",
+    "source": "plugins/memory-index-lexical/src/index.ts",
+    "mode": "默认装配",
+    "requires": [],
+    "provides": [
+      "harness.memory.index"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "model-mock",
+    "directory": "model-mock",
+    "source": "plugins/model-mock/src/index.ts",
+    "mode": "演示",
+    "requires": [],
+    "provides": [
+      "harness.model"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "model-openai",
+    "directory": "model-openai",
+    "source": "plugins/model-openai/src/index.ts",
+    "mode": "live",
+    "requires": [
+      "harness.config"
+    ],
+    "provides": [
+      "harness.model",
+      "harness.model.http"
+    ],
+    "optional": [
+      "harness.model.middleware",
+      "harness.network.proxy",
+      "harness.traces"
+    ],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "model-opencode",
+    "directory": "model-opencode",
+    "source": "plugins/model-opencode/src/index.ts",
+    "mode": "live",
+    "requires": [
+      "harness.model.http"
+    ],
+    "provides": [],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "ops-control",
+    "directory": "ops-control",
+    "source": "plugins/ops-control/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.adapter",
+      "harness.config",
+      "harness.http",
+      "harness.outbound",
+      "harness.storage",
+      "harness.system-control"
+    ],
+    "provides": [
+      "harness.operations.ingress"
+    ],
+    "optional": [
+      "harness.network.proxy"
+    ],
+    "clientRequires": [],
+    "client": true
+  },
+  {
+    "id": "outbound-queue",
+    "directory": "outbound-queue",
+    "source": "plugins/outbound-queue/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.adapter",
+      "harness.config",
+      "harness.storage",
+      "harness.system-control"
+    ],
+    "provides": [
+      "harness.outbound"
+    ],
+    "optional": [
+      "harness.traces"
+    ],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "qq-portable",
+    "directory": "qq-portable",
+    "source": "plugins/qq-portable/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.http",
+      "harness.storage"
+    ],
+    "provides": [
+      "harness.qq-portable"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": true
+  },
+  {
+    "id": "reminders",
+    "directory": "reminders",
+    "source": "plugins/reminders/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.config",
+      "harness.outbound",
+      "harness.storage",
+      "harness.tools"
+    ],
+    "provides": [
+      "harness.reminders"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "run-inspector",
+    "directory": "run-inspector",
+    "source": "plugins/run-inspector/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.config",
+      "harness.http"
+    ],
+    "provides": [
+      "harness.traces"
+    ],
+    "optional": [],
+    "clientRequires": [
+      "console-chats"
+    ],
+    "client": true
+  },
+  {
+    "id": "snowluma-runtime",
+    "directory": "snowluma-runtime",
+    "source": "plugins/snowluma-runtime/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.config",
+      "harness.http",
+      "harness.storage"
+    ],
+    "provides": [
+      "harness.snowluma"
+    ],
+    "optional": [
+      "harness.adapter"
+    ],
+    "clientRequires": [],
+    "client": true
+  },
+  {
+    "id": "sticker-tools",
+    "directory": "sticker-tools",
+    "source": "plugins/sticker-tools/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.adapter",
+      "harness.agent",
+      "harness.config",
+      "harness.media",
+      "harness.outbound",
+      "harness.storage",
+      "harness.tools"
+    ],
+    "provides": [
+      "harness.stickers"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "storage-file",
+    "directory": "storage-file",
+    "source": "plugins/storage-file/src/index.ts",
+    "mode": "替代 SQLite",
+    "requires": [],
+    "provides": [
+      "harness.memory.repository",
+      "harness.storage"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "storage-sqlite",
+    "directory": "storage-sqlite",
+    "source": "plugins/storage-sqlite/src/index.ts",
+    "mode": "默认存储",
+    "requires": [],
+    "provides": [
+      "harness.memory.repository",
+      "harness.storage"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "system-control",
+    "directory": "system-control",
+    "source": "plugins/system-control/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.config",
+      "harness.storage"
+    ],
+    "provides": [
+      "harness.system-control"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": true
+  },
+  {
+    "id": "tool-runtime",
+    "directory": "tool-runtime",
+    "source": "plugins/tool-runtime/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.access",
+      "harness.config"
+    ],
+    "provides": [
+      "harness.tools"
+    ],
+    "optional": [
+      "harness.tool-scope",
+      "harness.tools.policy",
+      "harness.traces"
+    ],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "transport-http",
+    "directory": "transport-http",
+    "source": "plugins/transport-http/src/index.ts",
+    "mode": "默认装配",
+    "requires": [],
+    "provides": [
+      "harness.http"
+    ],
+    "optional": [],
+    "clientRequires": [],
+    "client": false
+  },
+  {
+    "id": "web-tools",
+    "directory": "web-tools",
+    "source": "plugins/web-tools/src/index.ts",
+    "mode": "默认装配",
+    "requires": [
+      "harness.config",
+      "harness.http",
+      "harness.storage",
+      "harness.tools"
+    ],
+    "provides": [
+      "harness.web"
+    ],
+    "optional": [
+      "harness.network.proxy"
+    ],
+    "clientRequires": [],
+    "client": false
+  }
+]

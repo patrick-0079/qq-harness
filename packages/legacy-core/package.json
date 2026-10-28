@@ -1,0 +1,7 @@
+{
+  "name": "@qq-harness/legacy-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./generated/runtime.mjs"
+}

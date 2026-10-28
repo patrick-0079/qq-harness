@@ -1,126 +1,220 @@
-import { useEffect, useState } from 'react';
+import { Action } from '@qq-harness/client-sdk';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { defineClientPlugin, useHost, Slot } from '@qq-harness/client-sdk';
+import { Navigate } from 'react-router-dom';
+import { defineClientPlugin, useHost, Slot, useUnsavedChanges, Toggle } from '@qq-harness/client-sdk';
 import type { PublicConfig } from '@qq-harness/contracts';
-
-function Settings() {
-  const host = useHost();
-  const [draft, setDraft] = useState<PublicConfig>();
-  const [apiKey, setApiKey] = useState('');
-  const [notice, setNotice] = useState('');
+import { InputNumber, Alert } from 'antd';
+import { CatalogManager } from './catalogs.js';
+import { SearchSettings } from './search.js';
+function GlobalForm({ section }: { section: 'runtime' | 'model' | 'access' }) {
+  const host = useHost(),
+    [draft, setDraft] = useState<PublicConfig>(),
+    [dirty, setDirty] = useState(false),
+    [key, setKey] = useState(''),
+    [notice, setNotice] = useState('');
+  useUnsavedChanges(dirty);
   const { data } = useQuery({
     queryKey: ['console-settings', 'config'],
     queryFn: ({ signal }) => host.api.request<PublicConfig>('/api/config', { signal }),
   });
   useEffect(() => {
-    setDraft(data);
-  }, [data]);
-  if (!draft) return <div className="empty">加载配置…</div>;
+    if (!dirty) setDraft(data);
+  }, [data, dirty]);
+  if (!draft) return <p>加载设置…</p>;
+  const patch = (p: Partial<PublicConfig>) => {
+    setDraft({ ...draft, ...p });
+    setDirty(true);
+  };
   return (
-    <>
-      <div className="page-heading">
-        <div>
-          <span className="eyebrow">SETTINGS</span>
-          <h1>设置</h1>
-          <p>全局默认设置与接入配置。会话自定义后保存为独立快照。</p>
-        </div>
-      </div>
+    <div className="form-stack settings-page">
       <form
-        className="settings-layout"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setNotice('保存中…');
-          const patch = {
-            acceptAllSessions: draft.acceptAllSessions,
-            admissions: draft.admissions,
-            defaults: draft.defaults,
-            model: { ...draft.model, ...(apiKey ? { apiKey } : {}) },
-          };
+        className="form-stack"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const body =
+            section === 'runtime'
+              ? {
+                  execution: draft.execution,
+                  defaults: {
+                    runTimeoutMs: draft.defaults.runTimeoutMs,
+                    queueTimeoutMs: draft.defaults.queueTimeoutMs,
+                    maxRounds: draft.defaults.maxRounds,
+                  },
+                  model: { timeoutMs: draft.model.timeoutMs },
+                }
+              : section === 'model'
+                ? { model: { ...draft.model, ...(key ? { apiKey: key } : {}) } }
+                : {
+                    acceptAllSessions: draft.acceptAllSessions,
+                    deniedChats: draft.deniedChats,
+                    deniedUsers: draft.deniedUsers,
+                  };
           void host.api
-            .request('/api/config', { method: 'PATCH', body: JSON.stringify(patch) })
+            .request('/api/config', {
+              method: 'PATCH',
+              body: JSON.stringify(body),
+            })
             .then(() => {
-              setApiKey('');
+              setDirty(false);
+              setKey('');
               setNotice('设置已保存');
               void host.queries.invalidateQueries();
             })
-            .catch((error) => setNotice(error.message));
+            .catch((e) => setNotice(e.message));
         }}
       >
-        <section className="panel form-stack">
-          <h2>模型提供者</h2>
-          <p className="muted">演示模式使用开发模型；真实模式连接管理员配置的 OpenAI 兼容端点。</p>
-          <label>
-            API Base URL
-            <input
-              value={draft.model.baseUrl}
-              onChange={(event) =>
-                setDraft({ ...draft, model: { ...draft.model, baseUrl: event.target.value } })
-              }
+        {section === 'runtime' && (
+          <>
+            <Alert
+              type="info"
+              showIcon
+              title="并发池控制不同会话同时运行的数量；同一会话始终串行。超时为0表示不限。"
             />
-          </label>
-          <label>
-            模型名称
-            <input
-              value={draft.model.model}
-              onChange={(event) =>
-                setDraft({ ...draft, model: { ...draft.model, model: event.target.value } })
-              }
-              placeholder="模型 ID"
-            />
-          </label>
-          <label>
-            API Key
-            <input
-              type="password"
-              autoComplete="off"
-              value={apiKey}
-              onChange={(event) => setApiKey(event.target.value)}
-              placeholder={draft.model.hasApiKey ? '已配置 · 留空保持原值' : '尚未配置'}
-            />
-          </label>
-        </section>
-        <section className="panel form-stack">
-          <h2>默认聊天行为</h2>
-          <label className="toggle-row">
-            <span>
-              接收所有会话<small>关闭后仅接收明确添加的会话。</small>
-            </span>
-            <input
-              type="checkbox"
-              checked={draft.acceptAllSessions}
-              onChange={(event) => setDraft({ ...draft, acceptAllSessions: event.target.checked })}
-            />
-          </label>
-          <label>
-            准入会话（每行一个）
-            <textarea
-              rows={3}
-              value={draft.admissions.join('\n')}
-              onChange={(event) =>
-                setDraft({ ...draft, admissions: event.target.value.split('\n').filter(Boolean) })
-              }
-              placeholder="group:123456"
-            />
-          </label>
-          <label>
-            默认人设
-            <textarea
-              rows={5}
-              value={draft.defaults.persona}
-              onChange={(event) =>
-                setDraft({ ...draft, defaults: { ...draft.defaults, persona: event.target.value } })
-              }
-            />
-          </label>
-        </section>
-        <div className="row settings-footer">
-          <button className="primary">保存设置</button>
+            <div className="form-grid">
+              <label>
+                对话并发池
+                <InputNumber
+                  aria-label="对话并发池"
+                  min={1}
+                  max={64}
+                  value={draft.execution.concurrency}
+                  onChange={(v) =>
+                    patch({
+                      execution: { ...draft.execution, concurrency: Number(v) },
+                    })
+                  }
+                />
+              </label>
+              <label>
+                队列容量
+                <InputNumber
+                  aria-label="队列容量"
+                  min={1}
+                  max={10000}
+                  value={draft.execution.queueLimit}
+                  onChange={(v) =>
+                    patch({
+                      execution: { ...draft.execution, queueLimit: Number(v) },
+                    })
+                  }
+                />
+              </label>
+              {(['runTimeoutMs', 'queueTimeoutMs'] as const).map((k, i) => (
+                <label key={k}>
+                  {['默认会话执行超时', '默认排队等待超时'][i]}（秒）
+                  <InputNumber
+                    min={0}
+                    value={draft.defaults[k] / 1000}
+                    onChange={(v) =>
+                      patch({
+                        defaults: { ...draft.defaults, [k]: Number(v) * 1000 },
+                      })
+                    }
+                  />
+                </label>
+              ))}
+              <label>
+                模型请求超时（秒）
+                <InputNumber
+                  min={0.1}
+                  max={3600}
+                  value={draft.model.timeoutMs / 1000}
+                  onChange={(v) =>
+                    patch({
+                      model: { ...draft.model, timeoutMs: Number(v) * 1000 },
+                    })
+                  }
+                />
+              </label>
+              <label>
+                默认最大工具轮数
+                <InputNumber
+                  min={1}
+                  max={40}
+                  value={draft.defaults.maxRounds}
+                  onChange={(v) =>
+                    patch({
+                      defaults: { ...draft.defaults, maxRounds: Number(v) },
+                    })
+                  }
+                />
+              </label>
+            </div>
+          </>
+        )}
+        {section === 'model' && (
+          <div className="form-grid">
+            <label>
+              API Base URL
+              <input
+                value={draft.model.baseUrl}
+                onChange={(e) => patch({ model: { ...draft.model, baseUrl: e.target.value } })}
+              />
+            </label>
+            <label>
+              默认模型
+              <input
+                value={draft.model.model}
+                onChange={(e) => patch({ model: { ...draft.model, model: e.target.value } })}
+              />
+            </label>
+            <label>
+              API Key
+              <input
+                type="password"
+                autoComplete="new-password"
+                value={key}
+                placeholder={draft.model.hasApiKey ? '已配置，留空保留' : '尚未配置'}
+                onChange={(e) => {
+                  setKey(e.target.value);
+                  setDirty(true);
+                }}
+              />
+            </label>
+          </div>
+        )}
+        {section === 'access' && (
+          <>
+            <label className="toggle-row">
+              接收所有会话
+              <Toggle
+                checked={draft.acceptAllSessions}
+                onChange={(e) => patch({ acceptAllSessions: e.target.checked })}
+              />
+            </label>
+            <p className="muted">关闭后通过添加会话准入，无需单独白名单。黑名单优先，不能突破启动边界。</p>
+            {(['deniedChats', 'deniedUsers'] as const).map((k, i) => (
+              <label key={k}>
+                {['屏蔽会话（每行 group:号码 或 private:号码）', '屏蔽用户（每行QQ号）'][i]}
+                <textarea
+                  value={draft[k].join('\n')}
+                  onChange={(e) => patch({ [k]: e.target.value.split(/\s+/).filter(Boolean) })}
+                />
+              </label>
+            ))}
+          </>
+        )}
+        <div className="row">
+          <Action className="primary">保存设置</Action>
           <span role="status">{notice}</span>
         </div>
       </form>
-      <Slot point="settings.model.extra" />
+      {section === 'model' && (
+        <>
+          <CatalogManager mode="providers" />
+          <Slot point="settings.model.extra" />
+        </>
+      )}
+    </div>
+  );
+}
+function Prompts() {
+  return (
+    <div className="form-stack">
+      <CatalogManager mode="texts" />
       <Slot point="settings.persona.actions" />
-    </>
+    </div>
   );
 }
 export default defineClientPlugin({
@@ -128,6 +222,35 @@ export default defineClientPlugin({
   setup(ctx) {
     ctx.defineSlot('settings.model.extra');
     ctx.defineSlot('settings.persona.actions');
-    ctx.page({ id: 'settings', path: '/settings', title: '设置', icon: '⚙', order: 30, component: Settings });
+    ctx.page({
+      id: 'prompts',
+      path: '/prompts',
+      title: '提示词管理',
+      icon: 'document',
+      order: 25,
+      component: Prompts,
+    });
+    ctx.page({
+      id: 'settings',
+      path: '/settings',
+      title: '设置',
+      icon: 'settings',
+      order: 30,
+      component: () => <Navigate to="/settings/runtime" replace />,
+    });
+    for (const [id, title, component] of [
+      ['runtime', '运行与调度', () => <GlobalForm section="runtime" />],
+      ['model', '模型接入', () => <GlobalForm section="model" />],
+      ['access', '会话准入', () => <GlobalForm section="access" />],
+      ['search', '联网搜索', SearchSettings],
+    ] as const)
+      ctx.page({
+        id: 'settings-' + id,
+        parentId: 'settings',
+        path: '/settings/' + id,
+        title,
+        order: 30,
+        component,
+      });
   },
 });

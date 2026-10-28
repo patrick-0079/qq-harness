@@ -69,7 +69,7 @@ test('运行取消后迟到的模型响应不能发送消息', async () => {
                     {
                       id: 'late',
                       type: 'function',
-                      function: { name: 'send_message', arguments: '{"text":"不应发送"}' },
+                      function: { name: 'send_message', arguments: '{"messages":["不应发送"]}' },
                     },
                   ],
                 },

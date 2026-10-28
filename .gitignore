@@ -1,9 +1,38 @@
 node_modules/
 dist/
 var/
+runtime/
 coverage/
 playwright-report/
 test-results/
 *.log
 .env
 .env.local
+.env.*
+!.env.example
+!.env.*.example
+
+# Credentials and local configuration must never enter source control.
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+secrets.json
+secrets.*.json
+credentials.json
+credentials.*.json
+config.local.json
+launch.local.json
+*.bak
+*.bak-*
+*.bak.*
+*.orig
+*.rej
+
+# Installed community packages and catalog snapshots contain deployment settings.
+/extensions-v2/*/
+/extensions-v2/installed-catalog*.json
+
+# Manual screenshots may include real conversations and account details.
+/doc/screenshots/

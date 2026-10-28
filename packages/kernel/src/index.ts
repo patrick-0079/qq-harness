@@ -29,7 +29,11 @@ export class Runtime implements HostControl {
   private runs: Runs;
   private setupTimeoutMs: number;
   constructor(
-    options: { concurrency?: number; setupTimeoutMs?: number; log?: (message: string) => void } = {},
+    options: {
+      concurrency?: number;
+      setupTimeoutMs?: number;
+      log?: (message: string) => void;
+    } = {},
   ) {
     this.setupTimeoutMs = options.setupTimeoutMs ?? 10000;
     this.points = new ExtensionPoints((message) => this.publish('log', { message }));
@@ -43,8 +47,16 @@ export class Runtime implements HostControl {
   get revision(): number {
     return this._revision;
   }
+  configureRuns(concurrency: number, queueLimit: number) {
+    this.runs.configure(concurrency, queueLimit);
+  }
   publish(type: string, payload: unknown): void {
-    const event: HostEvent = { id: ++this.sequence, type, revision: this.revision, payload };
+    const event: HostEvent = {
+      id: ++this.sequence,
+      type,
+      revision: this.revision,
+      payload,
+    };
     for (const listener of [...this.listeners]) {
       try {
         listener(event);
@@ -104,7 +116,10 @@ export class Runtime implements HostControl {
             try {
               return Promise.resolve(dispose());
             } catch (error) {
-              this.publish('log', { message: String(error), owner: item.info.id });
+              this.publish('log', {
+                message: String(error),
+                owner: item.info.id,
+              });
               return Promise.resolve();
             }
           });
@@ -149,6 +164,10 @@ export class Runtime implements HostControl {
           mode: (definition) => {
             ctx.assertActive();
             effects.push(this.runs.register(ctx.id, definition, active));
+          },
+          guardRuns: (guard) => {
+            ctx.assertActive();
+            effects.push(this.runs.guard(guard));
           },
           log: (message) => this.publish('log', { owner: ctx.id, message }),
         };
@@ -212,6 +231,7 @@ export class Runtime implements HostControl {
     return value as T;
   }
   submit: HostControl['submit'] = (request) => this.runs.submit(request);
+  operation: HostControl['operation'] = (parent, request) => this.runs.operation(parent, request);
   listRuns: HostControl['listRuns'] = () => this.runs.list();
   cancel: HostControl['cancel'] = (id) => this.runs.cancel(id);
   wait: HostControl['wait'] = (id) => this.runs.wait(id);

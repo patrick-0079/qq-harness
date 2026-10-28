@@ -23,7 +23,7 @@ export function openSqliteStorage(
     'PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=5000; PRAGMA foreign_keys=ON;',
   );
   const version = Number((db.prepare('PRAGMA user_version').get() as { user_version: number }).user_version);
-  if (version > 2) {
+  if (version > 3) {
     db.close();
     throw new Error('数据库由更新版本创建，拒绝降级写入');
   }
@@ -58,6 +58,11 @@ export function openSqliteStorage(
       expires_at INTEGER NOT NULL, payload TEXT NOT NULL CHECK(json_valid(payload))
     );
     CREATE INDEX IF NOT EXISTS memory_notes_chat ON memory_notes(chat_key,expires_at);
+    CREATE TABLE IF NOT EXISTS memory_note_revisions (
+      note_id TEXT NOT NULL, revision INTEGER NOT NULL, payload TEXT NOT NULL CHECK(json_valid(payload)),
+      PRIMARY KEY(note_id,revision)
+    );
+    INSERT OR IGNORE INTO memory_note_revisions SELECT id,json_extract(payload,'$.revision'),payload FROM memory_notes;
     CREATE TABLE IF NOT EXISTS memory_cursors (chat_key TEXT PRIMARY KEY, local_id INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS memory_index_events (
       sequence INTEGER PRIMARY KEY AUTOINCREMENT, record_id TEXT NOT NULL,
@@ -70,7 +75,7 @@ export function openSqliteStorage(
       namespace TEXT NOT NULL, key TEXT NOT NULL, payload TEXT NOT NULL CHECK(json_valid(payload)),
       PRIMARY KEY(namespace, key)
     );
-    PRAGMA user_version=2;
+    PRAGMA user_version=3;
     COMMIT;`);
   const decode = (row: unknown): StoredMessage => {
     const record = row as MessageRow;
@@ -101,6 +106,85 @@ export function openSqliteStorage(
     if (closed) throw new Error('SQLite 存储已关闭');
   };
   const store: StorageService = {
+    updateMessage: (key, localId, patch) => {
+      assert();
+      chatKeySchema.parse(key);
+      const row = db.prepare('SELECT * FROM messages WHERE chat_key=? AND id=?').get(key, localId);
+      if (!row) throw new Error('消息不存在或不属于当前会话');
+      const old = decode(row),
+        payload = incomingSchema.parse({ ...old, ...patch });
+      db.prepare('UPDATE messages SET payload=? WHERE chat_key=? AND id=?').run(
+        JSON.stringify(payload),
+        key,
+        localId,
+      );
+      publish('messages.changed', { chatKey: key });
+      return { ...payload, localId: old.localId, self: old.self, read: old.read };
+    },
+    queryMessages: (keys, q) => {
+      const where =
+        "chat_key IN (SELECT value FROM json_each(?)) AND (?='' OR instr(lower(json_extract(payload,'$.text')),lower(?))>0) AND (? IS NULL OR json_extract(payload,'$.senderId')=?) AND timestamp>=? AND timestamp<=?";
+      const args = [
+        JSON.stringify(keys),
+        q.query ?? '',
+        q.query ?? '',
+        q.senderId ?? null,
+        q.senderId ?? null,
+        q.from ?? 0,
+        q.to ?? Number.MAX_SAFE_INTEGER,
+      ];
+      const total = Number(
+        db.prepare(`SELECT COUNT(*) AS n FROM messages WHERE ${where}`).get(...args)?.n ?? 0,
+      );
+      const items = db
+        .prepare(`SELECT * FROM messages WHERE ${where} ORDER BY id DESC LIMIT ? OFFSET ?`)
+        .all(...args, q.pageSize, (q.page - 1) * q.pageSize)
+        .map(decode)
+        .reverse();
+      return { items, total, page: q.page, pageSize: q.pageSize };
+    },
+    queryArchives: (keys, q) => {
+      const where =
+        "(? IS NULL OR chat_key IN (SELECT value FROM json_each(?))) AND (?='' OR status=?) AND (?='' OR instr(lower(payload),lower(?))>0) AND started_at>=? AND started_at<=?";
+      const args = [
+        keys ? JSON.stringify(keys) : null,
+        keys ? JSON.stringify(keys) : null,
+        q.status ?? '',
+        q.status ?? '',
+        q.query ?? '',
+        q.query ?? '',
+        q.from ?? 0,
+        q.to ?? Number.MAX_SAFE_INTEGER,
+      ];
+      const total = Number(db.prepare(`SELECT COUNT(*) AS n FROM runs WHERE ${where}`).get(...args)?.n ?? 0);
+      const items = db
+        .prepare(`SELECT payload FROM runs WHERE ${where} ORDER BY started_at DESC LIMIT ? OFFSET ?`)
+        .all(...args, q.pageSize, (q.page - 1) * q.pageSize)
+        .map((row) => JSON.parse(String(row.payload)) as Archive);
+      return { items, total, page: q.page, pageSize: q.pageSize };
+    },
+    messageMetrics: (keys) => {
+      const args = JSON.stringify(keys);
+      const counts = db
+        .prepare(
+          "SELECT SUM(self=0) AS received,SUM(self=1) AS sent,SUM(CASE WHEN self=0 AND json_extract(payload,'$.metadata.triggered')=1 THEN 1 ELSE 0 END) AS triggered,SUM(CASE WHEN self=0 AND json_type(payload,'$.metadata.triggered') IS NOT NULL THEN 1 ELSE 0 END) AS measured FROM messages WHERE chat_key IN (SELECT value FROM json_each(?))",
+        )
+        .get(args);
+      const daily = db
+        .prepare(
+          "SELECT strftime('%Y-%m-%d',timestamp/1000,'unixepoch','localtime') AS day,SUM(self=0) AS received,SUM(self=1) AS sent FROM messages WHERE chat_key IN (SELECT value FROM json_each(?)) GROUP BY day ORDER BY day DESC LIMIT 30",
+        )
+        .all(args) as unknown as { day: string; received: number; sent: number }[];
+      return {
+        received: Number(counts?.received ?? 0),
+        sent: Number(counts?.sent ?? 0),
+        triggered:
+          Number(counts?.measured ?? 0) === Number(counts?.received ?? 0)
+            ? Number(counts?.triggered ?? 0)
+            : null,
+        daily,
+      };
+    },
     append: (raw, self = false) => {
       assert();
       const message = incomingSchema.parse(raw);

@@ -33,7 +33,7 @@ async function boot(allowLaunch = true) {
     fs.rmSync(real, { recursive: true, force: true });
   });
   const port = await freePort();
-  const content = `import net from 'node:net';if(process.env.SNOWLUMA_ACCEPT_EULA!=='1'||process.env.SNOWLUMA_ACCEPT_PRIVACY!=='1')process.exit(91);process.stdout.write('accessToken=test-fixture-secret\\n');process.stdout.write('token=other-fixture-secret\\n');net.createServer(socket=>socket.end()).listen(${port},'127.0.0.1');`;
+  const content = `import net from 'node:net';if(process.env.SNOWLUMA_ACCEPT_EULA!=='1'||process.env.SNOWLUMA_ACCEPT_PRIVACY!=='1')process.exit(91);process.stdout.write('accessToken=test-fixture-secret\\n');process.stdout.write('token=other-fixture-secret\\n');process.stdout.write('protocol credential http-fixture-secret\\n');net.createServer(socket=>socket.end()).listen(${port},'127.0.0.1');`;
   fs.writeFileSync(path.join(packageDir, 'index.mjs'), content, 'utf8');
   fs.writeFileSync(
     path.join(packageDir, 'config/runtime.json'),
@@ -50,6 +50,7 @@ async function boot(allowLaunch = true) {
         wsUrl: `ws://127.0.0.1:${await freePort()}`,
         httpUrl: `http://127.0.0.1:${await freePort()}`,
         accessToken: 'test-fixture-secret',
+        httpAccessToken: 'http-fixture-secret',
       },
     },
   });
@@ -79,6 +80,13 @@ test('SnowLuma 插件默认只读，演示配置和未同意协议时禁止启�
     409,
   );
   f.runtime.configure({ directory: f.packageDir, mode: 'managed', acceptEula: true, acceptPrivacy: true });
+  f.runtime.configure({ autoStart: false });
+  expect(f.runtime.getSettings()).toMatchObject({
+    directory: f.packageDir,
+    mode: 'managed',
+    acceptEula: true,
+    acceptPrivacy: true,
+  });
   await expect(f.runtime.start()).rejects.toThrow('演示');
   expect(await isPortOpen('127.0.0.1', f.port)).toBe(false);
   const live = await boot();
@@ -105,6 +113,7 @@ test('托管启动互斥、状态区分登录、日志脱敏、设置持久化�
   const logs = JSON.stringify(await (await f.request('/logs')).json());
   expect(logs).not.toContain('test-fixture-secret');
   expect(logs).not.toContain('other-fixture-secret');
+  expect(logs).not.toContain('http-fixture-secret');
   expect(fs.readFileSync(path.join(f.packageDir, 'index.mjs'), 'utf8')).toBe(f.content);
   await f.runtime.stop();
   expect(await isPortOpen('127.0.0.1', f.port)).toBe(false);
@@ -112,6 +121,18 @@ test('托管启动互斥、状态区分登录、日志脱敏、设置持久化�
   expect((await f.request('/status')).status).toBe(404);
   await f.app.runtime.setEnabled('snowluma-runtime', true);
   expect(f.app.runtime.use(snowlumaService).getSettings().directory).toBe(f.packageDir);
+});
+
+test('mock SnowLuma 异常退出后状态包含失败原因，安装目录锁被释放', async () => {
+  const f = await boot();
+  fs.writeFileSync(path.join(f.packageDir, 'index.mjs'), 'setTimeout(() => process.exit(23), 50);');
+  f.runtime.configure({ directory: f.packageDir, mode: 'managed', acceptEula: true, acceptPrivacy: true });
+  await f.runtime.start();
+  await until(async () => f.runtime.logs().some((line) => line.text.includes('code=23')));
+  expect(await f.runtime.status()).toMatchObject({ phase: 'failed', owned: false });
+  expect((await f.runtime.status()).message).toContain('23');
+  const release = lockInstallation(f.packageDir, path.join(f.directory, 'locks'));
+  release();
 });
 test('外部服务不重复启动也不接管停止；卸载只回收自有子进程', async () => {
   const f = await boot();

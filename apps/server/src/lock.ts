@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { processOwnsLock } from '@qq-harness/files';
 
 export function acquireDataLock(dataDir: string): () => void {
   fs.mkdirSync(dataDir, { recursive: true });
@@ -24,20 +25,17 @@ export function acquireDataLock(dataDir: string): () => void {
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
       let pid: number;
+      const original = fs.readFileSync(file, 'utf8');
       try {
-        pid = Number(JSON.parse(fs.readFileSync(file, 'utf8')).pid);
+        pid = Number(JSON.parse(original).pid);
       } catch {
         throw new Error('数据目录锁格式损坏，请离线检查后处理');
       }
       if (!Number.isInteger(pid) || pid <= 0) throw new Error('数据目录锁 PID 无效');
-      try {
-        process.kill(pid, 0);
-      } catch (probe) {
-        if ((probe as NodeJS.ErrnoException).code === 'ESRCH') {
-          fs.unlinkSync(file);
-          continue;
-        }
-        throw new Error('无法确认数据目录锁归属，拒绝并行写入');
+      if (!processOwnsLock(pid, fs.statSync(file).mtimeMs)) {
+        if (fs.readFileSync(file, 'utf8') !== original) continue;
+        fs.unlinkSync(file);
+        continue;
       }
       throw new Error('该数据目录已有 QQ Harness 实例运行');
     }

@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {afterEach,expect,test,vi} from 'vitest';
+import {createApplication} from '../apps/server/src/app.js';
+import {configService} from '@qq-harness/domain';
+const cleanup:(()=>unknown|Promise<unknown>)[]=[];
+afterEach(async()=>{for(const fn of cleanup.splice(0).reverse())await fn();});
+test('搜索配置入口脱敏，删除／重排提供方不能串用其他渠道密钥，测试通过运行系统执行',async()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'harness-search-settings-'));cleanup.push(()=>{const full=fs.realpathSync(root);if(path.dirname(full)!==fs.realpathSync(os.tmpdir())||!path.basename(full).startsWith('harness-search-settings-'))throw new Error('清理越界');fs.rmSync(full,{recursive:true,force:true});});
+ const fetch=vi.fn(async(_url:unknown,init?:RequestInit)=>new Response(JSON.stringify({results:[{title:'测试',url:'https://fixture.invalid',content:'结果'}]})));
+ const app=await createApplication({dataDir:root,extensionHotReload:false,v2Managers:false,initialConfig:{legacyGlobal:{webSearch:{provider:'custom:b',providers:[{id:'a',baseUrl:'https://a.invalid',apiKey:'secret-for-a'},{id:'b',baseUrl:'https://b.invalid',apiKey:'secret-for-b'}]}}},web:{searchFetch:fetch}});cleanup.push(app.stop);
+ const request=(method:string,body?:unknown)=>app.app.request('http://127.0.0.1/api/web/settings',{method,...(body?{headers:{'content-type':'application/json'},body:JSON.stringify(body)}:{})});
+ const initial=await (await request('GET')).json() as any;expect(initial.providers.map((p:any)=>p.apiKey)).toEqual(['******','******']);
+ const updated=await request('PATCH',{providers:[initial.providers[1]]});expect(updated.status).toBe(200);
+ const ws=app.runtime.use(configService).get().legacyGlobal.webSearch as any;expect(ws.providers).toHaveLength(1);expect(ws.providers[0].id).toBe('b');expect(ws.providers[0].apiKey).toBe('secret-for-b');expect(ws.provider).toBe('custom:b');
+ const result=await app.app.request('http://127.0.0.1/api/web/test',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:'测试搜索'})});expect(result.status).toBe(200);const body=await result.json() as any;expect(body.result.results).toHaveLength(1);expect(app.runtime.listRuns().find(r=>r.id===body.runId)).toMatchObject({mode:'web.test',status:'completed'});
+ expect(fetch.mock.calls[0]?.[1]?.headers).toMatchObject({authorization:'Bearer secret-for-b'});
+ expect(JSON.stringify(await updated.json())).not.toContain('secret-for-b');
+});

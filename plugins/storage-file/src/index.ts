@@ -25,8 +25,9 @@ export function storageFile(dataDir: string) {
         if (cache.has(key)) return cache.get(key)!;
         let list: StoredMessage[] = [];
         for (const raw of readJsonl(filename(key))) {
-          const event = raw as { t: string; message?: StoredMessage; ids?: number[]; read?: boolean };
+          const event = raw as { t: string; message?: StoredMessage; ids?: number[]; read?: boolean;localId?:number;patch?:{text?:string;metadata?:Record<string,unknown>} };
           if (event.t === 'm' && event.message) list.push(event.message);
+          if(event.t==='update')list=list.map(message=>message.localId===event.localId?{...message,...event.patch}:message);
           if (event.t === 'read') {
             const ids = new Set(event.ids);
             list = list.map((message) =>
@@ -40,6 +41,12 @@ export function storageFile(dataDir: string) {
       const archiveDir = path.join(dataDir, 'sessions', 'archive');
       fs.mkdirSync(archiveDir, { recursive: true });
       ctx.provide(storageService, {
+        updateMessage:(key,localId,patch)=>{
+          ctx.assertActive();const list=messages(key),old=list.find(m=>m.localId===localId);if(!old)throw new Error('消息不存在或不属于当前会话');
+          const message={...old,...incomingSchema.parse({...old,...patch}),localId:old.localId,self:old.self,read:old.read};
+          appendJsonl(filename(key),{t:'update',localId,patch:{text:message.text,metadata:message.metadata}});
+          cache.set(key,list.map(m=>m.localId===localId?message:m));ctx.host.publish('messages.changed',{chatKey:key});return structuredClone(message);
+        },
         append: (input, self = false) => {
           ctx.assertActive();
           const value = incomingSchema.parse(input);

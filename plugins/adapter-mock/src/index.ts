@@ -8,14 +8,27 @@ export const adapterMock = definePlugin({
   name: '开发消息适配器',
   setup(ctx) {
     const listeners = new Set<(message: IncomingMessage) => void>();
+    const events = new Set<(event: Record<string, unknown>) => void>();
     const sent: { chatKey: string; text: string }[] = [];
     ctx.effect(() => {
       listeners.clear();
+      events.clear();
     });
     ctx.provide(adapterService, {
       kind: 'mock',
+      identity: () => ({ id: '888', name: '演示助手' }),
       connected: () => !ctx.signal.aborted,
       sent,
+      subscribeEvents: (listener) => {
+        events.add(listener);
+        return () => {
+          events.delete(listener);
+        };
+      },
+      injectEvent: (event) => {
+        ctx.assertActive();
+        for (const listener of events) listener(structuredClone(event));
+      },
       subscribe: (listener) => {
         listeners.add(listener);
         return () => {

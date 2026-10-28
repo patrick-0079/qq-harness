@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import net from 'node:net';
+import { z } from 'zod';
 import { spawn, execFile, type ChildProcess } from 'node:child_process';
 import {
   snowlumaSettingsSchema,
@@ -15,6 +16,7 @@ import { lockInstallation } from './process-lock.js';
 export interface SnowlumaPluginOptions {
   allowLaunch?: boolean;
   lockRoot?: string;
+  directory?: string;
 }
 export function isPortOpen(host: string, port: number, timeout = 300): Promise<boolean> {
   return new Promise((resolve) => {
@@ -84,7 +86,9 @@ export class SnowlumaRuntime {
     readonly options: SnowlumaPluginOptions,
     private connected: () => boolean,
   ) {
-    this.settings = snowlumaSettingsSchema.parse(storage.state('snowluma-runtime', 'settings') ?? {});
+    this.settings = snowlumaSettingsSchema.parse(
+      storage.state('snowluma-runtime', 'settings') ?? { directory: options.directory },
+    );
   }
   getSettings(): SnowlumaSettings {
     return structuredClone(this.settings);
@@ -93,8 +97,11 @@ export class SnowlumaRuntime {
     this.ctx.assertActive();
     if (this.child || this.starting || this.stopping)
       throw new Error('请先停止本插件管理的 SnowLuma，再修改启动设置');
-    const next = snowlumaSettingsSchema.partial().strict().parse(patch);
-    const settings = snowlumaSettingsSchema.parse({ ...this.settings, ...next });
+    // 只覆盖本次提交的字段；partial(default) 会意外重置目录、模式和协议同意状态。
+    const settings = snowlumaSettingsSchema.strict().parse({
+      ...this.settings,
+      ...z.record(z.string(), z.unknown()).parse(patch),
+    });
     if (
       (settings.directory && !path.isAbsolute(settings.directory)) ||
       (settings.nodePath && !path.isAbsolute(settings.nodePath))
@@ -109,8 +116,13 @@ export class SnowlumaRuntime {
     return this.buffer.slice(-200);
   }
   private log(text: string, stream: SnowlumaLog['stream'] = 'host') {
-    const token = this.config.get().onebot.accessToken;
-    let safe = token ? text.split(token).join('[REDACTED]') : text;
+    const config = this.config.get().onebot;
+    // HTTP 与 WS 可配置不同令牌；裸值日志也必须脱敏，不能只依赖字段名正则。
+    let safe = text;
+    for (const token of [config.accessToken, config.httpAccessToken]
+      .filter(Boolean)
+      .sort((a, b) => b.length - a.length))
+      safe = safe.split(token).join('[REDACTED]');
     safe = safe
       .replace(/(Bearer\s+)[\w.\-+/=]+/gi, '$1[REDACTED]')
       .replace(
@@ -229,6 +241,10 @@ export class SnowlumaRuntime {
         this.changed();
       };
       child.once('exit', (code, signal) => {
+        if (this.child === child && this.phase !== 'stopping' && (code !== 0 || signal)) {
+          this.phase = 'failed';
+          this.message = `SnowLuma 异常退出：code=${code ?? ''}, signal=${signal ?? ''}`;
+        }
         this.log(`进程退出：code=${code ?? ''}, signal=${signal ?? ''}`);
         finish();
       });

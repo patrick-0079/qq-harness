@@ -15,6 +15,7 @@ export interface ExtensionService {
   renderTemplate(text: string, owner?: string): unknown;
   runHook(name: string, input: LegacyObject, chatKey?: string): Promise<LegacyObject[]>;
   raw(): LegacyObject;
+  diagnostics():string[];
   attachManager(owner: PluginContext, id: string): Promise<void>;
 }
 export const extensionService = service<ExtensionService>('harness.extensions');

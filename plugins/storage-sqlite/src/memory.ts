@@ -9,6 +9,9 @@ import {
 import type { MemoryRepository } from '@qq-harness/domain';
 
 export function sqliteMemoryRepository(db: DatabaseSync): MemoryRepository {
+  db.exec(
+    'CREATE TABLE IF NOT EXISTS memory_agent_control (id INTEGER PRIMARY KEY CHECK(id=1), payload TEXT NOT NULL CHECK(json_valid(payload)))',
+  );
   const rowRecord = (row: unknown) =>
     row ? memoryRecordSchema.parse(JSON.parse(String((row as { payload: string }).payload))) : undefined;
   const rowNote = (row: unknown) =>
@@ -16,7 +19,50 @@ export function sqliteMemoryRepository(db: DatabaseSync): MemoryRepository {
   const getRecord = (id: string) =>
     rowRecord(db.prepare('SELECT payload FROM memory_records WHERE id=?').get(id));
   const getNote = (id: string) => rowNote(db.prepare('SELECT payload FROM memory_notes WHERE id=?').get(id));
+  const saveNote = (input: ScratchpadNote, expectedRevision?: number) => {
+    const note = scratchpadNoteSchema.parse(input);
+    db.exec('SAVEPOINT memory_write');
+    try {
+      const actual = getNote(note.id)?.revision ?? 0;
+      if (expectedRevision !== undefined && expectedRevision !== actual) throw new Error('记事本版本冲突');
+      if (note.revision !== actual + 1) throw new Error('记事本修订号无效');
+      db.prepare(
+        `INSERT INTO memory_notes(id,chat_key,updated_at,expires_at,payload) VALUES(?,?,?,?,?)
+        ON CONFLICT(id) DO UPDATE SET updated_at=excluded.updated_at,expires_at=excluded.expires_at,payload=excluded.payload`,
+      ).run(note.id, note.chatKey, note.updatedAt, note.expiresAt, JSON.stringify(note));
+      db.prepare('INSERT INTO memory_note_revisions(note_id,revision,payload) VALUES(?,?,?)').run(
+        note.id,
+        note.revision,
+        JSON.stringify(note),
+      );
+      db.exec('RELEASE SAVEPOINT memory_write');
+      return note;
+    } catch (error) {
+      db.exec('ROLLBACK TO SAVEPOINT memory_write; RELEASE SAVEPOINT memory_write');
+      throw error;
+    }
+  };
   return {
+    transaction: (write) => {
+      db.exec('SAVEPOINT memory_batch');
+      try {
+        const result = write();
+        db.exec('RELEASE SAVEPOINT memory_batch');
+        return result;
+      } catch (error) {
+        db.exec('ROLLBACK TO SAVEPOINT memory_batch; RELEASE SAVEPOINT memory_batch');
+        throw error;
+      }
+    },
+    control: () => {
+      const row = db.prepare('SELECT payload FROM memory_agent_control WHERE id=1').get();
+      return row ? JSON.parse(String(row.payload)) : undefined;
+    },
+    saveControl: (value) => {
+      db.prepare(
+        'INSERT INTO memory_agent_control(id,payload) VALUES(1,?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload',
+      ).run(JSON.stringify(value));
+    },
     records: () =>
       db
         .prepare('SELECT payload FROM memory_records ORDER BY updated_at DESC')
@@ -36,7 +82,7 @@ export function sqliteMemoryRepository(db: DatabaseSync): MemoryRepository {
     record: getRecord,
     saveRecord: (input, expectedRevision) => {
       const record = memoryRecordSchema.parse(input);
-      db.exec('BEGIN IMMEDIATE');
+      db.exec('SAVEPOINT memory_write');
       try {
         const prior = getRecord(record.id);
         const actual = prior?.revision ?? 0;
@@ -68,10 +114,10 @@ export function sqliteMemoryRepository(db: DatabaseSync): MemoryRepository {
           record.revision,
           record.status === 'active' ? 'upsert' : 'remove',
         );
-        db.exec('COMMIT');
+        db.exec('RELEASE SAVEPOINT memory_write');
         return record;
       } catch (error) {
-        db.exec('ROLLBACK');
+        db.exec('ROLLBACK TO SAVEPOINT memory_write; RELEASE SAVEPOINT memory_write');
         throw error;
       }
     },
@@ -83,29 +129,41 @@ export function sqliteMemoryRepository(db: DatabaseSync): MemoryRepository {
           record: memoryRecordSchema.parse(JSON.parse(String(row.payload))),
           changedAt: Number(row.changed_at),
         })),
-    notes: (chatKey) =>
+    notes: (chatKey, includeArchived = false) =>
       db
-        .prepare('SELECT payload FROM memory_notes WHERE chat_key=? ORDER BY updated_at DESC')
-        .all(chatKey)
+        .prepare(
+          "SELECT payload FROM memory_notes WHERE chat_key=? AND (?=1 OR COALESCE(json_extract(payload,'$.status'),'active')='active') ORDER BY updated_at DESC",
+        )
+        .all(chatKey, includeArchived ? 1 : 0)
         .map(rowNote) as ScratchpadNote[],
     note: getNote,
+    noteHistory: (id) =>
+      db
+        .prepare('SELECT payload FROM memory_note_revisions WHERE note_id=? ORDER BY revision DESC')
+        .all(id)
+        .map(rowNote) as ScratchpadNote[],
     saveNote: (input, expectedRevision) => {
-      const note = scratchpadNoteSchema.parse(input);
-      const prior = getNote(note.id);
-      const actual = prior?.revision ?? 0;
-      if (expectedRevision !== undefined && expectedRevision !== actual) throw new Error('记事本版本冲突');
-      if (note.revision !== actual + 1) throw new Error('记事本修订号无效');
-      db.prepare(
-        `INSERT INTO memory_notes(id,chat_key,updated_at,expires_at,payload) VALUES(?,?,?,?,?)
-         ON CONFLICT(id) DO UPDATE SET chat_key=excluded.chat_key,updated_at=excluded.updated_at,
-         expires_at=excluded.expires_at,payload=excluded.payload`,
-      ).run(note.id, note.chatKey, note.updatedAt, note.expiresAt, JSON.stringify(note));
-      return note;
+      return saveNote(input, expectedRevision);
     },
     deleteNote: (id) => {
-      db.prepare('DELETE FROM memory_notes WHERE id=?').run(id);
+      const prior = getNote(id);
+      if (prior && (!prior.status || prior.status === 'active'))
+        saveNote(
+          { ...prior, status: 'deleted', revision: prior.revision + 1, updatedAt: Date.now() },
+          prior.revision,
+        );
     },
-    expireNotes: (now) => Number(db.prepare('DELETE FROM memory_notes WHERE expires_at<=?').run(now).changes),
+    expireNotes: (now) => {
+      const notes = db
+        .prepare(
+          "SELECT payload FROM memory_notes WHERE expires_at<=? AND json_extract(payload,'$.consolidatedAt') IS NOT NULL AND COALESCE(json_extract(payload,'$.status'),'active')='active'",
+        )
+        .all(now)
+        .map(rowNote) as ScratchpadNote[];
+      for (const note of notes)
+        saveNote({ ...note, status: 'expired', revision: note.revision + 1, updatedAt: now }, note.revision);
+      return notes.length;
+    },
     cursor: (chatKey) =>
       Number(db.prepare('SELECT local_id FROM memory_cursors WHERE chat_key=?').get(chatKey)?.local_id ?? 0),
     setCursor: (chatKey, localId) => {

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { createApplication } from '../apps/server/src/app.js';
 import { containerRuntimeService, containerJobsService, adapterService } from '@qq-harness/domain';
 import { runContainerCli } from '@qq-harness/container-runtime';
-import type { ContainerBinding } from '@qq-harness/contracts';
+import type { ContainerInfo } from '@qq-harness/contracts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const engine = process.argv.find((v) => v.startsWith('--engine='))?.slice(9) ?? 'podman';
@@ -15,15 +15,17 @@ if (!['docker', 'podman'].includes(engine) || !image)
 const varDir = path.join(root, 'var');
 fs.mkdirSync(varDir, { recursive: true });
 const dataDir = fs.mkdtempSync(path.join(varDir, 'container-acceptance-'));
-const app = await createApplication({
-  dataDir,
-  demo: true,
-  v2Managers: false,
-  containers: { allowOperations: true },
-  initialConfig: { acceptAllSessions: false, admissions: ['private:10002'] },
-});
+const create = () =>
+  createApplication({
+    dataDir,
+    demo: true,
+    v2Managers: false,
+    containers: { allowOperations: true },
+    initialConfig: { acceptAllSessions: false, admissions: ['private:10002'] },
+  });
+let app = await create();
 const chatKey = 'private:10002';
-let binding: ContainerBinding | undefined;
+let binding: ContainerInfo | undefined;
 let cleaned = false;
 const assert = (ok: unknown, message: string) => {
   if (!ok) throw new Error(message);
@@ -75,12 +77,20 @@ try {
   });
   await until(() => jobs.get(chatKey, cancel.id).stdout.includes('started'));
   await jobs.cancel(chatKey, cancel.id);
-  assert(!(await runtime.inspect(chatKey)).running, '取消后容器仍在运行');
+  assert((await runtime.inspect(chatKey)).running, '取消任务不应停止共享容器');
   await runtime.start(chatKey);
   assert(
     (await tool('container_read', { path: '验收/result.txt' })).stdout === '42\n中文验收',
     '重启后文件丢失',
   );
+  let timedOut = false;
+  try {
+    await runtime.execute(chatKey, { command: 'sleep 60', timeoutMs: 1500 });
+  } catch {
+    timedOut = true;
+  }
+  assert(timedOut && (await runtime.inspect(chatKey)).running, '超时应清理任务并保留共享容器');
+  await runtime.start(chatKey);
   const unloading = jobs.start(chatKey, {
     command: 'printf "started\\n"; sleep 60',
     workdir: '/tmp/qq-harness-workspace',
@@ -92,8 +102,8 @@ try {
     maxOutputChars: 65536,
   });
   assert(
-    inspected.exitCode === 0 && JSON.parse(inspected.stdout)[0].State.Running === false,
-    '卸载后容器仍在运行',
+    inspected.exitCode === 0 && JSON.parse(inspected.stdout)[0].State.Running === true,
+    '卸载不应停止共享容器',
   );
   await app.runtime.setEnabled('container-runtime', true);
   runtime = app.runtime.use(containerRuntimeService);
@@ -103,7 +113,18 @@ try {
     '重新启用后文件读取失败',
   );
   assert(app.runtime.use(adapterService).sent?.length === 0, '容器验收不应发送 QQ 消息');
+  await app.stop();
+  app = await create();
+  runtime = app.runtime.use(containerRuntimeService);
+  assert(runtime.has(chatKey), '宿主重启后绑定丢失');
+  await runtime.start(chatKey);
+  assert(
+    (await tool('container_read', { path: '验收/result.txt' })).stdout === '42\n中文验收',
+    '宿主重启后文件丢失',
+  );
+  assert(app.runtime.use(adapterService).sent?.length === 0, '重启验收不应发送 QQ 消息');
   await runtime.remove(chatKey);
+  await runtime.removeExisting(binding.id);
   cleaned = true;
   console.log(
     JSON.stringify(
@@ -114,9 +135,11 @@ try {
         command: true,
         utf8Files: true,
         backgroundJob: true,
-        cancelStopsContainer: true,
+        cancelKeepsContainer: true,
+        timeoutKeepsContainer: true,
+        hostRestartRecoversBinding: true,
         restartPreservesFiles: true,
-        unloadStopsContainer: true,
+        unloadKeepsContainer: true,
         reenableRestoresBinding: true,
         testContainerRemoved: true,
         qqMessagesSent: 0,
@@ -131,6 +154,7 @@ try {
       await app.runtime.setEnabled('container-runtime', true);
       const current = app.runtime.use(containerRuntimeService);
       if (current.has(chatKey)) await current.remove(chatKey);
+      if (binding) await current.removeExisting(binding.id);
       cleaned = true;
     } catch {
       console.error(`临时容器未清理，请保留归属数据进行排查：${dataDir}`);

@@ -1,3 +1,4 @@
+import { waitMemoryRequest } from './fixtures/memory-task.js';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -94,8 +95,11 @@ test('SQLite 与文件仓储保留修订、待索引事件、游标及记事本�
     };
     repo.saveNote(note, 0);
     expect(repo.expireNotes(now + 999)).toBe(0);
+    expect(repo.expireNotes(now + 1000)).toBe(0);
+    repo.saveNote({ ...note, consolidatedAt: now + 500, revision: 2 }, 1);
     expect(repo.expireNotes(now + 1000)).toBe(1);
-    expect(repo.note(note.id)).toBeUndefined();
+    expect(repo.note(note.id)?.status).toBe('expired');
+    expect(repo.noteHistory(note.id)).toHaveLength(3);
     sqlite?.close();
     if (kind === 'file') expect(fileMemoryRepository(dir).record(initial.id)?.revision).toBe(2);
   }
@@ -142,6 +146,7 @@ test('三个维度隔离、旧文本兼容、敏感及私聊来源不跨会话',
     sources: [{ chatKey: 'group:1', localId: groupMessage.localId, senderId: '42' }],
   });
   storage.setMemory('group:1', '旧版约定：周末讨论');
+  await waitMemoryRequest(app, memory.consolidate('group:1', 'short'));
   expect((await memory.search('group:1', '管理员', '42')).map((item) => item.record.id)).toContain(local.id);
   expect((await memory.search('group:2', '管理员', '42')).map((item) => item.record.id)).not.toContain(
     local.id,
@@ -203,7 +208,7 @@ test('三个维度隔离、旧文本兼容、敏感及私聊来源不跨会话',
   expect(memory.remove(local.id).status).toBe('deleted');
 });
 
-test('暂存修改重置到期，重要项凭来源整理成中期记忆', async () => {
+test('笔记修改保留历史，整理后进入短期并依次进入中期', async () => {
   const app = await boot();
   const memory = app.runtime.use(memoryService),
     repo = app.runtime.use(memoryRepository);
@@ -220,20 +225,27 @@ test('暂存修改重置到期，重要项凭来源整理成中期记忆', async
   expect(note.expiresAt - note.updatedAt).toBeLessThanOrEqual(7 * 86_400_000);
   const changed = memory.updateNote('group:1', note.id, { text: '下周继续讨论旅行', important: true });
   expect(changed.updatedAt).toBeGreaterThanOrEqual(note.updatedAt);
+  expect((await waitMemoryRequest(app, memory.consolidate('group:1'))).status).toBe('completed');
   await until(
     () => repo.note(note.id)?.promotion,
     (value) => value === 'done',
   );
+  await waitMemoryRequest(app, memory.consolidate('group:1', 'medium'));
   expect(
-    repo.records().some((record) => record.key === `scratchpad:${note.id}` && record.tier === 'medium'),
+    repo
+      .records()
+      .some(
+        (record) => record.key === `scratchpad:${note.id}` && record.tier === 'medium' && !!record.document,
+      ),
   ).toBe(true);
   const edited = memory.updateNote('group:1', note.id, { text: '改为下周讨论路线' });
+  expect((await waitMemoryRequest(app, memory.consolidate('group:1'))).status).toBe('completed');
   await until(
     () => repo.note(note.id)?.promotion,
     (value) => value === 'done',
   );
   expect(
-    repo.records().find((record) => record.key === `scratchpad:${note.id}` && record.status === 'active')
+    memory.list('group:1').find((record) => record.key === `scratchpad:${note.id}` && record.tier === 'short')
       ?.text,
   ).toBe('改为下周讨论路线');
   expect(repo.expireNotes(edited.expiresAt)).toBe(1);
@@ -284,14 +296,14 @@ test('索引仅供候选：删除项、故障索引及旧版本写入不会成�
   expect(repo.record(record.id)?.status).toBe('deleted');
 });
 
-test('已准入的全部消息后台聚批提炼，重启后按游标续处理', async () => {
+test('全部准入消息等待整理，显式整理后推进持久化游标', async () => {
   const extractor = definePlugin({
     id: 'test-memory-extractor',
     setup(ctx) {
       ctx.provide(modelService, {
         complete: async (messages) => {
           const body = String(messages.at(-1)?.content ?? '');
-          const first = Number(body.split('\n')[0]?.split(' | ')[0]);
+          const first = JSON.parse(body).evidence[0].localId;
           return {
             message: {
               role: 'assistant',
@@ -336,6 +348,10 @@ test('已准入的全部消息后台聚批提炼，重启后按游标续处理',
       timestamp: Date.now(),
     });
   const repo = app.runtime.use(memoryRepository);
+  expect(repo.cursor('group:1')).toBe(0);
+  expect(
+    (await waitMemoryRequest(app, app.runtime.use(memoryService).consolidate('group:1', 'short'))).status,
+  ).toBe('completed');
   await until(
     () => repo.cursor('group:1'),
     (cursor) => cursor >= 30,
@@ -349,61 +365,62 @@ test('已准入的全部消息后台聚批提炼，重启后按游标续处理',
   ).toBe(true);
 });
 
-test('管理 API 读写结构化记忆、记事本和旧文本，并拒绝陈旧修订', async () => {
+test('管理API异步维护条目、文档与草稿，鉴权及版本冲突保留', async () => {
   const app = await boot({ token: 'memory-test-token' });
   const request = (url: string, init: RequestInit = {}) =>
-    app.app.request(`http://127.0.0.1${url}`, {
+    app.app.request('http://127.0.0.1' + url, {
       ...init,
       headers: { Authorization: 'Bearer memory-test-token', ...init.headers },
     });
   expect((await app.app.request('http://127.0.0.1/api/memory/status')).status).toBe(401);
   const created = await request('/api/memory/records', { method: 'POST', body: JSON.stringify(sample()) });
-  expect(created.status).toBe(201);
-  const record = (await created.json()) as MemoryRecord;
+  expect(created.status).toBe(202);
+  const task = (await created.json()) as { id: string };
+  const done = await waitMemoryRequest(app, task.id);
+  expect(done.status, done.error).toBe('completed');
+  const id = done.changes[0]!.id,
+    record = app.runtime.use(memoryRepository).record(id)!;
+  expect(record.document).toBeDefined();
   expect(
-    ((await (await request('/api/memory/records?chatKey=group%3A1')).json()) as MemoryRecord[]).map(
-      (item) => item.id,
-    ),
-  ).toContain(record.id);
-  const conflict = await request(`/api/memory/records/${record.id}`, {
+    (
+      await request('/api/memory/records/' + id, {
+        method: 'PATCH',
+        body: JSON.stringify({ expectedRevision: 999, patch: { text: '错误' } }),
+      })
+    ).status,
+  ).toBe(409);
+  const edited = await request('/api/memory/records/' + id, {
     method: 'PATCH',
-    body: JSON.stringify({
-      expectedRevision: 2,
-      patch: { text: '错误版本' },
-    }),
+    body: JSON.stringify({ expectedRevision: record.revision, patch: { text: '喜欢狗' } }),
   });
-  expect(conflict.status).toBe(409);
-  const edited = await request(`/api/memory/records/${record.id}`, {
-    method: 'PATCH',
-    body: JSON.stringify({
-      expectedRevision: 1,
-      patch: { text: '喜欢狗' },
-    }),
+  expect(edited.status).toBe(202);
+  expect((await waitMemoryRequest(app, ((await edited.json()) as { id: string }).id)).status).toBe(
+    'completed',
+  );
+  expect(app.runtime.use(memoryRepository).record(id)?.text).toBe('喜欢狗');
+  const note = await request('/api/memory/notes', {
+    method: 'POST',
+    body: JSON.stringify({ chatKey: 'group:1', text: '临时事项' }),
   });
-  expect(((await edited.json()) as MemoryRecord).revision).toBe(2);
-  const note = (await (
-    await request('/api/memory/notes', {
-      method: 'POST',
-      body: JSON.stringify({
-        chatKey: 'group:1',
-        text: '临时事项',
-      }),
-    })
-  ).json()) as { id: string };
-  expect((await request(`/api/memory/notes/${note.id}?chatKey=group%3A1`, { method: 'DELETE' })).status).toBe(
-    200,
+  const noteResult = await waitMemoryRequest(app, ((await note.json()) as { id: string }).id);
+  expect(noteResult.status).toBe('completed');
+  const removed = await request('/api/memory/notes/' + noteResult.changes[0]!.id + '?chatKey=group%3A1', {
+    method: 'DELETE',
+  });
+  expect(removed.status).toBe(202);
+  expect((await waitMemoryRequest(app, ((await removed.json()) as { id: string }).id)).status).toBe(
+    'completed',
   );
   expect(await (await request('/api/memory/notes?chatKey=group%3A1')).json()).toEqual([]);
-  await request('/api/chats/group%3A1/memory', {
+  const legacy = await request('/api/chats/group%3A1/memory', {
     method: 'PATCH',
     body: JSON.stringify({ text: '旧文本约定' }),
   });
+  expect(legacy.status).toBe(202);
+  expect((await waitMemoryRequest(app, ((await legacy.json()) as { id: string }).id)).status).toBe(
+    'completed',
+  );
   expect(await (await request('/api/chats/group%3A1/memory')).json()).toEqual({ text: '旧文本约定' });
-  expect(
-    ((await (await request('/api/memory/records?chatKey=group%3A1')).json()) as MemoryRecord[]).some(
-      (item) => item.key === 'legacy-text',
-    ),
-  ).toBe(true);
 });
 
 test('替换索引提供器且重建失败时仍可从权威仓储查询', async () => {
@@ -436,7 +453,7 @@ test('替换索引提供器且重建失败时仍可从权威仓储查询', async
   expect(app.runtime.listPlugins().find((item) => item.id === 'agent-memory')?.status).toBe('active');
 });
 
-test('提炼失败不推进游标，下一条消息触发重试且不复制事实', async () => {
+test('提炼失败不推进游标，重新整理成功且不复制事实', async () => {
   let attempts = 0;
   const extractor = definePlugin({
     id: 'test-memory-retry-model',
@@ -488,6 +505,9 @@ test('提炼失败不推进游标，下一条消息触发重试且不复制事�
       atMe: false,
       timestamp: Date.now(),
     });
+  expect(
+    (await waitMemoryRequest(app, app.runtime.use(memoryService).consolidate('group:1', 'short'))).status,
+  ).toBe('failed');
   await until(
     () => attempts,
     (value) => value >= 1,
@@ -503,6 +523,9 @@ test('提炼失败不推进游标，下一条消息触发重试且不复制事�
     timestamp: Date.now(),
   });
   const repo = app.runtime.use(memoryRepository);
+  expect(
+    (await waitMemoryRequest(app, app.runtime.use(memoryService).consolidate('group:1', 'short'))).status,
+  ).toBe('completed');
   await until(
     () => repo.cursor('group:1'),
     (value) => value >= 30,
@@ -529,7 +552,7 @@ test('模型每轮只收到按需检索指引，不预注入记忆正文', async
                   type: 'function',
                   function: {
                     name: 'finish',
-                    arguments: JSON.stringify({ mode: 'silent', reason: '测试' }),
+                    arguments: JSON.stringify({ mode: 'silent', silentReason: '测试' }),
                   },
                 },
               ],

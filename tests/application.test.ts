@@ -46,7 +46,7 @@ test('消息 → 模式 → 模型 → 工具 → 发送 → 归档，且重启�
   expect(archive.status).toBe('completed');
   expect(archive.sent).toBe(1);
   expect(app.runtime.use(adapterService).sent).toEqual([
-    { chatKey: 'group:10001', text: '演示回复：用户: 你好' },
+    { chatKey: 'group:10001', text: '演示回复：#m1 [localId=1] 用户 (2): 你好' },
   ]);
   expect(storage.unread('group:10001')).toEqual([]);
   await app.stop();
@@ -117,4 +117,22 @@ test('HTTP 来源、鉴权、脱敏、输入校验与插件停用', async () => 
   await app.runtime.setEnabled('conversation', false);
   expect(app.runtime.listPlugins().find((plugin) => plugin.id === 'conversation')?.status).toBe('disabled');
   expect((await request('/api/status')).status).toBe(200);
+});
+
+test('关闭管理令牌后无需认证访问控制台 API，旧令牌不干扰且来源限制保留', async () => {
+  const app = await boot({ token: '' });
+  expect((await app.app.request('http://127.0.0.1/api/status')).status).toBe(200);
+  expect((await app.app.request('http://127.0.0.1/api/config')).status).toBe(200);
+  expect(
+    (
+      await app.app.request('http://127.0.0.1/api/status', {
+        headers: { Authorization: 'Bearer stale-browser-token' },
+      })
+    ).status,
+  ).toBe(200);
+  expect(
+    (await app.app.request('http://127.0.0.1/api/status', { headers: { Origin: 'https://evil.example' } }))
+      .status,
+  ).toBe(403);
+  expect((await app.app.request('http://evil.example/api/status')).status).toBe(403);
 });

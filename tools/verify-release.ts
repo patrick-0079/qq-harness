@@ -1,0 +1,10 @@
+import fs from 'node:fs';import path from 'node:path';import {fileURLToPath} from 'node:url';import {spawn} from 'node:child_process';import {writeJsonAtomic} from '@qq-harness/files';import {hashes,sourceFingerprint} from './release-files.js';
+const root=fileURLToPath(new URL('../',import.meta.url)),candidate=path.join(root,'var/builds','acceptance-'+Date.now()),logs=path.join(root,'var/verification',path.basename(candidate));fs.mkdirSync(logs,{recursive:true});
+await import('../scripts/build-extension-compat.mjs');
+const sourceSha=sourceFingerprint(root),checks:Record<string,{exitCode:number;durationMs:number;log:string}>={};
+const env={...process.env,HARNESS_BUILD_DIR:candidate,HARNESS_E2E_RELEASE:candidate,CI:'1'};
+const steps:[string,string[]][]=[['typecheck',['node_modules/typescript/bin/tsc','--noEmit']],['unit',['node_modules/vitest/vitest.mjs','run']],['reference',['scripts/test-v2-reference.mjs']],['architecture',['scripts/check-architecture.mjs']],['dependencies',['--import','tsx','scripts/plugin-dependencies.mjs','--check']],['build',['scripts/build.mjs']],['browser',['node_modules/@playwright/test/cli.js','test']]];
+console.log(JSON.stringify({candidate,logs}));
+for(const [name,args]of steps){const start=Date.now(),file=path.join(logs,name+'.log'),out=fs.openSync(file,'w');console.log('开始 '+name);let exitCode:number;try{exitCode=await new Promise<number>((resolve,reject)=>{const child=spawn(process.execPath,args,{cwd:root,env,windowsHide:true,stdio:['ignore',out,out]});child.once('error',reject);child.once('exit',code=>resolve(code??1));});}finally{fs.closeSync(out);}checks[name]={exitCode,durationMs:Date.now()-start,log:path.relative(root,file)};writeJsonAtomic(path.join(logs,'progress.json'),{candidate,checks});console.log(name+' '+(exitCode===0?'通过':'失败')+' '+checks[name].durationMs+'ms');if(exitCode!==0)throw new Error('验收失败，详情：'+file);}
+if(sourceFingerprint(root)!==sourceSha)throw new Error('验收期间源码变化，请重跑');
+writeJsonAtomic(path.join(candidate,'verification.json'),{version:1,status:'passed',at:new Date().toISOString(),sourceSha,checks,files:hashes(candidate,['verification.json'])});console.log('全部验收通过：'+candidate);

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { defineClientPlugin, useHost, Slot } from '@qq-harness/client-sdk';
-import type { Archive, StatusDto } from '@qq-harness/contracts';
+import { runStatusLabel, type Archive, type StatusDto, type ChatDirectoryEntry } from '@qq-harness/contracts';
 
 function Overview() {
   const host = useHost();
@@ -12,36 +12,12 @@ function Overview() {
     queryKey: ['console-overview', 'archives'],
     queryFn: ({ signal }) => host.api.request<Archive[]>('/api/archives', { signal }),
   });
+  const { data: chats = [] } = useQuery({
+    queryKey: ['console-chats', 'chats'],
+    queryFn: ({ signal }) => host.api.request<ChatDirectoryEntry[]>('/api/chats', { signal }),
+  });
   return (
     <>
-      <div className="page-heading">
-        <div>
-          <span className="eyebrow">OVERVIEW</span>
-          <h1>运行总览</h1>
-          <p>查看运行状态，连接能力，观察每一次对话。</p>
-        </div>
-        <span className="pill positive">{data?.demo ? '演示模式 · 零模型费用' : 'OneBot 连接模式'}</span>
-      </div>
-      <div className="hero">
-        <div>
-          <span className="eyebrow">YOUR AGENT, YOUR WAY</span>
-          <h2>
-            一副骨架。
-            <br />
-            无限种可能。
-          </h2>
-          <p>
-            模型、消息接入、工具和界面都由插件组成。
-            <br />
-            在插件页面自由组合你的运行环境。
-          </p>
-        </div>
-        <div className="orb">
-          <span>Q</span>
-          <i />
-          <b />
-        </div>
-      </div>
       <div className="metrics">
         <article>
           <span>可用插件</span>
@@ -85,10 +61,17 @@ function Overview() {
               <tbody>
                 {archives.slice(0, 8).map((archive) => (
                   <tr key={archive.id}>
-                    <td>{archive.chatKey}</td>
+                    <td>
+                      <strong>
+                        {chats.find((chat) => chat.chatKey === archive.chatKey)?.displayName ??
+                          archive.chatKey}
+                      </strong>
+                      <br />
+                      <small className="muted">{archive.chatKey}</small>
+                    </td>
                     <td>
                       <span className={`pill ${archive.status === 'completed' ? 'positive' : ''}`}>
-                        {archive.status}
+                        {runStatusLabel(archive.status)}
                       </span>
                     </td>
                     <td>{archive.sent} 条</td>
@@ -108,6 +91,13 @@ export default defineClientPlugin({
   id: 'console-overview',
   setup(ctx) {
     ctx.defineSlot('overview.summary.extra');
-    ctx.page({ id: 'overview', path: '/', title: '运行总览', icon: '◈', order: 0, component: Overview });
+    ctx.page({
+      id: 'overview',
+      path: '/',
+      title: '运行总览',
+      icon: 'dashboard',
+      order: 0,
+      component: Overview,
+    });
   },
 });

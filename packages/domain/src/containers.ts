@@ -7,6 +7,7 @@ import type {
   ContainerExecInput,
   ContainerExecResult,
   ContainerJob,
+  DiscoveredContainer,
 } from '@qq-harness/contracts';
 
 export interface ContainerRuntimeService {
@@ -18,9 +19,20 @@ export interface ContainerRuntimeService {
   has(chatKey: string): boolean;
   list(signal?: AbortSignal): Promise<ContainerInfo[]>;
   create(chatKey: string, signal?: AbortSignal): Promise<ContainerInfo>;
-  inspect(chatKey: string, signal?: AbortSignal): Promise<ContainerInfo>;
-  start(chatKey: string, signal?: AbortSignal): Promise<ContainerInfo>;
-  stop(chatKey: string, signal?: AbortSignal): Promise<void>;
+  createResource(input?: { name?: string; image?: string }, signal?: AbortSignal): Promise<ContainerInfo>;
+  discover(signal?: AbortSignal): Promise<DiscoveredContainer[]>;
+  registerExisting(reference: string, signal?: AbortSignal): Promise<ContainerInfo>;
+  setBindings(chatKey: string, containerIds: string[], primary?: string): Promise<ContainerBinding[]>;
+  assignResource(containerId: string, chatKeys: string[]): Promise<ContainerInfo>;
+  bind(chatKey: string, containerId: string): Promise<ContainerInfo>;
+  unbind(chatKey: string, containerId?: string): Promise<void>;
+  removeExisting(containerId: string): Promise<void>;
+  inspect(chatKey: string, signal?: AbortSignal, containerId?: string): Promise<ContainerInfo>;
+  start(chatKey: string, signal?: AbortSignal, containerId?: string): Promise<ContainerInfo>;
+  stop(chatKey: string, signal?: AbortSignal, containerId?: string): Promise<void>;
+  startResource(containerId: string, signal?: AbortSignal): Promise<ContainerInfo>;
+  stopResource(containerId: string): Promise<void>;
+  workspace(chatKey: string, containerId?: string): string;
   remove(chatKey: string, signal?: AbortSignal): Promise<void>;
   execute(
     chatKey: string,
@@ -33,10 +45,18 @@ export interface ContainerRuntimeService {
     argv: string[],
     signal?: AbortSignal,
     stdin?: string,
+    containerId?: string,
   ): Promise<ContainerExecResult>;
 }
 export interface ContainerSessionService {
   available(chatKey: string): boolean;
+  command(
+    chatKey: string,
+    argv: string[],
+    signal?: AbortSignal,
+    stdin?: string,
+    containerId?: string,
+  ): Promise<ContainerExecResult>;
   execute(
     chatKey: string,
     input: ContainerExecInput,

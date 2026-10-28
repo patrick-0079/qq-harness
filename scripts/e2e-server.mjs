@@ -1,0 +1,14 @@
+import path from 'node:path';
+import fs from 'node:fs';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+const root=fileURLToPath(new URL('../',import.meta.url));
+const supplied=process.env.HARNESS_E2E_RELEASE,release=path.resolve(supplied??path.join(root,'var/builds',`e2e-${process.pid}-${Date.now()}`)),relative=path.relative(path.join(root,'var/builds'),release);
+if(!relative||relative.startsWith('..')||path.isAbsolute(relative))throw new Error('浏览器验收只能使用本工程独立构建');
+process.env.HARNESS_BUILD_DIR=release;
+process.env.HARNESS_RELEASE_DIR=release;
+process.env.HARNESS_TOKEN='';
+process.env.HARNESS_ALLOWED_CHATS='';
+if(!supplied)await import('./build.mjs');
+else if(!fs.existsSync(path.join(release,'server/main.mjs'))||!fs.existsSync(path.join(release,'console/index.html')))throw new Error('浏览器验收的版本尚未构建');
+process.argv.push('--demo','--port=3319','--ephemeral');
+await import(pathToFileURL(path.join(release,'server/main.mjs')).href);

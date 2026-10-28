@@ -27,6 +27,8 @@ export interface RunRequest<T = unknown> {
 }
 export interface RunRecord {
   id: string;
+  owner?: string;
+  parentId?: string;
   mode: string;
   partitionKey: string;
   status: 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
@@ -45,6 +47,10 @@ export interface RunContext {
 }
 export interface ModeDefinition<T = unknown> {
   id: string;
+  /** A separate bounded lane for short management work, independent of workload slots. */
+  lane?: 'control';
+  /** 短暂副作用操作可借用父运行的执行槽；它仍有独立的取消、期限和记录。 */
+  operation?: boolean;
   input: Schema<T>;
   partitionKey?(input: T): string;
   execute(run: RunContext, input: T): Promise<unknown>;
@@ -80,6 +86,7 @@ export interface HostControl {
   setEnabled(id: string, enabled: boolean): Promise<void>;
   listRuns(): RunRecord[];
   submit<T>(request: RunRequest<T>): RunRecord;
+  operation<T>(parent: RunContext, request: RunRequest<T>): Promise<RunRecord>;
   cancel(id: string): boolean;
   wait(id: string): Promise<RunRecord>;
   subscribe(fn: (event: HostEvent) => void): Disposer;
@@ -102,6 +109,7 @@ export interface PluginContext {
     order?: number,
   ): void;
   mode<T>(definition: ModeDefinition<T>): void;
+  guardRuns(guard: (owner: string, mode: string) => void): void;
   assertActive(): void;
   log(message: string): void;
 }

@@ -32,13 +32,13 @@ button {
   cursor: pointer;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: var(--surface);
   color: inherit;
   padding: 9px 15px;
   font-size: 13px;
 }
 button:hover {
-  background: #f0f5f3;
+  background: var(--subtle);
 }
 button:disabled {
   cursor: default;
@@ -50,7 +50,7 @@ button:disabled {
   color: white;
 }
 .primary:hover {
-  background: #255f54;
+  background: var(--accent);
 }
 .danger {
   color: var(--error);
@@ -64,7 +64,7 @@ a {
   grid-template-columns: 224px minmax(0, 1fr);
   min-height: 100vh;
 }
-aside {
+.shell > aside {
   position: sticky;
   top: 0;
   height: 100vh;
@@ -86,36 +86,36 @@ aside {
 .brand span {
   font-size: 17px;
   letter-spacing: -0.5px;
-  color: #253a3a;
+  color: var(--text);
 }
 .eyebrow {
   font-size: 10px;
   letter-spacing: 2px;
   font-weight: 600;
-  color: #929a9e;
+  color: var(--muted);
 }
-aside > .eyebrow {
+.shell > aside > .eyebrow {
   margin: 0 16px 14px;
 }
-nav {
+.shell > aside nav {
   display: flex;
   flex-direction: column;
   gap: 7px;
 }
-nav a {
+.shell > aside nav a {
   padding: 12px 16px;
   display: flex;
   align-items: center;
   gap: 13px;
   border-radius: 8px;
   font-size: 13px;
-  color: #68727e;
+  color: var(--muted);
 }
-nav a span {
+.shell > aside nav a span {
   font-size: 19px;
 }
-nav a.active {
-  background: #eaf2ef;
+.shell > aside nav a.active {
+  background: var(--subtle);
   color: var(--accent);
   font-weight: 600;
 }
@@ -123,40 +123,40 @@ nav a.active {
   margin-top: auto;
   padding: 20px 9px 0;
   font-size: 12px;
-  color: #6e7f79;
+  color: var(--accent);
 }
 .sidebar-footer small {
   display: block;
   font-size: 10px;
   margin-top: 10px;
-  color: #a3aaa8;
+  color: var(--muted);
 }
 .status-dot {
   display: inline-block;
   width: 6px;
   height: 6px;
-  background: #6ba488;
+  background: var(--accent);
   border-radius: 50%;
   margin-right: 8px;
 }
-main {
+.shell > main {
   min-width: 0;
 }
-header {
+.shell > main > header {
   height: 88px;
-  background: #fff;
+  background: var(--surface);
   border-bottom: 1px solid var(--line);
   padding: 22px 42px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-header strong {
+.shell > main > header strong {
   display: block;
   font-size: 12px;
   font-weight: 400;
   margin-top: 7px;
-  color: #78818b;
+  color: var(--muted);
 }
 .header-actions {
   display: flex;
@@ -199,18 +199,18 @@ h2 {
   line-height: 1.4;
   padding: 6px 10px;
   border-radius: 30px;
-  background: #f0f2f5;
-  color: #7c8794;
+  background: var(--subtle);
+  color: var(--muted);
   white-space: nowrap;
 }
 .positive {
-  background: #eaf4ee;
-  color: #4b8b70;
+  background: var(--subtle);
+  color: var(--accent);
 }
 .hero {
   min-height: 268px;
   border-radius: 14px;
-  background: #e8efe9;
+  background: var(--subtle);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -219,17 +219,17 @@ h2 {
   margin-bottom: 24px;
 }
 .hero .eyebrow {
-  color: #658776;
+  color: var(--accent);
 }
 .hero h2 {
   font-size: 39px;
   line-height: 1.35;
   letter-spacing: -1px;
-  color: #284b40;
+  color: var(--accent);
   margin: 15px 0;
 }
 .hero p {
-  color: #6f887a;
+  color: var(--accent);
   font-size: 12px;
   line-height: 1.9;
 }
@@ -237,12 +237,12 @@ h2 {
   width: 175px;
   height: 175px;
   margin-right: 48px;
-  border: 1px solid #b8cfc0;
+  border: 1px solid var(--accent-soft);
   border-radius: 50%;
   display: grid;
   place-items: center;
   position: relative;
-  background: radial-gradient(circle at 35% 30%, #f6fbf4, #c0d7c6);
+  background: radial-gradient(circle at 35% 30%, var(--subtle), var(--line));
   box-shadow: 12px 17px 35px #557e6320;
 }
 .orb span {
@@ -276,7 +276,7 @@ h2 {
 }
 .metrics article > span {
   font-size: 12px;
-  color: #7e8893;
+  color: var(--muted);
 }
 .metrics strong {
   display: block;
@@ -290,7 +290,7 @@ h2 {
   line-height: 36px;
 }
 .metrics small {
-  color: #a0a7af;
+  color: var(--muted);
   font-size: 10px;
 }
 .panel {
@@ -320,22 +320,22 @@ table {
 }
 th {
   font-size: 10px;
-  color: #929ba7;
+  color: var(--muted);
   letter-spacing: 0.5px;
   font-weight: 500;
   padding: 15px 25px;
-  background: #fafbfc;
+  background: var(--subtle);
 }
 td {
   padding: 15px 25px;
-  border-top: 1px solid #f0f2f4;
+  border-top: 1px solid var(--subtle);
   font-size: 12px;
-  color: #626e7b;
+  color: var(--muted);
 }
 .empty {
   padding: 65px 25px;
   text-align: center;
-  color: #929ba7;
+  color: var(--muted);
   font-size: 12px;
 }
 .chat-layout {
@@ -355,7 +355,7 @@ td {
   padding: 20px;
 }
 .chat-item.selected {
-  background: #eef5f1;
+  background: var(--subtle);
   border-left: 3px solid var(--accent);
 }
 .avatar {
@@ -365,8 +365,8 @@ td {
   display: grid;
   place-items: center;
   border-radius: 10px;
-  background: #ebf0ed;
-  color: #547967;
+  background: var(--subtle);
+  color: var(--accent);
   font-size: 13px;
 }
 .chat-item strong {
@@ -374,7 +374,7 @@ td {
 }
 .chat-item small {
   display: block;
-  color: #97a09f;
+  color: var(--muted);
   font-size: 10px;
   margin-top: 7px;
   max-width: 160px;
@@ -416,7 +416,7 @@ td {
   border-radius: 0;
   padding: 17px 0;
   font-size: 12px;
-  color: #85918d;
+  color: var(--muted);
 }
 .tabs button[aria-selected='true'] {
   border-bottom: 2px solid var(--accent);
@@ -442,15 +442,15 @@ td {
 }
 .message-meta {
   font-size: 10px;
-  color: #7e8c85;
+  color: var(--muted);
   margin-bottom: 8px;
 }
 .message-meta time {
   margin-left: 15px;
-  color: #afb5b1;
+  color: var(--muted);
 }
 .bubble {
-  background: #f3f5f6;
+  background: var(--subtle);
   border-radius: 0 10px 10px 10px;
   padding: 13px 16px;
   font-size: 12px;
@@ -459,11 +459,11 @@ td {
   overflow-wrap: anywhere;
 }
 .outgoing .bubble {
-  background: #e8f1eb;
+  background: var(--subtle);
 }
 .outgoing .avatar {
-  background: #dbeadf;
-  color: #528064;
+  background: var(--line);
+  color: var(--accent);
 }
 .composer {
   border-top: 1px solid var(--line);
@@ -482,16 +482,16 @@ td {
 }
 .composer small {
   font-size: 10px;
-  color: #9ba49e;
+  color: var(--muted);
 }
 input,
 textarea,
 select {
-  border: 1px solid #e0e6e3;
+  border: 1px solid var(--line);
   border-radius: 7px;
   padding: 10px 12px;
-  background: #fcfdfc;
-  color: #31443a;
+  background: var(--subtle);
+  color: var(--accent);
   font-size: 12px;
   max-width: 100%;
 }
@@ -506,7 +506,7 @@ textarea {
 }
 .form-stack label {
   font-size: 12px;
-  color: #66786c;
+  color: var(--accent);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -518,7 +518,7 @@ textarea {
 }
 .toggle-row small {
   display: block;
-  color: #9ba49e;
+  color: var(--muted);
   font-size: 10px;
   margin-top: 8px;
 }
@@ -541,8 +541,8 @@ textarea {
 }
 .plugin-symbol {
   font-size: 26px;
-  color: #658e79;
-  background: #f0f5f2;
+  color: var(--accent);
+  background: var(--subtle);
   border-radius: 10px;
   display: grid;
   place-items: center;
@@ -554,7 +554,7 @@ textarea {
 }
 .plugin-card code {
   font-size: 10px;
-  color: #98a39d;
+  color: var(--muted);
 }
 .plugin-card p {
   margin-top: 16px;
@@ -572,7 +572,7 @@ textarea {
 }
 .plugin-bottom small {
   font-size: 9px;
-  color: #a0aaa4;
+  color: var(--muted);
 }
 .switch {
   display: inline-flex;
@@ -591,7 +591,7 @@ textarea {
   position: absolute;
   inset: 0;
   border-radius: 20px;
-  background: #d9dfdc;
+  background: var(--line);
   pointer-events: none;
 }
 .switch span:after {
@@ -601,12 +601,12 @@ textarea {
   height: 13px;
   left: 3px;
   top: 3px;
-  background: #fff;
+  background: var(--surface);
   border-radius: 50%;
   transition: transform 0.15s;
 }
 .switch input:checked + span {
-  background: #6b9a7f;
+  background: var(--accent);
 }
 .switch input:checked + span:after {
   transform: translateX(13px);
@@ -658,8 +658,8 @@ details > small {
 .error {
   font-size: 12px;
   color: var(--error);
-  background: #fbefec;
-  border: 1px solid #f2d4ce;
+  background: var(--subtle);
+  border: 1px solid var(--line);
   padding: 15px;
   border-radius: 8px;
   margin: 12px 0;
@@ -673,7 +673,7 @@ details > small {
 }
 [role='status'] {
   font-size: 12px;
-  color: #708b7b;
+  color: var(--accent);
 }
 @media (max-width: 1100px) {
   .page {
@@ -688,7 +688,7 @@ details > small {
   .metrics {
     grid-template-columns: repeat(2, 1fr);
   }
-  header {
+  .shell > main > header {
     padding: 20px 28px;
   }
   .orb {
@@ -699,7 +699,7 @@ details > small {
   .shell {
     grid-template-columns: 1fr;
   }
-  aside {
+  .shell > aside {
     height: auto;
     position: static;
     padding: 15px;
@@ -708,21 +708,21 @@ details > small {
     margin: 0 0 15px;
   }
   .sidebar-footer,
-  aside > .eyebrow {
+  .shell > aside > .eyebrow {
     display: none;
   }
-  nav {
+  .shell > aside nav {
     flex-direction: row;
     overflow: auto;
   }
-  nav a {
+  .shell > aside nav a {
     white-space: nowrap;
     padding: 9px;
   }
   .page {
     padding: 22px 15px;
   }
-  header {
+  .shell > main > header {
     height: 70px;
     padding: 15px;
   }

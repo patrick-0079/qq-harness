@@ -9,6 +9,7 @@ import {
   toolService,
   containerSessionService,
   containerJobsService,
+  containerRuntimeService,
 } from '@qq-harness/domain';
 
 export const containerJobs = definePlugin({
@@ -16,6 +17,7 @@ export const containerJobs = definePlugin({
   name: '容器后台任务',
   requires: [
     containerSessionService.id,
+    containerRuntimeService.id,
     storageService.id,
     toolService.id,
     accessService.id,
@@ -71,6 +73,15 @@ export const containerJobs = definePlugin({
         )
           throw new Error('后台任务数量已达上限');
         const input = containerExecSchema.parse(raw);
+        const selected = ctx
+          .use(containerRuntimeService)
+          .bindings()
+          .filter((row) => row.chatKey === chatKey);
+        const binding = input.containerId
+          ? selected.find((row) => row.id === input.containerId)
+          : (selected.find((row) => row.primary) ?? selected[0]);
+        if (!binding) throw Error('当前会话未绑定所选容器');
+        input.containerId = binding.id;
         for (const [id, row] of jobs) {
           if (jobs.size < 100) break;
           if (row.status !== 'running') jobs.delete(id);
@@ -78,6 +89,7 @@ export const containerJobs = definePlugin({
         const job: ContainerJob = {
           id: randomUUID(),
           chatKey,
+          containerId: binding.id,
           command: input.command,
           status: 'running',
           createdAt: Date.now(),
@@ -121,7 +133,7 @@ export const containerJobs = definePlugin({
         const job = get(chatKey, id),
           running = active.get(id);
         if (running) {
-          running.controller.abort(new Error('任务已取消；当前会话容器将停止'));
+          running.controller.abort(new Error('任务已取消；仅清理此任务的进程树'));
           await running.done;
         }
         return structuredClone(job);
@@ -144,7 +156,7 @@ export const containerJobs = definePlugin({
       ],
       [
         'container_job_kill',
-        '取消后台任务并停止当前会话容器；保留文件。',
+        '取消后台任务并清理此任务的进程树；保留共享容器、其他任务和文件。',
         z.object({ id: z.string().uuid() }),
         { id: { type: 'string' } },
         (chat: string, id: string) => ctx.use(containerJobsService).cancel(chat, id),

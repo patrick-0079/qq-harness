@@ -14,6 +14,7 @@ interface Job {
   resolve: (record: RunRecord) => void;
   promise: Promise<RunRecord>;
   timer?: ReturnType<typeof setTimeout>;
+  operation?: boolean;
 }
 export class Runs {
   private modes = new Map<string, Mode>();
@@ -21,6 +22,31 @@ export class Runs {
   private queue: Job[] = [];
   private active = new Set<string>();
   private partitions = new Set<string>();
+  private operationParents = new Set<string>();
+  private queueLimit = 200;
+  private guards = new Set<(owner: string, mode: string) => void>();
+  guard(fn: (owner: string, mode: string) => void): Disposer {
+    this.guards.add(fn);
+    return () => {
+      this.guards.delete(fn);
+    };
+  }
+  private admit(mode: Mode) {
+    for (const guard of this.guards) guard(mode.owner, mode.definition.id);
+  }
+  configure(concurrency: number, queueLimit: number) {
+    if (
+      !Number.isInteger(concurrency) ||
+      concurrency < 1 ||
+      concurrency > 64 ||
+      !Number.isInteger(queueLimit) ||
+      queueLimit < 1
+    )
+      throw Error('运行池配置无效');
+    this.concurrency = concurrency;
+    this.queueLimit = queueLimit;
+    this.pump();
+  }
   constructor(
     private publish: (type: string, payload: unknown) => void,
     private revision: () => number,
@@ -28,7 +54,11 @@ export class Runs {
   ) {}
   register<T>(owner: string, definition: ModeDefinition<T>, active: () => boolean): Disposer {
     if (this.modes.has(definition.id)) throw new Error(`重复运行模式：${definition.id}`);
-    const entry: Mode = { owner, definition: definition as ModeDefinition, active };
+    const entry: Mode = {
+      owner,
+      definition: definition as ModeDefinition,
+      active,
+    };
     this.modes.set(definition.id, entry);
     return () => {
       if (this.modes.get(definition.id) === entry) this.modes.delete(definition.id);
@@ -38,11 +68,17 @@ export class Runs {
   submit<T>(request: RunRequest<T>): RunRecord {
     const mode = this.modes.get(request.mode);
     if (!mode?.active()) throw new Error(`运行模式未就绪：${request.mode}`);
-    if (this.queue.length >= 200) throw new Error('运行队列已满');
+    this.admit(mode);
+    if (
+      this.queue.filter((j) => j.mode.definition.lane === mode.definition.lane).length >=
+      (mode.definition.lane ? 20 : this.queueLimit)
+    )
+      throw new Error('运行队列已满');
     const input = mode.definition.input.parse(request.input);
     const partitionKey = mode.definition.partitionKey?.(input) ?? request.partitionKey;
     const record: RunRecord = {
       id: randomUUID(),
+      owner: mode.owner,
       mode: request.mode,
       partitionKey,
       status: 'queued',
@@ -69,14 +105,75 @@ export class Runs {
     return structuredClone(record);
   }
   private pump(): void {
-    while (this.active.size < this.concurrency) {
-      const index = this.queue.findIndex((job) => !this.partitions.has(job.record.partitionKey));
+    while (true) {
+      const activeJobs = [...this.active].map((id) => this.jobs.get(id)!);
+      const index = this.queue.findIndex(
+        (job) =>
+          !this.partitions.has(job.record.partitionKey) &&
+          activeJobs.filter((j) => j.mode.definition.lane === job.mode.definition.lane).length <
+            (job.mode.definition.lane ? 1 : this.concurrency),
+      );
       if (index < 0) return;
       const job = this.queue.splice(index, 1)[0]!;
       if (job.timer) clearTimeout(job.timer);
       this.active.add(job.record.id);
       this.partitions.add(job.record.partitionKey);
       void this.execute(job);
+    }
+  }
+  async operation<T>(parent: RunContext, request: RunRequest<T>): Promise<RunRecord> {
+    parent.assertActive();
+    const parentJob = this.jobs.get(parent.id),
+      mode = this.modes.get(request.mode);
+    if (!parentJob || parentJob.record.status !== 'running' || parentJob.operation)
+      throw new Error('操作必须绑定正在执行的顶层运行');
+    if (this.operationParents.has(parent.id)) throw new Error('父运行已有执行中的操作');
+    if (!mode?.active() || !mode.definition.operation) throw new Error('该模式不支持绑定操作');
+    this.admit(mode);
+    const input = mode.definition.input.parse(request.input),
+      partitionKey = mode.definition.partitionKey?.(input) ?? request.partitionKey;
+    const remaining = parent.deadline - Date.now();
+    if (remaining <= 0) throw new Error('父运行期限已过');
+    const timeoutMs =
+      request.timeoutMs === 0
+        ? Number.isFinite(remaining)
+          ? remaining
+          : 0
+        : Math.min(request.timeoutMs ?? 120000, remaining);
+    const record: RunRecord = {
+      id: randomUUID(),
+      parentId: parent.id,
+      owner: mode.owner,
+      mode: request.mode,
+      partitionKey,
+      status: 'queued',
+      createdAt: Date.now(),
+    };
+    let resolve!: (r: RunRecord) => void;
+    const promise = new Promise<RunRecord>((r) => {
+      resolve = r;
+    });
+    const job: Job = {
+      record,
+      request: { ...request, input, timeoutMs },
+      mode,
+      controller: new AbortController(),
+      promise,
+      resolve,
+      operation: true,
+    };
+    const abort = () => this.cancel(record.id, '父运行已取消');
+    this.operationParents.add(parent.id);
+    this.jobs.set(record.id, job);
+    parent.signal.addEventListener('abort', abort, { once: true });
+    try {
+      parent.signal.throwIfAborted();
+      // 操作不占用另一个顶层槽，也不等待父运行持有的会话锁。操作模式必须自行串行化副作用。
+      await this.execute(job);
+      return structuredClone(record);
+    } finally {
+      parent.signal.removeEventListener('abort', abort);
+      this.operationParents.delete(parent.id);
     }
   }
   private async execute(job: Job): Promise<void> {
@@ -87,14 +184,16 @@ export class Runs {
     const run: RunContext = {
       id: record.id,
       signal: controller.signal,
-      deadline: Date.now() + timeout,
+      deadline: timeout === 0 ? Infinity : Date.now() + timeout,
       revision: this.revision(),
       assertActive: () => {
         controller.signal.throwIfAborted();
+        if (record.status !== 'running') throw new Error('运行已经结束');
         if (!mode.active()) throw new Error('模式所属插件已停用');
+        this.admit(mode);
       },
     };
-    job.timer = setTimeout(() => this.cancel(record.id, '运行超时'), timeout);
+    if (timeout > 0) job.timer = setTimeout(() => this.cancel(record.id, '运行超时'), timeout);
     this.publish('run.changed', structuredClone(record));
     try {
       const result = await Promise.race([
@@ -103,7 +202,9 @@ export class Runs {
           return mode.definition.execute(run, request.input);
         }),
         new Promise<never>((_, reject) =>
-          controller.signal.addEventListener('abort', () => reject(controller.signal.reason), { once: true }),
+          controller.signal.addEventListener('abort', () => reject(controller.signal.reason), {
+            once: true,
+          }),
         ),
       ]);
       run.assertActive();
@@ -115,8 +216,10 @@ export class Runs {
     } finally {
       if (job.timer) clearTimeout(job.timer);
       record.endedAt = Date.now();
-      this.active.delete(record.id);
-      this.partitions.delete(record.partitionKey);
+      if (!job.operation) {
+        this.active.delete(record.id);
+        this.partitions.delete(record.partitionKey);
+      }
       this.finish(job);
       this.pump();
     }

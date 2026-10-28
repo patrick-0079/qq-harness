@@ -1,0 +1,1085 @@
+/* Layout ownership lives here. Business styles must not set shell dimensions,
+   make every th sticky, or impose a viewport-independent workspace height. */
+.console-shell {
+  --sidebar-width: 208px;
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  transition: none;
+}
+.console-shell.nav-collapsed {
+  --sidebar-width: 64px;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+}
+.console-shell > .app-sidebar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+}
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 64px;
+  flex: none;
+  padding: 0 18px;
+  white-space: nowrap;
+}
+.app-brand b {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: 8px;
+  background: var(--button-bg);
+  color: #fff;
+  font-size: 20px;
+}
+.app-brand > span {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+.app-brand small {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-weight: 400;
+}
+.sidebar-caption {
+  padding: 12px 20px 8px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.app-sidebar .sidebar-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 10px 12px;
+}
+.app-sidebar .sidebar-link {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  height: 40px;
+  gap: 10px;
+  margin: 0;
+  padding: 0 12px;
+  border-radius: 6px;
+  box-shadow: none;
+  color: var(--muted);
+}
+.app-sidebar .sidebar-link:hover {
+  background: var(--subtle);
+  color: var(--text);
+}
+.app-sidebar .sidebar-link.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: none;
+  font-weight: 600;
+}
+.app-sidebar .sidebar-link > .sidebar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+.console-shell .app-sidebar .sidebar-link > .sidebar-text {
+  width: auto;
+  height: auto;
+  flex: 1;
+  min-width: 0;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font: inherit;
+}
+.app-sidebar .sidebar-link > .sidebar-chevron {
+  font: inherit;
+  width: 12px;
+  height: auto;
+  margin-left: auto;
+}
+.sidebar-children {
+  margin: 4px 0 8px 29px;
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+}
+.app-sidebar .sidebar-children a {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  box-shadow: none;
+}
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: none;
+  padding: 12px;
+  border-top: 1px solid var(--line);
+}
+.sidebar-connection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 20px;
+  padding: 0 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.sidebar-connection i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--warning);
+  flex: none;
+}
+.sidebar-connection i[data-connected='true'] {
+  background: #22c55e;
+}
+.sidebar-bottom .sidebar-collapse {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 30px;
+  min-height: 30px;
+  margin: 0;
+  padding: 4px 8px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+}
+.console-shell.nav-collapsed .app-brand {
+  justify-content: center;
+  padding: 0;
+}
+.console-shell.nav-collapsed .app-brand > span,
+.console-shell.nav-collapsed .sidebar-caption,
+.console-shell.nav-collapsed .app-sidebar .sidebar-link > .sidebar-text,
+.console-shell.nav-collapsed .sidebar-chevron,
+.console-shell.nav-collapsed .sidebar-connection span,
+.console-shell.nav-collapsed .sidebar-collapse > span {
+  display: none;
+}
+.console-shell.nav-collapsed .sidebar-navigation {
+  padding: 8px 10px;
+}
+.console-shell.nav-collapsed .sidebar-link {
+  justify-content: center;
+  padding: 0;
+}
+.console-shell.nav-collapsed .sidebar-bottom {
+  padding: 12px 10px;
+  align-items: center;
+}
+.console-shell.nav-collapsed .sidebar-connection {
+  padding: 0;
+}
+.console-shell.nav-collapsed .sidebar-collapse {
+  justify-content: center;
+  padding: 0;
+}
+.sidebar-flyout {
+  min-width: 164px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.sidebar-flyout strong {
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.sidebar-flyout a {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 5px;
+  font-size: 13px;
+}
+.sidebar-flyout a:hover,
+.sidebar-flyout a.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.console-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.console-main > .console-header {
+  height: 52px;
+  min-height: 52px;
+  flex: none;
+  padding: 0 20px;
+  gap: 16px;
+}
+.console-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.console-breadcrumb h1 {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.35;
+}
+.console-main > .page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 16px 20px;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+.console-main .page > .toolbar,
+.console-main .page > .tabs {
+  flex: none;
+  margin: 0;
+}
+.console-main .page > .form-stack:not(.panel) {
+  padding: 0;
+}
+.console-main .page > .panel.table-wrap {
+  padding: 0;
+  flex: 1;
+  min-height: 180px;
+}
+.console-main .page > .pagination {
+  flex: none;
+  margin: 0;
+  padding: 0;
+  min-height: 32px;
+}
+.console-main .page :is(.row, .toolbar, .section-heading) {
+  min-width: 0;
+}
+.console-main .section-heading {
+  flex: none;
+}
+.console-main .toolbar {
+  gap: 8px;
+}
+.console-main .toolbar input[type='date'] {
+  flex: 0 1 148px;
+  width: 148px;
+}
+.console-main .toolbar select {
+  max-width: 230px;
+}
+.console-main .form-stack {
+  gap: 14px;
+}
+.console-main .form-stack label {
+  color: var(--text);
+}
+.console-main .panel.form-stack {
+  padding: 18px;
+}
+.console-main .settings-page form.form-stack {
+  padding: 0;
+}
+.console-main [role='status']:empty {
+  display: none;
+}
+.console-main .form-grid {
+  gap: 16px 20px;
+}
+.console-main .settings-page {
+  max-width: 1280px;
+}
+.console-main .settings-page .form-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 20px;
+  background: var(--surface);
+}
+.console-main .ant-input-number input {
+  min-height: 0;
+}
+.console-main label:has(> button[role='switch']) {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+.console-main .form-grid > .ant-btn {
+  align-self: end;
+  justify-self: start;
+  height: 32px;
+}
+.console-main .container-console {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 1280px;
+}
+.console-main .container-console .container-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 20px;
+  margin: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+}
+.console-main .container-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.console-main .container-fields label.container-enable {
+  grid-column: 1/-1;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.console-main .container-save {
+  grid-column: 1/-1;
+  padding-top: 4px;
+}
+.console-main .container-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: end;
+  margin: 0;
+}
+.console-main .container-engine-unavailable {
+  color: var(--warning);
+  background: var(--warning-soft);
+}
+.console-main .container-console .empty {
+  padding: 24px;
+}
+.console-main .qq-portable-page,
+.console-main .snowluma-page {
+  gap: 14px;
+}
+.console-main .qq-summary {
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.console-main .qq-summary article {
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-radius: 0;
+  padding: 14px 18px;
+  background: transparent;
+}
+.console-main .qq-summary article:last-child {
+  border-right: 0;
+}
+.console-main .qq-summary strong {
+  margin: 8px 0 4px;
+  font-size: 22px;
+}
+.console-main .qq-main-grid {
+  gap: 14px;
+  align-items: start;
+}
+.console-main :is(.qq-launch-panel, .qq-steps) {
+  padding: 18px;
+}
+.console-main .qq-runtime-info {
+  gap: 12px;
+  padding: 14px 0;
+  margin: 16px 0;
+}
+.console-main .qq-actions button {
+  padding: 5px 12px;
+}
+.console-main .snowluma-page > .panel {
+  padding: 16px;
+}
+.console-main .snowluma-status-grid {
+  gap: 10px;
+  margin-top: 12px;
+}
+.console-main .snowluma-status-grid > span {
+  padding: 10px;
+  border-radius: 5px;
+}
+.console-main .snowluma-page > form.panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+.console-main .snowluma-page > form.panel > :is(h2, p, .ant-btn) {
+  grid-column: 1/-1;
+}
+.console-main .snowluma-page > form.panel > .ant-btn {
+  justify-self: start;
+}
+.console-main .snowluma-page > form.panel > .toggle-row {
+  grid-column: 1/-1;
+}
+/* Headers stick only inside a bounded scroll area. A page with several
+   settings tables must never stack all their headers at the same offset. */
+.console-main table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.console-main th {
+  position: static;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.5;
+}
+.console-main td {
+  font-size: 13px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+  border-top: 0;
+}
+.console-main :is(th, td) {
+  padding: 10px 12px;
+}
+.console-main thead th {
+  white-space: nowrap;
+  background: var(--subtle);
+}
+.console-main .table-wrap {
+  min-width: 0;
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.console-main .table-wrap > table > thead > tr > th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.console-main .plugin-table {
+  min-width: 840px;
+  table-layout: fixed;
+}
+.plugin-name {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+.dependency-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+}
+.dependency-tags code {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1.5;
+  background: var(--subtle);
+  color: var(--muted);
+}
+.console-main .extension-table {
+  min-width: 980px;
+  table-layout: fixed;
+}
+.console-main .extension-table .extension-name {
+  width: auto;
+  min-width: 0;
+}
+.console-main .extension-table .extension-description {
+  width: auto;
+  max-width: none;
+}
+.console-main .extension-table .extension-actions {
+  min-width: 0;
+  gap: 6px;
+}
+.console-main .qq-tools-table {
+  min-width: 760px;
+  table-layout: fixed;
+}
+.console-main .provided-tools-table {
+  min-width: 860px;
+}
+/* Conversation workspace shares the remaining viewport, instead of nesting
+   fixed 590/560px panels that push essential controls below the screen. */
+.console-main .chat-layout {
+  display: grid;
+  grid-template-columns: clamp(200px, var(--chat-width, 280px), 520px) minmax(0, 1fr);
+  flex: 1;
+  gap: 12px;
+  min-height: 0;
+  align-items: stretch;
+  overflow: hidden;
+}
+.console-main .chat-layout > :is(.chat-list.panel, .chat-detail.panel) {
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  max-width: none;
+}
+.console-main .chat-list.panel {
+  width: auto;
+  min-width: 0;
+}
+.console-main .chat-detail.panel {
+  container-type: inline-size;
+}
+.console-main .chat-detail > .section-heading {
+  padding: 12px 14px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.console-main .chat-detail > .section-heading h2 {
+  font-size: 15px;
+  margin: 0 0 3px;
+}
+.console-main .chat-detail > .section-heading > .row {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.console-main .chat-detail > .tabs {
+  flex: none;
+  gap: 4px;
+  padding: 0 10px;
+}
+.console-main .chat-detail > .tabs button {
+  padding: 9px 10px;
+}
+.console-main .chat-detail > .tab-content {
+  flex: 1;
+  min-height: 0;
+  padding: 14px;
+  overflow: auto;
+}
+.console-main .chat-detail > .tab-content:has(> .chat-settings) {
+  padding: 0;
+  overflow: hidden;
+}
+.console-main .chat-detail .table-wrap {
+  max-height: none;
+}
+.console-main .alphabet-index {
+  justify-content: space-evenly;
+  gap: 0;
+  padding: 2px 0;
+  width: 22px;
+}
+.console-main .alphabet-index button {
+  height: auto;
+  flex: 1 1 0;
+  line-height: 1;
+  min-height: 0;
+  max-height: 20px;
+  padding: 0;
+}
+.console-main .chat-detail .composer {
+  flex: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+  padding: 8px 12px;
+}
+.console-main .chat-detail .composer textarea {
+  min-height: 34px;
+  height: 34px;
+  max-height: 110px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  background: var(--subtle);
+  resize: vertical;
+}
+.console-main .composer > .row {
+  margin: 0;
+  min-width: 0;
+  width: auto;
+}
+.console-main .composer .ant-btn {
+  white-space: nowrap;
+}
+.console-main .composer small {
+  display: none;
+}
+.console-main .chat-settings {
+  display: grid;
+  grid-template-columns: 144px minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+.settings-index {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 8px;
+  overflow: auto;
+  border-right: 1px solid var(--line);
+  background: var(--subtle);
+}
+.settings-index .ant-btn {
+  flex: none;
+  justify-content: flex-start;
+  text-align: left;
+  border: 0;
+  padding: 7px 10px;
+  min-height: 34px;
+  background: transparent;
+  box-shadow: none;
+  font-size: 12px;
+}
+.settings-index .ant-btn[aria-selected='true'] {
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+.console-main .chat-detail .settings-content {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+}
+.console-main .settings-save-bar {
+  position: sticky;
+  bottom: -16px;
+  flex: none;
+  margin-top: auto;
+  flex-wrap: wrap;
+  padding: 12px 0;
+}
+.console-main .policy-table {
+  table-layout: fixed;
+}
+.console-main .policy-table th:nth-child(1) {
+  width: 37%;
+}
+.console-main .policy-table th:nth-child(2) {
+  width: 27%;
+}
+.console-main .policy-table th:nth-child(3) {
+  width: 36%;
+}
+.console-main .policy-table .inline-field {
+  max-width: 100%;
+}
+.console-main .policy-table input {
+  width: 90px;
+  max-width: 100%;
+}
+.console-main .records-workspace {
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+}
+.console-main .records-workspace > :not(.run-browser) {
+  flex: none;
+}
+.console-main .records-workspace > .toolbar {
+  margin: 0;
+}
+.console-main .run-browser {
+  flex: 1;
+  min-height: 200px;
+  grid-template-columns: minmax(180px, 30%) minmax(0, 1fr);
+}
+.console-main .run-list,
+.console-main .run-detail-pane {
+  min-height: 0;
+  max-height: none;
+  overflow: auto;
+}
+.console-main .run-detail-pane {
+  padding: 14px;
+}
+.console-main .run-detail-inline .tabs {
+  flex-wrap: nowrap;
+  overflow: auto;
+  gap: 14px;
+}
+.console-main .run-detail-inline .tabs button {
+  font-size: 12px;
+  padding: 8px 0;
+}
+.console-main .run-select {
+  white-space: normal;
+}
+.console-main .run-select > span {
+  display: grid;
+  gap: 6px;
+  justify-content: start;
+}
+.console-main .records-workspace > .empty {
+  display: none;
+}
+.console-main .chat-detail > .section-heading {
+  padding: 8px 12px;
+}
+.console-main .chat-title {
+  flex: 1 1 120px;
+  min-width: 120px;
+}
+.console-main .chat-title h2 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.console-main .chat-detail > .section-heading h2 {
+  line-height: 1.35;
+}
+.console-main .chat-detail > .tab-content:not(:has(> .chat-settings)) {
+  padding: 10px;
+}
+.console-main .records-workspace {
+  gap: 8px;
+}
+.console-main .records-workspace > .toolbar {
+  flex-wrap: nowrap;
+}
+.console-main .records-workspace > .toolbar > input {
+  min-width: 80px;
+}
+.console-main .records-workspace > .toolbar > select {
+  max-width: 114px;
+}
+.console-main .run-detail-pane {
+  padding: 10px;
+}
+.console-main .run-detail-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.console-main .run-detail-meta {
+  flex-wrap: nowrap;
+  gap: 8px;
+  padding: 0;
+}
+.console-main .run-detail-id {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.console-main .run-detail-id code {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.console-main .run-detail-meta > .ant-btn {
+  flex: none;
+  padding: 4px 8px;
+  min-height: 28px;
+  font-size: 11px;
+}
+.console-main .run-detail-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted);
+  min-height: 20px;
+}
+.console-main .run-detail-summary > span:not(.pill) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.console-main .run-detail-summary [role='status'] {
+  padding: 1px 4px;
+  font-size: 11px;
+}
+.console-main .run-detail-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.console-main .run-detail-toolbar > .tabs {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  gap: 12px;
+}
+.console-main .run-detail-toolbar > .ant-btn {
+  padding: 3px 8px;
+  min-height: 27px;
+  font-size: 11px;
+}
+.console-main .run-detail-inline .timeline {
+  margin-top: 0;
+  padding-top: 8px;
+}
+.run-date-filter {
+  position: relative;
+  flex: none;
+}
+.run-date-filter > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 7px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.run-date-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 190px;
+  z-index: 12;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px #0002;
+  background: var(--surface);
+  display: grid;
+  gap: 10px;
+}
+.run-date-popover label {
+  display: grid;
+  gap: 5px;
+  font-size: 12px;
+}
+.console-main .run-date-popover input[type='date'] {
+  width: 100%;
+}
+.console-main .reply-limit-field input {
+  width: 140px;
+  max-width: 100%;
+}
+@container (max-width:620px) {
+  .console-main .chat-settings {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .settings-index {
+    flex-direction: row;
+    padding: 8px 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .console-main .settings-index .ant-btn {
+    white-space: nowrap;
+    padding: 5px 9px;
+    min-height: 30px;
+  }
+  .console-main .chat-detail .settings-content {
+    padding: 12px;
+  }
+  .console-main .settings-save-bar {
+    bottom: -12px;
+  }
+}
+@media (max-width: 1200px) {
+  .console-main .settings-page .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .console-main .chat-layout {
+    grid-template-columns: min(240px, var(--chat-width, 280px)) minmax(0, 1fr) !important;
+  }
+  .console-main .page {
+    padding: 12px;
+  }
+}
+@media (max-width: 900px) {
+  .console-shell {
+    --sidebar-width: 180px;
+  }
+  .console-main .chat-layout {
+    grid-template-columns: 200px minmax(0, 1fr) !important;
+  }
+  .console-main .run-browser {
+    grid-template-columns: 168px minmax(0, 1fr);
+  }
+  .console-main .header-actions > .pill {
+    display: none;
+  }
+  .console-main .container-console .container-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .console-main .qq-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 700px) {
+  .console-shell {
+    height: 100dvh;
+    --sidebar-width: 64px;
+  }
+  .console-shell:not(.nav-collapsed) {
+    --sidebar-width: 180px;
+  }
+  .console-main > .console-header {
+    padding: 0 12px;
+  }
+  .console-breadcrumb > span {
+    display: none;
+  }
+  .console-main .chat-layout {
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    flex: none;
+  }
+  .console-main .chat-layout > .chat-list.panel {
+    height: 260px;
+    min-height: 260px;
+    max-height: 260px;
+    width: 100%;
+  }
+  .console-main .chat-layout > .chat-detail.panel {
+    height: 650px;
+    min-height: 650px;
+  }
+  .console-main .run-browser {
+    grid-template-columns: 1fr;
+    grid-template-rows: 140px minmax(0, 1fr);
+  }
+  .console-main .run-list {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    max-height: 140px;
+  }
+  .console-main .settings-page .form-grid {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+  .console-main .container-console .container-fields {
+    grid-template-columns: 1fr;
+  }
+  .console-main .snowluma-page > form.panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Detail workspaces can reclaim both nested list columns without losing state. */
+.console-main .chat-layout.chat-list-collapsed {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+.console-main .chat-layout.chat-list-collapsed > .chat-list {
+  display: none;
+}
+.console-main .run-browser.run-list-collapsed,
+.console-main .run-browser.run-browser-empty {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+}
+.run-list-collapsed > .run-list,
+.run-browser-empty > .run-list {
+  display: none;
+}
+.console-main .records-workspace.records-expanded {
+  position: fixed;
+  inset: 12px;
+  z-index: 900;
+  background: var(--surface, white);
+  padding: 12px;
+  box-shadow: 0 0 0 100vmax #0006;
+}
+.console-main .records-workspace > .toolbar {
+  flex-wrap: wrap;
+}
+.catalog-actions {
+  min-width: 230px;
+}
+.catalog-actions > .ant-btn {
+  margin: 3px 6px 3px 0;
+}
+@container (max-width: 650px) {
+  .console-main .run-browser:not(.run-list-collapsed):not(.run-browser-empty) {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(80px, 25%) minmax(0, 1fr);
+  }
+  .console-main .run-list {
+    max-height: none;
+  }
+}
+
+.memory-workspace {
+  min-height: 0;
+  overflow: auto;
+}
+.memory-workspace > .tabs {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.memory-editor textarea {
+  width: 100%;
+  resize: vertical;
+}
+.memory-workspace .chat-settings {
+  min-height: 420px;
+}
+.memory-workspace .chat-settings:has(.settings-index[hidden]) {
+  grid-template-columns: minmax(0, 1fr);
+}
+.memory-task {
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.memory-task del,
+.memory-task ins {
+  display: block;
+  white-space: pre-wrap;
+  padding: 6px;
+}
+.memory-content table td {
+  overflow-wrap: anywhere;
+}
+
+.settings-index[hidden],
+input[type='file'][hidden] {
+  display: none !important;
+}

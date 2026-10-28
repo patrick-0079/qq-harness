@@ -95,7 +95,7 @@ const report = {
   nativeRoutes,
   legacyPackages,
 };
-fs.writeFileSync(path.join(root, 'docs/migration-inventory.json'), JSON.stringify(report, null, 2) + '\n');
+fs.writeFileSync(path.join(root, 'doc/migration-inventory.json'), JSON.stringify(report, null, 2) + '\n');
 console.log(JSON.stringify(report.counts, null, 2));
 console.log(
   '尚无原生同名工具：' +

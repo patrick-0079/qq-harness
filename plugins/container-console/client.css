@@ -1,46 +1,70 @@
 .container-console {
   display: grid;
-  gap: 16px;
+  gap: 10px;
+  min-width: 0;
 }
 .container-console .container-fields {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
 }
-.container-console label {
+.container-console label,
+.container-session-settings label {
   display: grid;
   gap: 6px;
+  min-width: 0;
 }
-.container-console label:has(input[type='checkbox']) {
+.container-console .toggle-row {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .container-console .container-actions {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   flex-wrap: wrap;
   align-items: center;
 }
-.container-console .container-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--line);
+.container-console .container-pool-toolbar {
+  margin-bottom: 12px;
 }
-.container-console small {
+.container-console .container-pool-toolbar > .ant-input {
+  width: min(260px, 100%);
+}
+.container-console small,
+.container-account small,
+.container-account-list small {
   display: block;
   overflow-wrap: anywhere;
-}
-.container-console textarea {
-  min-height: 100px;
+  color: var(--text-muted);
 }
 .container-console .container-output {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  max-height: 420px;
+  max-height: 360px;
   overflow: auto;
+}
+.container-console .ant-table-wrapper {
+  min-width: 0;
+}
+.container-console .container-form-note {
+  grid-column: 1/-1;
+  margin: 0;
+  color: var(--text-muted);
+}
+.container-account,
+.container-account-list > div {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.container-account code,
+.container-account-list code {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.container-session-settings .ant-select {
+  width: 100%;
+}
+.container-console .ant-tabs-content-holder {
+  min-width: 0;
 }

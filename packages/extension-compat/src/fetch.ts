@@ -1,12 +1,17 @@
 import http from 'node:http';
 import https from 'node:https';
+import { publicFetch, type PublicFetchOptions } from '@qq-harness/files';
 
 // v1 扩展需要标准 Response；仍复用旧版 URL 校验并固定已校验 IP，避免 DNS 重绑定。
 export async function extensionFetch(
   raw: string,
   options: RequestInit,
   validate: (raw: string) => Promise<{ url: URL; ip: string }>,
+  proxy?: PublicFetchOptions['proxy'],
 ): Promise<Response> {
+  if (proxy?.webFetch !== false && proxy) {
+    return publicFetch(raw, { proxy, validate: async target => { const { url, ip } = await validate(target); return { url, address: ip }; }, signal: options.signal ?? undefined, method: options.method, headers: Object.fromEntries(new Headers(options.headers)), body: options.body as string | Uint8Array | undefined, maxBytes: 2 * 1024 * 1024 });
+  }
   let method = String(options.method ?? 'GET').toUpperCase();
   let body =
     options.body == null

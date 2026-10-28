@@ -35,19 +35,24 @@ const application = await createApplication({
     : path.resolve(process.env.HARNESS_V2_EXTENSION_ROOT ?? path.join(root, 'extensions-v2')),
   demo: !args.includes('--live'),
   token: process.env.HARNESS_TOKEN,
+  concurrency: process.env.HARNESS_CONCURRENCY ? Number(process.env.HARNESS_CONCURRENCY) : undefined,
+  snowluma: { directory: process.env.HARNESS_SNOWLUMA_DIR },
+  qqPortable: {
+    directory: path.join(ephemeral ? dataDir : root, 'runtime', 'qq-portable'),
+    dataDirectory: path.join(ephemeral ? dataDir : root, 'var', 'qq-portable-data'),
+  },
   containers: { allowOperations: args.includes('--containers') || args.includes('--live') },
-  allowedChats:
-    process.env.HARNESS_ALLOWED_CHATS === undefined
-      ? undefined
-      : process.env.HARNESS_ALLOWED_CHATS.split(',')
-          .map((key) => key.trim())
-          .filter(Boolean),
+  allowedChats: !process.env.HARNESS_ALLOWED_CHATS?.trim()
+    ? undefined
+    : process.env.HARNESS_ALLOWED_CHATS.split(',')
+        .map((key) => key.trim())
+        .filter(Boolean),
 });
-const staticRoot = path.join(root, 'dist', 'console');
+const staticRoot = path.join(process.env.HARNESS_RELEASE_DIR??path.join(root,'dist'),'console');
 application.app.use('*', async (c, next) => {
   c.header(
     'Content-Security-Policy',
-    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
   );
   await next();
 });
@@ -55,7 +60,7 @@ application.app.use('*', serveStatic({ root: staticRoot }));
 application.app.get('*', serveStatic({ path: path.join(staticRoot, 'index.html') }));
 const server = serve({ fetch: application.app.fetch, port, hostname: '127.0.0.1' }, (info) => {
   console.log(`QQ Harness ${args.includes('--live') ? 'OneBot' : 'DEMO'}: http://127.0.0.1:${info.port}`);
-  process.send?.({ type: 'ready', port: info.port });
+  process.send?.(process.env.HARNESS_PM2 === '1' ? 'ready' : { type: 'ready', port: info.port });
 });
 let stopping = false;
 const stop = async () => {

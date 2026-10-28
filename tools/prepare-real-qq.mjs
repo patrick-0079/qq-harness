@@ -37,7 +37,7 @@ const config = {
     maxRounds: 4,
     runTimeoutMs: 180000,
     persona:
-      '你正在进行 QQ Harness 真实消息联调。只处理当前会话的测试请求，用简短中文回答。需要回复时调用 send_message；成功发送后调用 finish(mode="spoken", reason="联调回复已发送")。不要向其他会话发送、查询历史聊天或执行管理动作。',
+      '你正在进行 QQ Harness 真实消息联调。只处理当前会话的测试请求，用简短中文回答。需要回复时调用 send_message；成功发送后调用 finish({mode:"spoken"})。不要向其他会话发送、查询历史聊天或执行管理动作。',
   },
   model: { baseUrl, model, apiKey: key, timeoutMs: 90000, retries: 0 },
   onebot: {

@@ -2678,7 +2678,7 @@ function resolveScript({ skillId, script, lang = "js" }) {
   const pkg = getSkillPackage(skillId);
   if (!pkg) return { ok: false, error: `\u672A\u77E5\u6280\u80FD\uFF1A${skillId}\uFF08\u672A\u52A0\u8F7D\u6216\u672A\u542F\u7528\uFF09` };
   const wantLang = String(lang || "js").toLowerCase();
-  if (wantLang !== "js") {
+  if (wantLang !== "js" && !containerBackend) {
     return { ok: false, error: `\u964D\u7EA7\u540E\u7AEF\u53EA\u652F\u6301 js\uFF08\u5F53\u524D ${wantLang}\uFF09\uFF1B\u9700\u8981\u5176\u5B83\u8BED\u8A00\u8BF7\u63A5\u5165\u5BB9\u5668\u540E\u7AEF` };
   }
   const rel = String(script || "").replace(/\\/g, "/").replace(/^\/+/, "");
@@ -2687,8 +2687,10 @@ function resolveScript({ skillId, script, lang = "js" }) {
     const avail = pkg.scripts.map((s) => s.path).slice(0, 10);
     return { ok: false, error: `\u811A\u672C\u672A\u5728 skill.json \u7684 scripts[] \u4E2D\u58F0\u660E\uFF1A${rel}${avail.length ? `\uFF08\u53EF\u7528\uFF1A${avail.join("\u3001")}\uFF09` : ""}` };
   }
-  if (entry.lang !== "js") return { ok: false, error: `\u8BE5\u811A\u672C\u8BED\u8A00\u4E3A ${entry.lang}\uFF0C\u964D\u7EA7\u540E\u7AEF\u53EA\u652F\u6301 js` };
-  if (!DOC_EXT.has(import_node_path.default.extname(rel).toLowerCase())) return { ok: false, error: `\u53EA\u5141\u8BB8 .js \u811A\u672C\uFF1A${rel}` };
+  if (entry.lang !== "js" && !containerBackend) return { ok: false, error: `\u8BE5\u811A\u672C\u8BED\u8A00\u4E3A ${entry.lang}\uFF0C\u964D\u7EA7\u540E\u7AEF\u53EA\u652F\u6301 js` };
+  if (!containerBackend && !DOC_EXT.has(import_node_path.default.extname(rel).toLowerCase())) return { ok: false, error: `\u53EA\u5141\u8BB8 .js \u811A\u672C\uFF1A${rel}` };
+  if (wantLang !== entry.lang) return { ok: false, error: "\u811A\u672C\u8BED\u8A00\u4E0E\u6E05\u5355\u4E0D\u5339\u914D" };
+  if (!["js", "python", "py", "sh", "bash"].includes(entry.lang)) return { ok: false, error: "\u4E0D\u652F\u6301\u7684\u811A\u672C\u8BED\u8A00" };
   const abs = import_node_path.default.resolve(pkg.dir, rel);
   const relToDir = import_node_path.default.relative(pkg.dir, abs);
   if (!relToDir || relToDir.startsWith("..") || import_node_path.default.isAbsolute(relToDir)) {
@@ -2759,6 +2761,7 @@ async function runInSandbox(job) {
       if (settled) return;
       settled = true;
       if (timer) clearTimeout(timer);
+      job.signal?.removeEventListener("abort", abort);
       try {
         worker?.terminate();
       } catch {
@@ -2770,6 +2773,12 @@ async function runInSandbox(job) {
         durationMs: Date.now() - startedAt
       });
     };
+    const abort = () => finish({ ok: false, cancelled: true, error: "\u6280\u80FD\u6267\u884C\u5DF2\u53D6\u6D88" });
+    if (job.signal?.aborted) {
+      abort();
+      return;
+    }
+    job.signal?.addEventListener("abort", abort, { once: true });
     try {
       worker = new import_node_worker_threads.Worker(RUNNER_SOURCE, {
         eval: true,
@@ -2795,6 +2804,7 @@ async function runInSandbox(job) {
   });
 }
 async function runSkillScript(job) {
+  job.signal?.throwIfAborted();
   let degrade = null;
   if (containerBackend) {
     let available6 = { ok: true };
@@ -2814,9 +2824,11 @@ async function runSkillScript(job) {
       }
     }
   }
+  if ((job.entry?.lang ?? job.lang ?? "js") !== "js") return { ok: false, backend: "sandbox", error: "\u5F53\u524D\u4F1A\u8BDD\u6CA1\u6709\u53EF\u7528\u5BB9\u5668\uFF0C\u964D\u7EA7\u540E\u7AEF\u53EA\u652F\u6301 js", logs: [], durationMs: 0 };
   const hardLimitMs = Math.max(1e3, Number(job.timeoutMs) || 5e3) + 3e3;
+  let hardTimer;
   const hard = new Promise((resolve) => {
-    const t = setTimeout(() => resolve({
+    const t = hardTimer = setTimeout(() => resolve({
       ok: false,
       error: `\u811A\u672C\u6267\u884C\u8D85\u65F6\uFF08\u786C\u4E0A\u9650 ${hardLimitMs}ms\uFF09`,
       logs: [],
@@ -2825,7 +2837,12 @@ async function runSkillScript(job) {
     }), hardLimitMs);
     t.unref?.();
   });
-  const out = await Promise.race([runInSandbox(job), hard]);
+  let out;
+  try {
+    out = await Promise.race([runInSandbox(job), hard]);
+  } finally {
+    clearTimeout(hardTimer);
+  }
   return degrade ? { ...out, degradedFrom: degrade.from, degradeReason: degrade.reason } : out;
 }
 
@@ -4967,7 +4984,7 @@ async function loadSkillDir(dir2, { log: log6 = console.log, kind = null } = {})
     return r2;
   }
   adaptLegacyPrompt(found.raw, manifest);
-  const declaredType = manifest.type || null;
+  const declaredType = found.raw.harnessMigration?.runtimeApi === "legacy-v1" ? null : manifest.type || null;
   if (declaredType && declaredType !== "plugin") {
     const mv = validateManifest(declaredType, found.raw);
     if (!mv.ok) {
@@ -5070,11 +5087,12 @@ async function loadSkillDir(dir2, { log: log6 = console.log, kind = null } = {})
   const prevWasLive = prevSkill && !prevSkill.loadError;
   if (prevWasLive) {
     try {
-      if (typeof prevSkill.deactivate === "function") prevSkill.deactivate({ reason: "reload" });
+      if (typeof prevSkill.deactivate === "function") await prevSkill.deactivate({ reason: "reload" });
     } catch (error) {
       log6(`[skill] \u26A0\uFE0F ${manifest.id} \u65E7\u5B9E\u4F8B deactivate \u5931\u8D25\uFF1A${error?.message ?? error}`);
     }
   }
+  const previousTools = listTools().filter((t) => t.skillId === manifest.id);
   const toolIds = [];
   const collectingRegister = (def) => {
     const id = api6.registerTool(def);
@@ -5086,10 +5104,12 @@ async function loadSkillDir(dir2, { log: log6 = console.log, kind = null } = {})
     if (setupFn) await setupFn(apiWithCollect);
   } catch (error) {
     if (toolIds.length) unregisterToolsBySkill(manifest.id);
+    for (const previousTool of previousTools) registerTool(previousTool);
+    await mod.__harnessCleanup?.();
     const msg = `\u6CE8\u518C\u5931\u8D25\uFF1A${error.message}`;
     if (hadPrevious) {
       try {
-        if (typeof prevSkill.activate === "function") prevSkill.activate({ reason: "reload-failed" });
+        if (typeof prevSkill.activate === "function") await prevSkill.activate({ reason: "reload-failed" });
       } catch (e2) {
         log6(`[skill] \u26A0\uFE0F ${manifest.id} \u65E7\u5B9E\u4F8B\u6FC0\u6D3B\u5931\u8D25\uFF1A${e2?.message ?? e2}`);
       }
@@ -5102,6 +5122,7 @@ async function loadSkillDir(dir2, { log: log6 = console.log, kind = null } = {})
     return r2;
   }
   if (prevSkill) {
+    await prevSkill.__harnessCleanup?.();
     skillManager.capabilities.removeOwner(manifest.id);
     skillManager.registry.unregister(manifest.id);
     skillManager.errors.delete(manifest.id);
@@ -5132,9 +5153,9 @@ async function loadSkillDir(dir2, { log: log6 = console.log, kind = null } = {})
     availableReason: "",
     activate: typeof mod.activate === "function" ? mod.activate : null,
     deactivate: typeof mod.deactivate === "function" ? mod.deactivate : null,
-    dispose: typeof mod.dispose === "function" ? () => {
+    dispose: typeof mod.dispose === "function" ? async () => {
       try {
-        mod.dispose();
+        await mod.dispose();
       } finally {
         unregisterToolsBySkill(manifest.id);
       }
@@ -5145,6 +5166,12 @@ async function loadSkillDir(dir2, { log: log6 = console.log, kind = null } = {})
     providers: mod.providers && typeof mod.providers === "object" ? mod.providers : {},
     promptSections: typeof mod.promptSections === "function" ? mod.promptSections : null
   };
+  skill.__harnessCleanup = mod.__harnessCleanup;
+  skill.__harnessSignal = mod.__harnessSignal;
+  skill.__harnessIngress = mod.__harnessIngress;
+  skill.__harnessProtocol = mod.__harnessProtocol;
+  skill.__harnessSender = mod.__harnessSender;
+  skill.__harnessStickerPolicy = mod.__harnessStickerPolicy;
   skill.loadError = null;
   const r = skillManager.register(skill);
   if (!r.ok) {
@@ -5209,7 +5236,7 @@ async function loadPlugins({ log: log6 = console.log, roots = null, runtime = nu
       log6(`[skill] \u26A0\uFE0F ${s.manifest.id} \u4F9D\u8D56\u672A\u5C31\u7EEA\uFF1A${err.reason}`);
     }
   }
-  const typed = allLoaded.filter((s) => s?.manifest?.type && typeof s.activate === "function" && !__extensionHost.isManaged(s.manifest.id));
+  const typed = allLoaded.filter((s) => typeof s.activate === "function" && !__extensionHost.isManaged(s.manifest.id));
   const { order } = topoOrder(typed);
   for (const s of order) {
     const id = String(s.manifest.id);
@@ -6306,7 +6333,9 @@ async function scanAndRegister2() {
       break;
     }
     const dir2 = import_node_path12.default.join(root, ent.name);
+    if (!import_node_fs12.default.existsSync(import_node_path12.default.join(dir2, "skill.json"))) continue;
     const { raw, error } = readManifest3(dir2);
+    if (raw?.harnessMigration?.runtimeApi === "legacy-v1") continue;
     if (error) {
       failCount++;
       log3(`${ent.name}\uFF1A${error}`);

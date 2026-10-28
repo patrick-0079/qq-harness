@@ -1,0 +1,4 @@
+# Pinned vendor files must keep the exact bytes recorded in provenance.json.
+# Their upstream formatting is verified by hashes instead of whitespace rules.
+packages/extension-compat/vendor/** -text -whitespace
+packages/legacy-core/vendor/** -text -whitespace

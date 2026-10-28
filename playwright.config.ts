@@ -14,7 +14,7 @@ export default defineConfig({
     viewport: { width: 1440, height: 1000 },
   },
   webServer: {
-    command: 'node dist/server/main.mjs --demo --port=3319 --ephemeral',
+    command: 'node scripts/e2e-server.mjs',
     url: 'http://127.0.0.1:3319/api/health',
     reuseExistingServer: false,
   },

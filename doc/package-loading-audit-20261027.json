@@ -1,0 +1,1484 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-27T11:02:16.284Z",
+  "scope": "loading-and-lifecycle-only",
+  "behaviorVerified": false,
+  "rows": [
+    {
+      "id": "addressee-guard",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "fe3f6956db00fbbd86b5609e1830b98431c6ac3dd7abccdea6f25072e7468425"
+      },
+      "reason": ""
+    },
+    {
+      "id": "agent-task",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "1dc6907722edb88e30a45637ec169bf012f0a17d00547989e2e2cdab645ca945"
+      },
+      "reason": ""
+    },
+    {
+      "id": "ai-status",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "f9c0a82809732b273aa64b52da0c2117d71b490365d96065d5162a7d0497c176"
+      },
+      "reason": ""
+    },
+    {
+      "id": "anti-recon",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "8301543586f0a44090ade9695c732eaa4ec4268f6e1f5ab7504558dd9217ba0a"
+      },
+      "reason": ""
+    },
+    {
+      "id": "at-identity",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "5638a9cbe6b29750dd70642ffd485d128d4076bbd86d71111248406d4c12a4ba"
+      },
+      "reason": ""
+    },
+    {
+      "id": "at-mention",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "03a4944bc32cb7871fd1531a8deb3289ec9dfcab8bd6e98e10e1aa67763a698a",
+        "lib/at-resolver.js": "368061c630f6fa2414f7d92bd112a8d5a07ad40f676413ae85917af92e10c360"
+      },
+      "reason": ""
+    },
+    {
+      "id": "auto-finish",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "266b3c24f5eea423e34ece9f56fec43ef69e0b4e3b19539ea38f7e48da102939"
+      },
+      "reason": ""
+    },
+    {
+      "id": "cache-suite",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "0f8840733b493e0351861a55d27eaa78c50de807d5e64d4833f5ea1c1c5de77d",
+        "lib/thinking-adapters.js": "1e1451031cf2675b8e6a8d85c0236c536445b51b3ae1c5d84d4d6f2301e11d9b",
+        "lib/prefix-guard.js": "a2ac4e466ab134ba2a177a5514e2f9f30c6621ff4e5704c3c00092d805980ce3",
+        "lib/cache-pin.js": "f740c9dbabd224c899d8b20aa44acbc118b900da114d358b203e7e56c69e6ba7",
+        "lib/prewarm-gate.js": "8bc377d9e231614ccdd0a214e3857cdaaaab310ba0021152c2fc96c249c73cb8",
+        "lib/peak-valley.js": "097f13ec0cf023a2d8ed6e3aa1521f82a425619fbb15d44343c71487547459a3",
+        "lib/dialects.js": "8940bac2672148e994bd6e34bf7a7b47c7907bd76a8fb699a5564b44d82d082e"
+      },
+      "reason": ""
+    },
+    {
+      "id": "ccb-command",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "c1a68982c52dab35160bbdf3900133729e55908dc1ce09f276a811f1dd83896e"
+      },
+      "reason": ""
+    },
+    {
+      "id": "chatter-guard",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "ce924895bd4cf22ffd9603439fcc4f0292c5a13444d330ccd910c740dd07eba6"
+      },
+      "reason": ""
+    },
+    {
+      "id": "chuanzi",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "3897cf590b082377e26a049e8c35ad5040bbd1082b4cba23d7a7cf5e15054da9"
+      },
+      "reason": ""
+    },
+    {
+      "id": "command-digest",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "76f1980fd4d5b1c518613b9b37a71aba982212e742f8b0a6dadbbea6356022c5"
+      },
+      "reason": ""
+    },
+    {
+      "id": "content-guard",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "28634414ea8ecd0ae1622862fb907ebe07a0d0e36cda2fc4bd1111339801dd0c"
+      },
+      "reason": ""
+    },
+    {
+      "id": "context-chime",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "39ae255c52c52651f02b7d7c1185a72662da3d06faf8d6309876df3bb251bf88"
+      },
+      "reason": ""
+    },
+    {
+      "id": "context-reuse",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "99ce68239ecd68cf3a112b7ee2130e300ecbd5e4b08e9f2494e484e46948024c"
+      },
+      "reason": ""
+    },
+    {
+      "id": "continuous-life",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "3e3519d7ad0a4b75ee6bf9eb35137e244426b7127845d3790c66084518c5a0a8"
+      },
+      "reason": ""
+    },
+    {
+      "id": "cross-chat-link",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "221f051f1c710e8bd2f43c8764d0c0139395485019d1917a866faf479b11b167"
+      },
+      "reason": ""
+    },
+    {
+      "id": "cross-memory",
+      "directory": "plugins",
+      "status": "native-port-separate-tests",
+      "loaded": false,
+      "active": false,
+      "stopped": false,
+      "disabledAgain": false,
+      "blockedAttempts": [],
+      "reason": ""
+    },
+    {
+      "id": "daily-checkin",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "4ac914e1b7c20e8f5d0c465ee8cb2adaf1215be45b3096c1b327136e162c808b"
+      },
+      "reason": ""
+    },
+    {
+      "id": "deepseek-search-fix",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "680ce7f0938b18b39e44c05e415cf7a7570f2d0341a70c783e4c1fb237033e30"
+      },
+      "reason": ""
+    },
+    {
+      "id": "deepseek-status",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "12eb56f82d3666ed1568ab4da39609afd2578bfbac7d49e1598c4d12c165f8a9"
+      },
+      "reason": ""
+    },
+    {
+      "id": "detailed-thinking",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "d6962fcfc27f5ed9a3b0bf45c1350a4d2507cc730cc40c7f975901bc655ea317"
+      },
+      "reason": ""
+    },
+    {
+      "id": "face-decode",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "e1f409a5f6fda323a4731da648cb546a696f3f38f15443397f3f6d32fc419d7f",
+        "lib/faces.mjs": "079f6f33548f276b52e8cdecc64c505b3cb122d39eb494393c4f40096d370407"
+      },
+      "reason": ""
+    },
+    {
+      "id": "friend-gate",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [
+        {
+          "kind": "process"
+        },
+        {
+          "kind": "process"
+        }
+      ],
+      "sourceHashes": {
+        "index.js": "136e693c1710aff193fafeef3b6dca8733b5e19a55ae36f6231d4bce06bde965"
+      },
+      "reason": ""
+    },
+    {
+      "id": "group-manner",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "743909f65b0d6ab23468c2e55c29f4031815123949efceb00293db3b4ec39ae9"
+      },
+      "reason": ""
+    },
+    {
+      "id": "guardian",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [
+        {
+          "kind": "process"
+        },
+        {
+          "kind": "process"
+        }
+      ],
+      "sourceHashes": {
+        "index.js": "7695a7279b6cd4643a35fc05a96132c096144e1701dae076ad527831d1af83aa"
+      },
+      "reason": ""
+    },
+    {
+      "id": "hell-joke",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "387fce08e0fba7a5dba4fe32342d9881ebe6e679eabc7c201e9d2bf545ebef5f"
+      },
+      "reason": ""
+    },
+    {
+      "id": "image-compat",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "a74e0bf0308b9363e95152548675ca855a20306b6750d773c529d73446365ec7"
+      },
+      "reason": ""
+    },
+    {
+      "id": "kaomoji",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "ab1ec761e7335187ec78476904646edd7498f682a55a4816a5ac421fd87b7275"
+      },
+      "reason": ""
+    },
+    {
+      "id": "kb-hub",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "2e6ed7247c7b61e15b3964d01e628c4535f04a35ca50156b05f2c99d6114d80b"
+      },
+      "reason": ""
+    },
+    {
+      "id": "mc-status",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "11ed139e74ae48a581d86ba2cc4ac4f0d61dec09c316fee31d77fa2306753096",
+        "rcon.js": "3f45573f83f339906ed472022d47a5c4e2323ca563eaf6e76beda76c4db117a1",
+        "logtail.js": "3e09eb841770217aec2caa3a0a3860b899849fed1a8a843d97204e469633068d",
+        "sources.js": "3ab6b02f7a04523db5c5634e3bfa8b1f4a47392a9874dace3d5cc2c6d2adf167",
+        "mcping.js": "114702e19dedbdf72ab29574a14ee15219ee4a0f809e51faf75c9fbcda89c452"
+      },
+      "reason": ""
+    },
+    {
+      "id": "mcp-bridge",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "ca91777cc6f61258244719ce69880dab791c671cd78536b11ccaf7a2767b10e3",
+        "mcp-client.js": "d5dd403b58ff034de94b805f3b5847c0857b09442d6bd5e961305279a04dbdc3"
+      },
+      "reason": ""
+    },
+    {
+      "id": "member-aliases",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "a3a6f7db8ac582ed56fcfcb5a4b0a498fcf402d35c554ebf9be09d0065c24aea"
+      },
+      "reason": ""
+    },
+    {
+      "id": "msg-reaction",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "c4a03f08bb2edb8a9568aa392cb46b789d726b95e8829853a98f84ffe12e711b"
+      },
+      "reason": ""
+    },
+    {
+      "id": "net-proxy",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "cc2bf309beddea9c19ca68065ba69780ef5284d789c27788d914d149e9979336"
+      },
+      "reason": ""
+    },
+    {
+      "id": "ops-ctrl",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "4003e0352bcb4d4c5b37861fd4f225550da0eb8334224a9663a49ac7ecd1866d",
+        "lib/balance.js": "a9e82360d91989fdc6790f9c02204a06ee62d11058bb29c6ca302c9616f9a8b5",
+        "lib/system.js": "1b9e84dfdc707b3fd772146492c8d7c56da5f49f25e920e15e3c9769edbaf837"
+      },
+      "reason": ""
+    },
+    {
+      "id": "owner-identity",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": false,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "d170426bd3f15f0d881f19552b3c299546f2ae433cf802b4739db04709bbb0c9"
+      },
+      "reason": "还没填主人 QQ 号"
+    },
+    {
+      "id": "persona-picker",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "4f6b8351b8e41ff20e25fa37d408fdbe7fb5cc3c83daea5102bea0930b5d4f35"
+      },
+      "reason": ""
+    },
+    {
+      "id": "poke-counter",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "188a8793b7a97775ff58318803d89727108431f938d13d30d296312f3cdf5cbb"
+      },
+      "reason": ""
+    },
+    {
+      "id": "punch-card",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "0e473b422f50c085382dfb608e5dc43a6279e46c947e638ec6534f83ef0aebb4"
+      },
+      "reason": ""
+    },
+    {
+      "id": "qianyeyue-affinity",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "739fbd43adfc891c26ef9de9c8eeaa2156adc36709739f4321d52f5fecff184d"
+      },
+      "reason": ""
+    },
+    {
+      "id": "question-relay",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "f4369cd92e86d9bc9d45d4d3a198649c5244a3529e94f4c722d43dd6ba548147"
+      },
+      "reason": ""
+    },
+    {
+      "id": "quota-guard",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "7cff348a447a9d71135d396f5d108f2f3c9a98039f458a6a9ca961eef7e3415d"
+      },
+      "reason": ""
+    },
+    {
+      "id": "quote-reply",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "51dfb6e5ed566014c06041defa9fb8f314397867dfdfda0d43a2576b544cde2a"
+      },
+      "reason": ""
+    },
+    {
+      "id": "quote-target",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "0e83cb2e86a25991813d8bf5e5abaad2fa10dff9233aea9effc02bccf4f54900"
+      },
+      "reason": ""
+    },
+    {
+      "id": "reminder",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "556214d854ef6328117b3e07a9cbf046778be12e1921ef57556c427ae1f0bb6e"
+      },
+      "reason": ""
+    },
+    {
+      "id": "repeat-echo",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "31647f7e5f462aaab14aa14c23b24b4750dfd232e7782196329e4d1e08074b3f",
+        "logic.js": "a7515d785546ad6b2407c826a9874760c9445c90c4804de0a3e25493adfd3dc1"
+      },
+      "reason": ""
+    },
+    {
+      "id": "reply-pacing",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "481edfb078f1f63cfeb2e210a01ee6ac9e2cb6557f868fcc0fd7f9b790d7a0ae"
+      },
+      "reason": ""
+    },
+    {
+      "id": "reply-safety",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "992fe3d6cf18f71e9c34e65cf6874d81ed279619ca9ef18422e278439f0e56d8"
+      },
+      "reason": ""
+    },
+    {
+      "id": "reply-tool-guard",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "ab6c3812fa9cef0998691a8948350c6af788c7396d056ce0e5edbe5a5aea1f90"
+      },
+      "reason": ""
+    },
+    {
+      "id": "revenge-ledger",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "5b0536bd33010bd9b9c7aec5c587bb134bd6ad5ae2741f45f7f64a5dc5ae64e7"
+      },
+      "reason": ""
+    },
+    {
+      "id": "rollpig",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "2e505051f536dd46cd6217d3b2a4661a9dac1dece66ac960f2ad38ef51eb87b9"
+      },
+      "reason": ""
+    },
+    {
+      "id": "safety-guard",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "b04119c8d07b64c33bdcd47cbe7b0e78d76764ef25113188aed31c1da04d9b54"
+      },
+      "reason": ""
+    },
+    {
+      "id": "search-guard",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "6a3b83140fa7f7922ab57b78c504414c5423ac529c7c61050a02657a61066a46"
+      },
+      "reason": ""
+    },
+    {
+      "id": "share-card",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": false,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "fb9c19a71e07aa7099e0edf469fa2603aad22ec7cebb20bfe7bc74c78f4b5c85",
+        "lib/resolve.js": "0157b32448630569705c01042fd8bcc97d45a922f6167696cbe9832889a34bba",
+        "lib/ocr.js": "2fbe2c6c2444f1a099e31bca4ad129a31b6b9e8cfe36c8180af9a83ab7dc3756",
+        "lib/card.js": "88218c50d21da52bf55cd6374903193d9d633d167b1a56d9f996cc6e435f9e5a"
+      },
+      "reason": "主人 QQ 号（ownerIds）是必填项，请先在设置里填写"
+    },
+    {
+      "id": "silent-voice-check",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "8f7b2a8aa6d3123771ea3cd3e2f587c16505f361079ac16e0408f6eb2aabdf01"
+      },
+      "reason": ""
+    },
+    {
+      "id": "sleep-schedule",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "09c05b33d4f3e90c2cf00c0f7ed72a480aaa66608ad5be7b649412a1e20edf8b"
+      },
+      "reason": ""
+    },
+    {
+      "id": "speech-to-text-qq",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "316684ca2a2b336fbba95ac95c0a9fa9ca5924b49b88ed8ad96dfe5e8b54e2e1"
+      },
+      "reason": ""
+    },
+    {
+      "id": "steam-query",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "16dd1af7ed771293b75e4ef0576419002c7d308198151519d48c3c23a5847a18"
+      },
+      "reason": ""
+    },
+    {
+      "id": "sticker-cap",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "de3bbf8b417c86321fa3d7791b5d5a84ff4861dae33e19c559713d2d8590c191"
+      },
+      "reason": ""
+    },
+    {
+      "id": "sticker-memory",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "df290698088b5dfbfbe81da8e03ea05e85bacd95932983113b96d44522bd28f2"
+      },
+      "reason": ""
+    },
+    {
+      "id": "sticker-send-as-emoji",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "31e6b3caf6bd0f5d9ee93e21f849877e80b24c4fc60b0671e012116081432016"
+      },
+      "reason": ""
+    },
+    {
+      "id": "sticker-sense",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "9d832b2f925e8e1f57b7c7dafae80e51fbd2e9703e0780ad67ded2f472ceaf43"
+      },
+      "reason": ""
+    },
+    {
+      "id": "sticker-steal",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "608aaa120fc2509c58520f7ddc325539b71f723cf3ffc5c19a6f0a4a69d2dbed"
+      },
+      "reason": ""
+    },
+    {
+      "id": "token-ledger",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": false,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "c6eba90cd195f2ee0484bd713ee5562695ba998f5c021cfa5b7f4c03ed2029ec",
+        "lib/ledger.js": "c6a5a867bcefc89b3109ca3891bcf4b203e5e760630aeaa76e15b7a5de974d81"
+      },
+      "reason": "还没有会话存档（D:\\QQAgent\\qq-harness\\var\\package-audit-1793098791476\\token-ledger\\data\\sessions 不存在）—— 机器人聊过天之后就能用了"
+    },
+    {
+      "id": "tool-boost",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "0dab951820254f6ff657b3f17b4d580f602287313e4c6a7393f44554000d3921"
+      },
+      "reason": ""
+    },
+    {
+      "id": "topic-guard",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "bdae9deb683c169e0f1f034c18fb75f157b4da6b2ac9ee7740e9feac32e91c68"
+      },
+      "reason": ""
+    },
+    {
+      "id": "typing-indicator",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "29454d555950c31a200e102a6ff054020a02ed738b59ca8c5ea86b226cf06631"
+      },
+      "reason": ""
+    },
+    {
+      "id": "video-frames",
+      "directory": "plugins",
+      "status": "audited",
+      "loaded": true,
+      "active": false,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [
+        {
+          "kind": "process"
+        },
+        {
+          "kind": "process"
+        },
+        {
+          "kind": "process"
+        },
+        {
+          "kind": "process"
+        }
+      ],
+      "sourceHashes": {
+        "index.js": "8a43e5bf60d767ec682186358b1fcb6c55b26324ef48f89efa77241044f90b06",
+        "frames.js": "d81ee062c05b15dbcc53dbbafe4a565da2bbf4355d6747c631a6279620090e3b"
+      },
+      "reason": "未找到 ffmpeg，无法抽帧（装好 ffmpeg 后约 1 分钟内自动恢复）"
+    },
+    {
+      "id": "ark-db",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "6c84fe7df1ecb78126bda224e6416832c645a5695ebe6d1e8746060a8b9b16f0"
+      },
+      "reason": ""
+    },
+    {
+      "id": "bili-card",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "15630a2f39fd97fb157126788b4772a62fc0c94d3ec3bf6491c07b85ed425e6e"
+      },
+      "reason": ""
+    },
+    {
+      "id": "bilibili-peek",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "ae2051aa1fc0f15a3d337c076a6ad6d2aad67612f7ea94a7da6a30f90820e1d4"
+      },
+      "reason": ""
+    },
+    {
+      "id": "cross-group-memory",
+      "directory": "skills",
+      "status": "native-port-separate-tests",
+      "loaded": false,
+      "active": false,
+      "stopped": false,
+      "disabledAgain": false,
+      "blockedAttempts": [],
+      "reason": ""
+    },
+    {
+      "id": "daily-fortune",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "7155f137b6318a7a1bfd76537a3f91ac19dbe4c18a0996ffa7eb527f62ede818"
+      },
+      "reason": ""
+    },
+    {
+      "id": "deai-flavor",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "cd8533c5de9bf9aad050984e121ab2a8730d9ecfcb13710240e5d2c714b4ede1"
+      },
+      "reason": ""
+    },
+    {
+      "id": "friend-approval",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": false,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "d1d5579fe17aaea0bd9efedf9b4d8589b08250399d7ecc4f744b2fa9887a6f8b"
+      },
+      "reason": "还没设置审批人：在技能设置里填「审批人 QQ 号」，或把人加进「设置 → 白名单」的私聊栏"
+    },
+    {
+      "id": "group-image-repost",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "7f072e97c6b6559118d756bf4b1384c7da0f97b31d6b8687989594ede5beb308"
+      },
+      "reason": ""
+    },
+    {
+      "id": "health-report",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "d187634293f68c59e3abec14b625c162ee2ed94fdea0ac7b551d848721e613d6"
+      },
+      "reason": ""
+    },
+    {
+      "id": "image-studio",
+      "directory": "skills",
+      "status": "native-port-separate-tests",
+      "loaded": false,
+      "active": false,
+      "stopped": false,
+      "disabledAgain": false,
+      "blockedAttempts": [],
+      "reason": ""
+    },
+    {
+      "id": "long-memory",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "f3ed54d71b3c10e08f49373e5b0c9d1efb182c93473d2f1b4358b4f7f71c7783"
+      },
+      "reason": ""
+    },
+    {
+      "id": "meme-mood",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "d5a43f3d136b2c405922992e5b161f3db88ffb5fc751053ea62b8f7f31137e81"
+      },
+      "reason": ""
+    },
+    {
+      "id": "mimo-tts",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": false,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "cee11ebf5c630e51428a18172c64a5f31aae57ac537359ed2038c8d907b8473b"
+      },
+      "reason": "还没填 MiMo API Key（设置里的 apiKey）"
+    },
+    {
+      "id": "minecraft-master",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "c1442a1c35fc66f20901890d88978da0b241da3def4b1544cce943efd2e884a8"
+      },
+      "reason": ""
+    },
+    {
+      "id": "my-weather",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "b8f6199006adedac45931f66f5e58877a67f72f247debf8d5014a6fead2e497b"
+      },
+      "reason": ""
+    },
+    {
+      "id": "office-export",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "c609532daa2c4c7adcdeb9e15e5ca22372ad020c0e8b9eb035dc0cb97b4a034a"
+      },
+      "reason": ""
+    },
+    {
+      "id": "owner-console",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "3255220990cd960e85fb3bd59cd8b73e8b7c8c14b3005aa962004cdd4101ddd5"
+      },
+      "reason": ""
+    },
+    {
+      "id": "pcstatus",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "3914bffc319df9af36972154c7ea33550847920d3b3e3d13f0f25ab9a7a1155b"
+      },
+      "reason": ""
+    },
+    {
+      "id": "pig-hub",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "2d4028698712e4a0f938578c713794661844a07cf20ea2ccfa4f5d099791b72c"
+      },
+      "reason": ""
+    },
+    {
+      "id": "recall",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "342291d6309aad6c6875b68feaf62e15185f4132865b902e514d6e9c3391f564"
+      },
+      "reason": ""
+    },
+    {
+      "id": "reply-meme",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "52408e3b6a281bb5eb455bb257d3b7b4390373e14fa255a7637b8488b986afe2",
+        "lib/local.js": "21710ec80ed9bd16b1faefa4a49cb3ffc56bb6ba832f056e51f8e95f0a583633",
+        "lib/history.js": "86eef858b8ad8d268599162d74e73e76564b6ea675d36f5bb96872117a7b46ba",
+        "lib/source.js": "ea9bcad01b45a7c42ef845304b17a2cc298f6fb44b5c85b05ed5d0cfea0a8648",
+        "lib/candidates.js": "458af8446cbc5404e66bd0d21ec61abf806065255a1efc9cff4e7347d584d628",
+        "lib/policy.js": "a2df564edaa6dcf04bfe3bca8381c53c24b96d08a9052888943ac0a0e69a1cd5",
+        "lib/cache.js": "db1dcdbcaef7e09facb3623952757a8942871d847f2018305b9c2bfe1f404292",
+        "lib/image.js": "5eaffe640e65200189c990a3671a8c9e0576383650041872a28e9cd88926d375",
+        "lib/metadata.js": "a87041e654747ac98ac69bd7e4a6c694d8eb727f6867e3813725f56fe2daa939",
+        "lib/text.js": "e29c13e3957939440da82a4d9d96a1ab072ba4202a42d2df215af8bdafa5b95c",
+        "lib/network.js": "b289f008656a7d42de7694e8a90f6bf1a57f6a4fbcaf2c137cb030230857c86b",
+        "lib/limiter.js": "b591cf15af482ea9bdf8639048f64d32aa24987e96299ebc7b3c5ddd2e155d16"
+      },
+      "reason": ""
+    },
+    {
+      "id": "scheduled-task",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "54a825dd37f8e8dfe8de7233bd5daea9ffdb75af2abdd0953b76bf6474af44e5",
+        "host-patch.mjs": "28d2f29c2af656e06ed8d337968b13361d1157b9ef3b7fbc1ee57e1e5e3f591d",
+        "lib/store.mjs": "063dbff09c4a8ed816c7121d86d815067da4ea8bb88756e4a775f4a3d132d34f",
+        "lib/time.mjs": "9c5f7ff3935f7faeee72eea2cf98784ac5859ebf18479541c76c3b3ef924782a"
+      },
+      "reason": ""
+    },
+    {
+      "id": "self-avatar",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "a9262a54822d3d65bcc18c6fa72afd6c26ce151ac8e8c1c8eb978d8c4984f11a"
+      },
+      "reason": ""
+    },
+    {
+      "id": "self-surf",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "a803f8f6c06ac37f53f895b7c5674f366843b8f34ea4d8e9dbdba0f8af226d2a"
+      },
+      "reason": ""
+    },
+    {
+      "id": "sing-aloud",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "5a53d21d88b17907543426f14a135aebd88f6b2a4f12975abe5adacc0cce65f7",
+        "melody-tune.mjs": "3d2c4e18a81703f7480d3be26074d05ae89811f960e5b1ce749de6a6428a625a"
+      },
+      "reason": ""
+    },
+    {
+      "id": "skill-summary",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "1d5a1bc9ff22d145014fe87f8572bba7476f57ec3566abff5023d7505c1aa387",
+        "pixiv-fetch.js": "0d95ddbc66aa0c21caebe94669357042560f78deaedbb7ba6742ff560d9c8bb1"
+      },
+      "reason": ""
+    },
+    {
+      "id": "smart-image",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "84025a769992537fe603a7f7a113a48252fb3439ae8e02f0ce7e1350074eb244",
+        "lib/pixiv.js": "f9c83b4bd4b6e5769e242fc260868983e5796472c2ba0f12688d46ff377d97a6",
+        "lib/sources.js": "b54e40c6e12b1246ed746898836c0b7be3ed7119e2486a47f731e78192e75ecf",
+        "lib/image.js": "edf09bcaf2fa0b842d8dc63f13a6844ad77e6292e12959abc4cd602dd6cf4315",
+        "lib/history.js": "6f33691f70d1e0b59e99b8bea0cfb7abb7a857e66d856e3327ac653884cb5e8d"
+      },
+      "reason": ""
+    },
+    {
+      "id": "stamina",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "2ef24486cd9237d148ddd6fb82727d330b022c74f33511ef4db264ef060ed331"
+      },
+      "reason": ""
+    },
+    {
+      "id": "steam-deals",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "dc266e76e3bf9bcd08d0cf0cbb52a120c458de278eeebe5df4dd246e79d52b8e",
+        "steam-data.js": "5ce6f8387689d8b3df962313e4b26574509aadf667c6f48dd1c5918822b48413",
+        "pixiv-fetch.js": "0d95ddbc66aa0c21caebe94669357042560f78deaedbb7ba6742ff560d9c8bb1",
+        "game-names.js": "6538f07236b24cd33a33e8d5af1cceaedce9d427abccc17d8ef7b4e388914fde"
+      },
+      "reason": ""
+    },
+    {
+      "id": "trendy-memes",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "a14531b914b2c6b1d4cd62ced4bd18c4dbe09563a5e426cb2611ff2da0da9e45"
+      },
+      "reason": ""
+    },
+    {
+      "id": "usage-report",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "d872e8f3c108c2fd1d8403e3ad9a221910ca1620987e9091a0be8f862baecab1"
+      },
+      "reason": ""
+    },
+    {
+      "id": "verify-first",
+      "directory": "skills",
+      "status": "audited",
+      "loaded": true,
+      "active": true,
+      "stopped": true,
+      "disabledAgain": true,
+      "blockedAttempts": [],
+      "sourceHashes": {
+        "index.js": "6631fe24d6335d1377d146306851effe25bf75b48787ce521803d4a060109786"
+      },
+      "reason": ""
+    }
+  ]
+}
